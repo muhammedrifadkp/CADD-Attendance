@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const path = require('path');
 const connectDB = require('./config/db');
 const { errorHandler } = require('./middleware/errorMiddleware');
+const autoSeedAdmin = require('./autoSeed');
 const userRoutes = require('./routes/userRoutes');
 const batchRoutes = require('./routes/batchRoutes');
 const studentRoutes = require('./routes/studentRoutes');
@@ -14,8 +15,11 @@ const labRoutes = require('./routes/labRoutes');
 // Load environment variables
 dotenv.config();
 
-// Connect to database
-connectDB();
+// Connect to database and auto-seed admin
+connectDB().then(() => {
+  // Auto-seed admin user after database connection
+  autoSeedAdmin();
+});
 
 const app = express();
 
@@ -50,6 +54,22 @@ app.get('/api/test', (req, res) => {
     headers: req.headers,
     origin: req.headers.origin || 'No origin header'
   });
+});
+
+// Manual seed endpoint (for backup)
+app.get('/api/seed-admin', async (req, res) => {
+  try {
+    await autoSeedAdmin();
+    res.json({
+      message: 'Admin seeding completed',
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: 'Error seeding admin',
+      error: error.message
+    });
+  }
 });
 
 // CORS test route
