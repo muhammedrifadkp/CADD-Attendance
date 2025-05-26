@@ -320,9 +320,16 @@ const TeacherStudentsList = () => {
                     <p className="text-sm text-gray-600 font-medium">
                       Roll: {student.rollNo}
                     </p>
+                    {/* Class Time Display */}
+                    {student.batch?.timing && (
+                      <div className="flex items-center mt-1 text-xs text-cadd-red font-semibold">
+                        <ClockIcon className="h-3 w-3 mr-1" />
+                        {formatTiming(student.batch.timing)}
+                      </div>
+                    )}
                     <div className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium mt-1 ${student.isActive
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-red-100 text-red-800'
+                      ? 'bg-green-100 text-green-800'
+                      : 'bg-red-100 text-red-800'
                       }`}>
                       {student.isActive ? 'Active' : 'Inactive'}
                     </div>
@@ -454,6 +461,13 @@ const TeacherStudentsList = () => {
                         <div>
                           <div className="text-sm font-medium text-gray-900">{student.name}</div>
                           <div className="text-sm text-gray-500">Roll: {student.rollNo}</div>
+                          {/* Class Time Display in Table */}
+                          {student.batch?.timing && (
+                            <div className="flex items-center mt-1 text-xs text-cadd-red font-semibold">
+                              <ClockIcon className="h-3 w-3 mr-1" />
+                              {formatTiming(student.batch.timing)}
+                            </div>
+                          )}
                         </div>
                       </div>
                     </td>
@@ -490,8 +504,8 @@ const TeacherStudentsList = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${student.isActive
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-red-100 text-red-800'
+                        ? 'bg-green-100 text-green-800'
+                        : 'bg-red-100 text-red-800'
                         }`}>
                         {student.isActive ? 'Active' : 'Inactive'}
                       </span>
