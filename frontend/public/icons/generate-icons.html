@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CADD PWA Icon Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .icon-container {
+            display: inline-block;
+            margin: 10px;
+            text-align: center;
+        }
+
+        .icon {
+            background: #322536;
+            border-radius: 20%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 5px;
+            border: none;
+        }
+
+        .download-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .download-btn:hover {
+            background: #0056b3;
+        }
+
+        .download-all-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 20px 0;
+        }
+
+        .download-all-btn:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>CADD PWA Icon Generator</h1>
+    <p>Using existing C-logo.png with background color #322536</p>
+    <button id="download-all" class="download-all-btn">Download All Icons</button>
+
+    <div id="icons-container"></div>
+
+    <script>
+        const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
+        const backgroundColor = '#322536';
+
+        // Load the C-logo image
+        const logoImg = new Image();
+        logoImg.crossOrigin = 'anonymous';
+        logoImg.src = '../logos/C-logo.png';
+
+        function createIcon(size) {
+            return new Promise((resolve) => {
+                const canvas = document.createElement('canvas');
+                canvas.width = size;
+                canvas.height = size;
+                const ctx = canvas.getContext('2d');
+
+                // Background with rounded corners
+                ctx.fillStyle = backgroundColor;
+                ctx.fillRect(0, 0, size, size);
+
+                // Create rounded corners
+                ctx.globalCompositeOperation = 'destination-in';
+                ctx.beginPath();
+                const radius = size * 0.2; // 20% radius for rounded corners
+                ctx.roundRect(0, 0, size, size, radius);
+                ctx.fill();
+
+                // Reset composite operation
+                ctx.globalCompositeOperation = 'source-over';
+
+                // Draw the C-logo in the center
+                if (logoImg.complete) {
+                    const logoSize = size * 0.6; // Logo takes 60% of the icon size
+                    const logoX = (size - logoSize) / 2;
+                    const logoY = (size - logoSize) / 2;
+                    ctx.drawImage(logoImg, logoX, logoY, logoSize, logoSize);
+                }
+
+                resolve(canvas);
+            });
+        }
+
+        function downloadIcon(canvas, filename) {
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        // Add roundRect polyfill for older browsers
+        if (!CanvasRenderingContext2D.prototype.roundRect) {
+            CanvasRenderingContext2D.prototype.roundRect = function (x, y, width, height, radius) {
+                this.beginPath();
+                this.moveTo(x + radius, y);
+                this.lineTo(x + width - radius, y);
+                this.quadraticCurveTo(x + width, y, x + width, y + radius);
+                this.lineTo(x + width, y + height - radius);
+                this.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+                this.lineTo(x + radius, y + height);
+                this.quadraticCurveTo(x, y + height, x, y + height - radius);
+                this.lineTo(x, y + radius);
+                this.quadraticCurveTo(x, y, x + radius, y);
+                this.closePath();
+            };
+        }
+
+        const container = document.getElementById('icons-container');
+
+        // Wait for logo to load before creating icons
+        logoImg.onload = async () => {
+            for (const size of sizes) {
+                const iconContainer = document.createElement('div');
+                iconContainer.className = 'icon-container';
+
+                const canvas = await createIcon(size);
+                canvas.className = 'icon';
+                canvas.style.width = '80px';
+                canvas.style.height = '80px';
+
+                const label = document.createElement('div');
+                label.textContent = `${size}x${size}`;
+                label.style.fontSize = '12px';
+                label.style.marginBottom = '5px';
+
+                const downloadBtn = document.createElement('button');
+                downloadBtn.className = 'download-btn';
+                downloadBtn.textContent = 'Download';
+                downloadBtn.onclick = () => downloadIcon(canvas, `icon-${size}x${size}.png`);
+
+                iconContainer.appendChild(label);
+                iconContainer.appendChild(canvas);
+                iconContainer.appendChild(downloadBtn);
+                container.appendChild(iconContainer);
+            }
+        };
+
+        // Download all icons function
+        document.getElementById('download-all').onclick = async () => {
+            for (const size of sizes) {
+                const canvas = await createIcon(size);
+                setTimeout(() => {
+                    downloadIcon(canvas, `icon-${size}x${size}.png`);
+                }, size * 5); // Stagger downloads
+            }
+        };
+    </script>
+</body>
+
+</html>
