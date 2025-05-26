@@ -21,6 +21,7 @@ import { toast } from 'react-toastify'
 import { useAuth } from '../../../context/AuthContext'
 import { formatDateSimple } from '../../../utils/dateUtils'
 import BackButton from '../../../components/BackButton'
+import CLoader from '../../../components/CLoader'
 
 const TeacherStudentsList = () => {
   const { user } = useAuth()
@@ -110,14 +111,7 @@ const TeacherStudentsList = () => {
   const stats = getStudentStats()
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-64">
-        <div className="relative">
-          <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-200"></div>
-          <div className="animate-spin rounded-full h-16 w-16 border-4 border-cadd-red border-t-transparent absolute top-0 left-0"></div>
-        </div>
-      </div>
-    )
+    return <CLoader />
   }
 
   return (
