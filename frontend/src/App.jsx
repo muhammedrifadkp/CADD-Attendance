@@ -53,11 +53,21 @@ import DebugLabFeatures from './components/DebugLabFeatures'
 
 function App() {
   const { user, loading } = useAuth()
-  const [showSplash, setShowSplash] = useState(true)
+  const [showSplash, setShowSplash] = useState(() => {
+    // Check if splash screen has been shown before
+    const hasSeenSplash = localStorage.getItem('cadd-splash-shown')
+    return !hasSeenSplash
+  })
 
-  // Show splash screen on first load
+  const handleSplashComplete = () => {
+    // Mark splash as shown and hide it
+    localStorage.setItem('cadd-splash-shown', 'true')
+    setShowSplash(false)
+  }
+
+  // Show splash screen only on first visit
   if (showSplash) {
-    return <SplashScreen onComplete={() => setShowSplash(false)} />
+    return <SplashScreen onComplete={handleSplashComplete} />
   }
 
   // Show loading spinner for auth
