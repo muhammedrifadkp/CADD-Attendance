@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link, useLocation } from 'react-router-dom'
 import { batchesAPI, attendanceAPI } from '../../../services/api'
-import { UserGroupIcon, ClipboardDocumentCheckIcon, ChartBarIcon, ArrowLeftIcon, CalendarDaysIcon, AcademicCapIcon } from '@heroicons/react/24/outline'
+import { UserGroupIcon, ClipboardDocumentCheckIcon, ChartBarIcon, ArrowLeftIcon, CalendarDaysIcon, AcademicCapIcon, ClockIcon } from '@heroicons/react/24/outline'
 import { toast } from 'react-toastify'
 import { useAuth } from '../../../context/AuthContext'
 
@@ -17,6 +17,21 @@ const BatchDetails = () => {
     latePercentage: 0,
   })
   const [loading, setLoading] = useState(true)
+
+  // Helper function to format timing display
+  const formatTiming = (timing) => {
+    if (!timing) return 'No timing set'
+
+    const timeSlots = {
+      '09:00-10:30': '09:00 AM - 10:30 AM',
+      '10:30-12:00': '10:30 AM - 12:00 PM',
+      '12:00-13:30': '12:00 PM - 01:30 PM',
+      '14:00-15:30': '02:00 PM - 03:30 PM',
+      '15:30-17:00': '03:30 PM - 05:00 PM'
+    }
+
+    return timeSlots[timing] || timing
+  }
 
   // Determine the correct base route based on user role and current location
   const getBaseRoute = () => {
@@ -102,6 +117,15 @@ const BatchDetails = () => {
                     </>
                   )}
                 </div>
+                {/* Batch Timing */}
+                {batch.timing && (
+                  <div className="mt-3 flex items-center text-white/90">
+                    <ClockIcon className="h-5 w-5 mr-2" />
+                    <span className="font-semibold text-cadd-yellow">
+                      {formatTiming(batch.timing)}
+                    </span>
+                  </div>
+                )}
                 {batch.createdBy && (
                   <div className="mt-3 text-sm text-white/80">
                     Created by: {' '}
