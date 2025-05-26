@@ -35,34 +35,21 @@ const SplashScreen = ({ onComplete }) => {
               transition={{ type: "spring", stiffness: 100, damping: 15, duration: 1.2 }}
               className="mb-8"
             >
-              <div className="relative">
-                <motion.div
-                  className="absolute inset-0 rounded-full"
-                  style={{
-                    background: 'conic-gradient(from 0deg, #ff0000, #ff6b6b, #ff0000)',
-                    padding: '4px'
-                  }}
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                >
-                  <div className="w-full h-full rounded-full bg-gray-900"></div>
-                </motion.div>
-                <motion.div
-                  className="relative z-10 w-32 h-32 rounded-full flex items-center justify-center"
-                  style={{ backgroundColor: '#322536' }}
-                  animate={{ boxShadow: '0 0 20px rgba(255, 0, 0, 0.6)' }}
+              <motion.div
+                className="w-32 h-32 rounded-full flex items-center justify-center"
+                style={{ backgroundColor: '#322536' }}
+                animate={{ boxShadow: '0 0 20px rgba(255, 0, 0, 0.6)' }}
+                transition={{ duration: 2, repeat: Infinity }}
+              >
+                <motion.span
+                  className="text-6xl font-black text-red-500"
+                  style={{ fontFamily: 'Arial Black, Arial, sans-serif' }}
+                  animate={{ scale: [1, 1.1, 1] }}
                   transition={{ duration: 2, repeat: Infinity }}
                 >
-                  <motion.span
-                    className="text-6xl font-black text-red-500"
-                    style={{ fontFamily: 'Arial Black, Arial, sans-serif' }}
-                    animate={{ scale: [1, 1.1, 1] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  >
-                    C
-                  </motion.span>
-                </motion.div>
-              </div>
+                  C
+                </motion.span>
+              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
