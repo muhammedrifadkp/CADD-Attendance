@@ -24,7 +24,6 @@ import { useAuth } from '../../../context/AuthContext'
 import { toast } from 'react-toastify'
 import BookingSuccessModal from '../../../components/BookingSuccessModal'
 import BackButton from '../../../components/BackButton'
-import CLoader from '../../../components/CLoader'
 
 const AdminBookLab = () => {
   const navigate = useNavigate()
@@ -606,7 +605,12 @@ const AdminBookLab = () => {
             </div>
 
             {loading ? (
-              <CLoader />
+              <div className="flex items-center justify-center min-h-64">
+                <div className="relative">
+                  <div className="animate-spin rounded-full h-20 w-20 border-4 border-gray-200"></div>
+                  <div className="animate-spin rounded-full h-20 w-20 border-4 border-cadd-red border-t-transparent absolute top-0 left-0"></div>
+                </div>
+              </div>
             ) : (
               <div className="max-w-6xl mx-auto">
                 {getAvailablePCs().length === 0 ? (

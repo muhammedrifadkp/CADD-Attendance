@@ -24,7 +24,6 @@ import ApplyBookingsResultModal from '../../components/ApplyBookingsResultModal'
 import ClearBookedSlotsModal from '../../components/ClearBookedSlotsModal'
 import ClearSlotsResultModal from '../../components/ClearSlotsResultModal'
 import BackButton from '../../components/BackButton'
-import CLoader from '../../components/CLoader'
 
 const LabAvailability = () => {
   const { user } = useAuth()
@@ -644,7 +643,12 @@ const LabAvailability = () => {
       </div>
 
       {loading ? (
-        <CLoader />
+        <div className="flex items-center justify-center min-h-64">
+          <div className="relative">
+            <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-200"></div>
+            <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-500 border-t-transparent absolute top-0 left-0"></div>
+          </div>
+        </div>
       ) : Object.keys(pcsByRow).length > 0 ? (
         <div className="space-y-6">
 

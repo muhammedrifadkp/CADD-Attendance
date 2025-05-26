@@ -16,7 +16,6 @@ import { labAPI } from '../../../services/labAPI'
 import { toast } from 'react-toastify'
 import { showConfirm } from '../../../utils/popup'
 import { formatDateSimple } from '../../../utils/dateUtils'
-import CLoader from '../../../components/CLoader'
 
 const PCList = () => {
   const [pcs, setPCs] = useState([])
@@ -93,7 +92,11 @@ const PCList = () => {
   }
 
   if (loading) {
-    return <CLoader />
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-cadd-red"></div>
+      </div>
+    )
   }
 
   return (
