@@ -176,23 +176,23 @@ const AdminDashboard = () => {
       ) : (
         <>
           {/* Stats Cards */}
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+          <div className="stats-grid dashboard-grid grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
             {cards.map((card, index) => (
               <Link
                 key={card.name}
                 to={card.link}
-                className="group relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 overflow-hidden animate-slide-up"
+                className="dashboard-card group relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 overflow-hidden animate-slide-up touch-target"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
                 <div className={`absolute inset-0 bg-gradient-to-br ${card.gradient} opacity-5 group-hover:opacity-10 transition-opacity`}></div>
-                <div className="relative p-6">
+                <div className="dashboard-card-content relative p-6">
                   <div className="flex items-center justify-between mb-4">
-                    <div className={`p-3 rounded-xl bg-gradient-to-br ${card.gradient} shadow-lg`}>
+                    <div className={`dashboard-card-icon p-3 rounded-xl bg-gradient-to-br ${card.gradient} shadow-lg`}>
                       <card.icon className="h-6 w-6 text-white" />
                     </div>
                     <ChartBarIcon className="h-5 w-5 text-gray-400 group-hover:text-gray-600 transition-colors" />
                   </div>
-                  <div>
+                  <div className="dashboard-card-stats">
                     <p className="text-sm font-medium text-gray-600 mb-1">{card.name}</p>
                     <p className="text-3xl font-bold text-gray-900 mb-2">{card.count}</p>
                     <p className="text-xs text-gray-500">{card.description}</p>

@@ -89,10 +89,10 @@ const Login = () => {
         </p>
       </div>
 
-      <form className="space-y-6" onSubmit={handleSubmit}>
+      <form className="form-grid space-y-6" onSubmit={handleSubmit}>
         <div className="space-y-4">
           {/* Email Field */}
-          <div>
+          <div className="form-group">
             <label htmlFor="email" className="form-label">
               Email Address
             </label>
@@ -115,7 +115,7 @@ const Login = () => {
           </div>
 
           {/* Password Field */}
-          <div>
+          <div className="form-group">
             <label htmlFor="password" className="form-label">
               Password
             </label>
@@ -137,7 +137,7 @@ const Login = () => {
               <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
                 <button
                   type="button"
-                  className="text-gray-400 hover:text-gray-600 focus:outline-none transition-colors"
+                  className="btn-icon-mobile text-gray-400 hover:text-gray-600 focus:outline-none transition-colors touch-target"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? (
@@ -152,11 +152,11 @@ const Login = () => {
         </div>
 
         {/* Submit Button */}
-        <div className="pt-4">
+        <div className="form-actions pt-4">
           <button
             type="submit"
             disabled={loading}
-            className={`w-full relative overflow-hidden py-3 px-4 rounded-lg font-medium text-white transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-opacity-50 ${loginType === 'teacher'
+            className={`form-button w-full relative overflow-hidden py-3 px-4 rounded-lg font-medium text-white transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-opacity-50 touch-target ${loginType === 'teacher'
               ? 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 focus:ring-blue-300'
               : 'bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 focus:ring-red-300'
               } ${loading ? 'opacity-75 cursor-not-allowed' : ''}`}

@@ -2,6 +2,7 @@
 
 /* Base Mobile Styles */
 @media (max-width: 640px) {
+
   /* Container and Layout Fixes */
   .container {
     padding-left: 1rem !important;
@@ -16,6 +17,25 @@
   .mobile-nav-item {
     padding: 0.75rem 1rem !important;
     font-size: 0.875rem !important;
+  }
+
+  /* Enhanced Mobile Navigation */
+  .mobile-sidebar {
+    width: 100% !important;
+    max-width: 320px !important;
+    transform: translateX(-100%) !important;
+    transition: transform 0.3s ease-in-out !important;
+  }
+
+  .mobile-sidebar.open {
+    transform: translateX(0) !important;
+  }
+
+  .mobile-nav-backdrop {
+    position: fixed !important;
+    inset: 0 !important;
+    background-color: rgba(0, 0, 0, 0.5) !important;
+    z-index: 40 !important;
   }
 
   /* Cards and Grid Layouts */
@@ -33,7 +53,28 @@
     grid-template-columns: 1fr !important;
   }
 
-  /* Forms */
+  /* Enhanced Dashboard Cards */
+  .dashboard-card {
+    padding: 1.25rem !important;
+    margin-bottom: 1rem !important;
+  }
+
+  .dashboard-card-content {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.75rem !important;
+  }
+
+  .dashboard-card-icon {
+    width: 3rem !important;
+    height: 3rem !important;
+  }
+
+  .dashboard-card-stats {
+    text-align: left !important;
+  }
+
+  /* Enhanced Forms */
   .form-grid {
     grid-template-columns: 1fr !important;
     gap: 1rem !important;
@@ -43,7 +84,11 @@
   .form-select,
   .form-textarea {
     width: 100% !important;
-    font-size: 16px !important; /* Prevents zoom on iOS */
+    font-size: 16px !important;
+    /* Prevents zoom on iOS */
+    padding: 0.875rem !important;
+    border-radius: 0.75rem !important;
+    min-height: 44px !important;
   }
 
   .form-row {
@@ -51,10 +96,35 @@
     gap: 0.75rem !important;
   }
 
-  /* Tables */
+  .form-label {
+    font-size: 0.875rem !important;
+    font-weight: 600 !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  .form-group {
+    margin-bottom: 1.25rem !important;
+  }
+
+  .form-actions {
+    flex-direction: column !important;
+    gap: 0.75rem !important;
+    margin-top: 1.5rem !important;
+  }
+
+  .form-button {
+    width: 100% !important;
+    min-height: 48px !important;
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+  }
+
+  /* Enhanced Tables */
   .table-container {
     overflow-x: auto !important;
     -webkit-overflow-scrolling: touch !important;
+    border-radius: 0.75rem !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
   }
 
   .mobile-table {
@@ -62,26 +132,82 @@
   }
 
   .table-cell {
-    padding: 0.5rem !important;
+    padding: 0.75rem 0.5rem !important;
     font-size: 0.875rem !important;
+    white-space: nowrap !important;
   }
 
-  /* Buttons */
+  .table-header {
+    padding: 1rem 0.5rem !important;
+    font-size: 0.75rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+  }
+
+  .table-row {
+    min-height: 48px !important;
+  }
+
+  .table-row:hover {
+    background-color: rgba(59, 130, 246, 0.05) !important;
+  }
+
+  /* Enhanced Buttons */
   .btn-group {
     flex-direction: column !important;
-    gap: 0.5rem !important;
+    gap: 0.75rem !important;
   }
 
   .btn-mobile {
     width: 100% !important;
     justify-content: center !important;
+    min-height: 48px !important;
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    border-radius: 0.75rem !important;
   }
 
-  /* Modal and Popups */
+  .btn-icon-mobile {
+    padding: 0.75rem !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+  }
+
+  /* Enhanced Modal and Popups */
+  .modal-overlay {
+    position: fixed !important;
+    inset: 0 !important;
+    background-color: rgba(0, 0, 0, 0.6) !important;
+    z-index: 50 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 1rem !important;
+  }
+
   .modal-content {
-    margin: 1rem !important;
+    width: 100% !important;
+    max-width: calc(100vw - 2rem) !important;
     max-height: calc(100vh - 2rem) !important;
     overflow-y: auto !important;
+    border-radius: 1rem !important;
+    background-color: white !important;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+  }
+
+  .modal-header {
+    padding: 1.5rem 1.5rem 1rem !important;
+    border-bottom: 1px solid #e5e7eb !important;
+  }
+
+  .modal-body {
+    padding: 1.5rem !important;
+  }
+
+  .modal-footer {
+    padding: 1rem 1.5rem 1.5rem !important;
+    border-top: 1px solid #e5e7eb !important;
   }
 
   /* Charts */
@@ -169,36 +295,152 @@
     font-size: 1.5rem !important;
   }
 
-  /* Lab Management */
+  /* Enhanced Lab Management */
   .lab-grid {
     grid-template-columns: 1fr !important;
     gap: 1rem !important;
   }
 
   .pc-card {
-    padding: 0.75rem !important;
+    padding: 1rem !important;
+    border-radius: 0.75rem !important;
+    min-height: 44px !important;
   }
 
   .pc-grid {
     grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.75rem !important;
+  }
+
+  .pc-grid-large {
+    grid-template-columns: repeat(3, 1fr) !important;
     gap: 0.5rem !important;
   }
 
-  /* Batch and Student Lists */
+  .pc-status-card {
+    padding: 0.875rem !important;
+    border-radius: 0.75rem !important;
+    min-height: 48px !important;
+    font-size: 0.875rem !important;
+    font-weight: 600 !important;
+    text-align: center !important;
+    transition: all 0.2s ease-in-out !important;
+  }
+
+  .pc-status-card:active {
+    transform: scale(0.95) !important;
+  }
+
+  .lab-time-slots {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.75rem !important;
+  }
+
+  .lab-time-slot {
+    padding: 1rem !important;
+    border-radius: 0.75rem !important;
+    min-height: 48px !important;
+    font-size: 0.875rem !important;
+    font-weight: 600 !important;
+  }
+
+  .lab-booking-form {
+    padding: 1.5rem !important;
+  }
+
+  .lab-booking-controls {
+    flex-direction: column !important;
+    gap: 1rem !important;
+  }
+
+  /* Enhanced Batch and Student Lists */
   .list-item {
-    padding: 0.75rem !important;
+    padding: 1rem !important;
+    border-radius: 0.75rem !important;
+    margin-bottom: 0.75rem !important;
   }
 
   .list-item-content {
     flex-direction: column !important;
     align-items: flex-start !important;
-    gap: 0.5rem !important;
+    gap: 0.75rem !important;
   }
 
   .list-item-actions {
     width: 100% !important;
     justify-content: flex-end !important;
+    gap: 0.75rem !important;
+    margin-top: 0.75rem !important;
+  }
+
+  .list-item-header {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: flex-start !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  .list-item-title {
+    font-size: 1.125rem !important;
+    font-weight: 700 !important;
+    line-height: 1.3 !important;
+  }
+
+  .list-item-subtitle {
+    font-size: 0.875rem !important;
+    color: #6b7280 !important;
+    margin-top: 0.25rem !important;
+  }
+
+  .list-item-meta {
+    display: flex !important;
+    flex-wrap: wrap !important;
     gap: 0.5rem !important;
+    margin-top: 0.5rem !important;
+  }
+
+  .list-item-badge {
+    padding: 0.25rem 0.75rem !important;
+    border-radius: 9999px !important;
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
+  }
+
+  /* Enhanced Search and Filters */
+  .search-container {
+    margin-bottom: 1.5rem !important;
+  }
+
+  .search-input {
+    width: 100% !important;
+    padding: 0.875rem 1rem !important;
+    font-size: 16px !important;
+    border-radius: 0.75rem !important;
+    border: 2px solid #e5e7eb !important;
+    min-height: 48px !important;
+  }
+
+  .search-input:focus {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+  }
+
+  .filter-tabs {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 0.5rem !important;
+    margin-top: 1rem !important;
+  }
+
+  .filter-tab {
+    padding: 0.5rem 1rem !important;
+    border-radius: 9999px !important;
+    font-size: 0.875rem !important;
+    font-weight: 600 !important;
+    min-height: 40px !important;
+    white-space: nowrap !important;
   }
 
   /* Sidebar */
@@ -249,6 +491,103 @@
 
   .mobile-gap-sm {
     gap: 0.5rem !important;
+  }
+
+  /* Enhanced Attendance Components */
+  .attendance-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+
+  .attendance-card {
+    padding: 1.25rem !important;
+    border-radius: 0.75rem !important;
+    margin-bottom: 1rem !important;
+  }
+
+  .attendance-student-card {
+    padding: 1rem !important;
+    border-radius: 0.75rem !important;
+    margin-bottom: 0.75rem !important;
+    border: 2px solid #e5e7eb !important;
+  }
+
+  .attendance-student-info {
+    margin-bottom: 1rem !important;
+  }
+
+  .attendance-student-name {
+    font-size: 1.125rem !important;
+    font-weight: 700 !important;
+    margin-bottom: 0.25rem !important;
+  }
+
+  .attendance-student-id {
+    font-size: 0.875rem !important;
+    color: #6b7280 !important;
+  }
+
+  .attendance-status-buttons {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.5rem !important;
+  }
+
+  .attendance-status-button {
+    width: 100% !important;
+    padding: 0.75rem !important;
+    border-radius: 0.5rem !important;
+    font-size: 0.875rem !important;
+    font-weight: 600 !important;
+    min-height: 44px !important;
+    transition: all 0.2s ease-in-out !important;
+  }
+
+  .attendance-status-button:active {
+    transform: scale(0.98) !important;
+  }
+
+  .attendance-summary {
+    padding: 1.25rem !important;
+    border-radius: 0.75rem !important;
+    margin-bottom: 1.5rem !important;
+  }
+
+  .attendance-summary-stats {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1rem !important;
+  }
+
+  .attendance-summary-stat {
+    text-align: center !important;
+    padding: 1rem !important;
+    border-radius: 0.5rem !important;
+  }
+
+  .attendance-batch-selector {
+    margin-bottom: 1.5rem !important;
+  }
+
+  .attendance-date-picker {
+    margin-bottom: 1.5rem !important;
+  }
+
+  .attendance-actions {
+    position: sticky !important;
+    bottom: 0 !important;
+    background-color: white !important;
+    padding: 1rem !important;
+    border-top: 1px solid #e5e7eb !important;
+    margin: 0 -1rem -1rem !important;
+  }
+
+  .attendance-submit-button {
+    width: 100% !important;
+    min-height: 52px !important;
+    font-size: 1.125rem !important;
+    font-weight: 700 !important;
+    border-radius: 0.75rem !important;
   }
 }
 
@@ -342,7 +681,8 @@
 }
 
 /* High DPI displays */
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+@media (-webkit-min-device-pixel-ratio: 2),
+(min-resolution: 192dpi) {
   .high-dpi-text {
     -webkit-font-smoothing: antialiased !important;
     -moz-osx-font-smoothing: grayscale !important;
@@ -390,16 +730,44 @@
 }
 
 /* Responsive text sizes */
-.responsive-text-xs { font-size: 0.75rem; }
-.responsive-text-sm { font-size: 0.875rem; }
-.responsive-text-base { font-size: 1rem; }
-.responsive-text-lg { font-size: 1.125rem; }
-.responsive-text-xl { font-size: 1.25rem; }
+.responsive-text-xs {
+  font-size: 0.75rem;
+}
+
+.responsive-text-sm {
+  font-size: 0.875rem;
+}
+
+.responsive-text-base {
+  font-size: 1rem;
+}
+
+.responsive-text-lg {
+  font-size: 1.125rem;
+}
+
+.responsive-text-xl {
+  font-size: 1.25rem;
+}
 
 @media (max-width: 640px) {
-  .responsive-text-xs { font-size: 0.625rem; }
-  .responsive-text-sm { font-size: 0.75rem; }
-  .responsive-text-base { font-size: 0.875rem; }
-  .responsive-text-lg { font-size: 1rem; }
-  .responsive-text-xl { font-size: 1.125rem; }
+  .responsive-text-xs {
+    font-size: 0.625rem;
+  }
+
+  .responsive-text-sm {
+    font-size: 0.75rem;
+  }
+
+  .responsive-text-base {
+    font-size: 0.875rem;
+  }
+
+  .responsive-text-lg {
+    font-size: 1rem;
+  }
+
+  .responsive-text-xl {
+    font-size: 1.125rem;
+  }
 }

@@ -2,7 +2,7 @@ import { Outlet } from 'react-router-dom'
 
 const AuthLayout = () => {
   return (
-    <div className="min-h-screen gradient-bg flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen gradient-bg flex items-center justify-center py-6 px-4 sm:py-12 sm:px-6 lg:px-8">
       {/* Background Pattern */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full opacity-10 gradient-primary"></div>
@@ -10,7 +10,7 @@ const AuthLayout = () => {
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full opacity-5 gradient-accent"></div>
       </div>
 
-      <div className="max-w-md w-full space-y-8 relative z-10">
+      <div className="container max-w-md w-full space-y-6 sm:space-y-8 relative z-10">
         {/* CADD Centre Header */}
         <div className="text-center animate-fade-in">
           <div className="flex justify-center mb-6">

@@ -251,19 +251,40 @@ const TeacherLayout = () => {
 
       {/* Main content */}
       <div className="md:pl-64 flex flex-col flex-1">
-        <div className="sticky top-0 z-10 md:hidden pl-1 pt-1 sm:pl-3 sm:pt-3 bg-gray-100">
-          <button
-            type="button"
-            className="-ml-0.5 -mt-0.5 h-12 w-12 inline-flex items-center justify-center rounded-md text-gray-500 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-500"
-            onClick={() => setSidebarOpen(true)}
-          >
-            <span className="sr-only">Open sidebar</span>
-            <Bars3Icon className="h-6 w-6" aria-hidden="true" />
-          </button>
+        {/* Mobile header */}
+        <div className="mobile-header sticky top-0 z-10 md:hidden bg-white shadow-lg border-b border-gray-200">
+          <div className="flex items-center justify-between px-4 py-3">
+            <button
+              type="button"
+              className="btn-icon-mobile h-10 w-10 inline-flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:text-gray-900 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-cadd-red transition-all duration-300 touch-target"
+              onClick={() => setSidebarOpen(true)}
+            >
+              <span className="sr-only">Open sidebar</span>
+              <Bars3Icon className="h-6 w-6" aria-hidden="true" />
+            </button>
+            <div className="flex items-center">
+              <img
+                className="h-8 w-auto mr-2"
+                src="/logos/cadd_logo.png"
+                alt="CADD Centre"
+                onError={(e) => {
+                  e.target.style.display = 'none'
+                  e.target.nextSibling.style.display = 'block'
+                }}
+              />
+              <div className="hidden w-8 h-8 bg-gradient-to-br from-cadd-red to-cadd-pink rounded-lg flex items-center justify-center mr-2">
+                <span className="text-white font-bold text-sm">CC</span>
+              </div>
+              <div className="text-center">
+                <h1 className="text-lg font-bold bg-gradient-to-r from-cadd-red to-cadd-pink bg-clip-text text-transparent">CADD Centre</h1>
+                <p className="text-xs text-gray-500 font-medium">Teacher Portal</p>
+              </div>
+            </div>
+          </div>
         </div>
         <main className="flex-1">
           <div className="py-4 sm:py-6 lg:py-8">
-            <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
+            <div className="container max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
               <Outlet />
             </div>
           </div>

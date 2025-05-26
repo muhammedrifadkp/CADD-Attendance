@@ -72,17 +72,14 @@ const AdminLayout = () => {
       >
         {/* Sidebar backdrop */}
         <div
-          className={`fixed inset-0 bg-gray-600 bg-opacity-75 transition-opacity ${sidebarOpen ? 'opacity-100 ease-out duration-300' : 'opacity-0 ease-in duration-200'
+          className={`mobile-nav-backdrop transition-opacity ${sidebarOpen ? 'opacity-100 ease-out duration-300' : 'opacity-0 ease-in duration-200'
             }`}
           onClick={() => setSidebarOpen(false)}
         ></div>
 
         {/* Sidebar */}
         <div
-          className={`relative flex-1 flex flex-col max-w-xs w-full bg-gray-900 shadow-2xl transform transition ${sidebarOpen
-            ? 'translate-x-0 ease-out duration-300'
-            : '-translate-x-full ease-in duration-200'
-            }`}
+          className={`mobile-sidebar ${sidebarOpen ? 'open' : ''} relative flex-1 flex flex-col max-w-xs w-full bg-gray-900 shadow-2xl`}
           style={{
             background: 'linear-gradient(180deg, #1f2937 0%, #111827 50%, #0f172a 100%)'
           }}
@@ -268,11 +265,11 @@ const AdminLayout = () => {
       {/* Main content */}
       <div className="md:pl-64 flex flex-col flex-1">
         {/* Mobile header */}
-        <div className="sticky top-0 z-10 md:hidden bg-white shadow-lg border-b border-gray-200">
+        <div className="mobile-header sticky top-0 z-10 md:hidden bg-white shadow-lg border-b border-gray-200">
           <div className="flex items-center justify-between px-4 py-3">
             <button
               type="button"
-              className="h-10 w-10 inline-flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:text-gray-900 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-cadd-red transition-all duration-300"
+              className="btn-icon-mobile h-10 w-10 inline-flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:text-gray-900 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-cadd-red transition-all duration-300 touch-target"
               onClick={() => setSidebarOpen(true)}
             >
               <span className="sr-only">Open sidebar</span>
@@ -291,7 +288,7 @@ const AdminLayout = () => {
               <div className="hidden w-8 h-8 bg-gradient-to-br from-cadd-red to-cadd-pink rounded-lg flex items-center justify-center mr-2">
                 <span className="text-white font-bold text-sm">CC</span>
               </div>
-              <div>
+              <div className="text-center">
                 <h1 className="text-lg font-bold bg-gradient-to-r from-cadd-red to-cadd-pink bg-clip-text text-transparent">CADD Centre</h1>
                 <p className="text-xs text-gray-500 font-medium">Admin Panel</p>
               </div>
@@ -327,7 +324,7 @@ const AdminLayout = () => {
 
         <main className="flex-1 animate-fade-in">
           <div className="py-4 sm:py-6 lg:py-8">
-            <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
+            <div className="container max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
               <Outlet />
             </div>
           </div>
