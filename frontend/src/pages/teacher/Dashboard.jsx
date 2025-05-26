@@ -6,7 +6,6 @@ import {
   UserGroupIcon,
   ClipboardDocumentCheckIcon,
   AcademicCapIcon,
-  CalendarDaysIcon,
   ChartBarIcon,
   ComputerDesktopIcon,
   ClockIcon
@@ -315,47 +314,9 @@ const TeacherDashboard = () => {
               </div>
             </Link>
 
-            <Link
-              to="/todays-bookings"
-              className="group relative bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 hover:shadow-lg transition-all duration-300 transform hover:scale-105 border border-blue-100"
-            >
-              <div className="flex items-center mb-4">
-                <div className="p-3 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-lg">
-                  <CalendarDaysIcon className="h-6 w-6 text-white" />
-                </div>
-                <div className="ml-4">
-                  <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-700 transition-colors">
-                    Today's Bookings
-                  </h3>
-                  <p className="text-sm text-gray-600">View and manage lab bookings</p>
-                </div>
-              </div>
-              <div className="flex items-center text-sm text-blue-600 font-medium">
-                <span>View Bookings</span>
-                <ChartBarIcon className="h-4 w-4 ml-2" />
-              </div>
-            </Link>
 
-            <Link
-              to="/book-lab"
-              className="group relative bg-gradient-to-br from-orange-50 to-amber-50 rounded-xl p-6 hover:shadow-lg transition-all duration-300 transform hover:scale-105 border border-orange-100"
-            >
-              <div className="flex items-center mb-4">
-                <div className="p-3 rounded-xl bg-gradient-to-br from-orange-500 to-amber-600 shadow-lg">
-                  <PlusIcon className="h-6 w-6 text-white" />
-                </div>
-                <div className="ml-4">
-                  <h3 className="text-lg font-semibold text-gray-900 group-hover:text-orange-700 transition-colors">
-                    Book Lab Session
-                  </h3>
-                  <p className="text-sm text-gray-600">Reserve computer lab time</p>
-                </div>
-              </div>
-              <div className="flex items-center text-sm text-orange-600 font-medium">
-                <span>Book Now</span>
-                <ChartBarIcon className="h-4 w-4 ml-2" />
-              </div>
-            </Link>
+
+
 
             <Link
               to="/lab-availability"

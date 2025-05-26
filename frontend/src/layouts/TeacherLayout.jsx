@@ -7,7 +7,6 @@ import {
   UserGroupIcon,
   ClipboardDocumentListIcon,
   ChartBarIcon,
-  CalendarDaysIcon,
   ArrowLeftOnRectangleIcon,
   ComputerDesktopIcon,
 } from '@heroicons/react/24/outline'
@@ -31,12 +30,7 @@ const TeacherLayout = () => {
       icon: ClipboardDocumentListIcon,
       current: location.pathname.startsWith('/attendance'),
     },
-    {
-      name: 'Today\'s Bookings',
-      href: '/todays-bookings',
-      icon: CalendarDaysIcon,
-      current: location.pathname === '/todays-bookings',
-    },
+
     {
       name: 'Lab Availability',
       href: '/lab-availability',
