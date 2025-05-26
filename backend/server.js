@@ -72,6 +72,43 @@ app.get('/api/seed-admin', async (req, res) => {
   }
 });
 
+// Reset admin password endpoint
+app.get('/api/reset-admin-password', async (req, res) => {
+  try {
+    const bcrypt = require('bcryptjs');
+    const User = require('./models/userModel');
+
+    // Find admin user
+    const admin = await User.findOne({ email: 'admin@caddcentre.com' });
+
+    if (!admin) {
+      return res.status(404).json({
+        message: 'Admin user not found'
+      });
+    }
+
+    // Hash new password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash('Admin@123456', salt);
+
+    // Update password
+    admin.password = hashedPassword;
+    await admin.save();
+
+    res.json({
+      message: 'Admin password reset successfully',
+      email: 'admin@caddcentre.com',
+      password: 'Admin@123456',
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: 'Error resetting admin password',
+      error: error.message
+    });
+  }
+});
+
 // CORS test route
 app.post('/api/test-cors', (req, res) => {
   res.json({
