@@ -5,7 +5,7 @@ import { toast } from 'react-toastify'
 const api = axios.create({
   baseURL: import.meta.env.DEV
     ? 'http://localhost:5001/api'
-    : import.meta.env.VITE_API_URL || 'https://your-backend-url.vercel.app/api',
+    : import.meta.env.VITE_API_URL || 'https://cadd-attendance-backend.onrender.com/api',
   headers: {
     'Content-Type': 'application/json',
   },
