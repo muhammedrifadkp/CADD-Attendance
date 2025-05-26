@@ -20,6 +20,7 @@ import StudentsList from './pages/admin/students/StudentsList'
 // Teacher Pages
 import TeacherDashboard from './pages/teacher/Dashboard'
 import AttendancePage from './pages/teacher/AttendancePage'
+import TeacherStudentsList from './pages/teacher/students/TeacherStudentsList'
 
 
 
@@ -117,6 +118,7 @@ function App() {
         <Route path="attendance" element={<AttendancePage />} />
         <Route path="attendance/calendar" element={<AttendanceCalendar />} />
 
+        <Route path="students" element={<TeacherStudentsList />} />
         <Route path="lab-availability" element={<LabAvailability />} />
         <Route path="batches" element={<BatchesList />} />
         <Route path="batches/new" element={<BatchForm />} />

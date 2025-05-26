@@ -9,6 +9,7 @@ import {
   ChartBarIcon,
   ArrowLeftOnRectangleIcon,
   ComputerDesktopIcon,
+  UserIcon,
 } from '@heroicons/react/24/outline'
 
 const TeacherLayout = () => {
@@ -30,7 +31,12 @@ const TeacherLayout = () => {
       icon: ClipboardDocumentListIcon,
       current: location.pathname.startsWith('/attendance'),
     },
-
+    {
+      name: 'Students',
+      href: '/students',
+      icon: UserIcon,
+      current: location.pathname === '/students',
+    },
     {
       name: 'Lab Availability',
       href: '/lab-availability',
