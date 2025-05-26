@@ -70,10 +70,7 @@
         const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
         const backgroundColor = '#322536';
 
-        // Load the C-logo image
-        const logoImg = new Image();
-        logoImg.crossOrigin = 'anonymous';
-        logoImg.src = '../logos/C-logo.png';
+        // No need to load external image - we'll draw the "C" directly
 
         function createIcon(size) {
             return new Promise((resolve) => {
@@ -96,13 +93,12 @@
                 // Reset composite operation
                 ctx.globalCompositeOperation = 'source-over';
 
-                // Draw the C-logo in the center
-                if (logoImg.complete) {
-                    const logoSize = size * 0.6; // Logo takes 60% of the icon size
-                    const logoX = (size - logoSize) / 2;
-                    const logoY = (size - logoSize) / 2;
-                    ctx.drawImage(logoImg, logoX, logoY, logoSize, logoSize);
-                }
+                // Draw a large, bold "C" letter instead of the logo image
+                ctx.fillStyle = '#ffffff';
+                ctx.font = `900 ${size * 0.55}px Arial Black, Arial, sans-serif`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('C', size / 2, size / 2 + size * 0.02); // Slight vertical adjustment
 
                 resolve(canvas);
             });
@@ -134,8 +130,8 @@
 
         const container = document.getElementById('icons-container');
 
-        // Wait for logo to load before creating icons
-        logoImg.onload = async () => {
+        // Create icons immediately since we don't need to wait for external image
+        async function initializeIcons() {
             for (const size of sizes) {
                 const iconContainer = document.createElement('div');
                 iconContainer.className = 'icon-container';
@@ -160,7 +156,10 @@
                 iconContainer.appendChild(downloadBtn);
                 container.appendChild(iconContainer);
             }
-        };
+        }
+
+        // Initialize icons when page loads
+        initializeIcons();
 
         // Download all icons function
         document.getElementById('download-all').onclick = async () => {
