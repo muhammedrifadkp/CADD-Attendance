@@ -91,6 +91,38 @@
     min-height: 44px !important;
   }
 
+  /* Fix for inputs with left icons */
+  .form-input.pl-10 {
+    padding-left: 3rem !important;
+    /* Increased from 2.5rem to 3rem for better spacing */
+  }
+
+  /* Fix for inputs with both left and right icons */
+  .form-input.pl-10.pr-10 {
+    padding-left: 3rem !important;
+    padding-right: 3rem !important;
+  }
+
+  /* Ensure proper icon positioning on mobile */
+  .form-group .absolute.inset-y-0.left-0 {
+    padding-left: 0.875rem !important;
+    /* Adjust icon position */
+  }
+
+  .form-group .absolute.inset-y-0.right-0 {
+    padding-right: 0.875rem !important;
+    /* Adjust right icon position */
+  }
+
+  /* Better touch targets for password toggle */
+  .btn-icon-mobile {
+    min-width: 44px !important;
+    min-height: 44px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
   .form-row {
     flex-direction: column !important;
     gap: 0.75rem !important;
