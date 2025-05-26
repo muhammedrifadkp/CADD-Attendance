@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect } from 'react'
-import { authAPI } from '../services/api'
+import { authAPI, getToken, setToken, removeToken } from '../services/api'
 import { toast } from 'react-toastify'
 
 const AuthContext = createContext()
@@ -13,12 +13,12 @@ export const AuthProvider = ({ children }) => {
   // Check if user is logged in
   useEffect(() => {
     const checkLoggedIn = async () => {
-      // Check if the user was previously logged in and has a token
+      // Check if the user was previously logged in and has a valid token
       const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true'
-      const token = localStorage.getItem('authToken')
+      const token = getToken()
 
       if (!isLoggedIn || !token) {
-        console.log('No login state or token found in localStorage')
+        console.log('No login state or valid token found')
         setUser(null)
         setLoading(false)
         return
@@ -31,9 +31,8 @@ export const AuthProvider = ({ children }) => {
         setUser(res.data)
       } catch (error) {
         console.log('User is not logged in or session expired')
-        // Clear any stale login state
-        localStorage.removeItem('isLoggedIn')
-        localStorage.removeItem('authToken')
+        // Clear any stale login state securely
+        removeToken()
         setUser(null)
       } finally {
         setLoading(false)
@@ -84,9 +83,9 @@ export const AuthProvider = ({ children }) => {
       // Store user in state
       setUser(res.data)
 
-      // Store token and login flag in localStorage
+      // Store token and login flag securely
       if (res.data.token) {
-        localStorage.setItem('authToken', res.data.token)
+        setToken(res.data.token)
       }
       localStorage.setItem('isLoggedIn', 'true')
 
@@ -95,9 +94,8 @@ export const AuthProvider = ({ children }) => {
       console.error('Login error:', error)
       console.error('Response data:', error.response?.data)
 
-      // Clear any stale login state
-      localStorage.removeItem('isLoggedIn')
-      localStorage.removeItem('authToken')
+      // Clear any stale login state securely
+      removeToken()
       setUser(null)
 
       throw new Error(
@@ -115,9 +113,8 @@ export const AuthProvider = ({ children }) => {
       // Clear user state
       setUser(null)
 
-      // Remove all auth data
-      localStorage.removeItem('isLoggedIn')
-      localStorage.removeItem('authToken')
+      // Remove all auth data securely
+      removeToken()
 
       console.log('Logout successful')
     } catch (error) {
@@ -125,8 +122,7 @@ export const AuthProvider = ({ children }) => {
 
       // Even if the API call fails, clear the local state
       setUser(null)
-      localStorage.removeItem('isLoggedIn')
-      localStorage.removeItem('authToken')
+      removeToken()
     }
   }
 

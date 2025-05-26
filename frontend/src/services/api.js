@@ -12,10 +12,44 @@ const api = axios.create({
   withCredentials: true,
 })
 
+// Secure token management
+const getToken = () => {
+  try {
+    const token = localStorage.getItem('authToken')
+    // Basic token validation
+    if (token && token.split('.').length === 3) {
+      return token
+    }
+    return null
+  } catch (error) {
+    console.error('Error accessing token:', error)
+    return null
+  }
+}
+
+const setToken = (token) => {
+  try {
+    if (token) {
+      localStorage.setItem('authToken', token)
+    }
+  } catch (error) {
+    console.error('Error storing token:', error)
+  }
+}
+
+const removeToken = () => {
+  try {
+    localStorage.removeItem('authToken')
+    localStorage.removeItem('isLoggedIn')
+  } catch (error) {
+    console.error('Error removing token:', error)
+  }
+}
+
 // Add request interceptor to include token in headers
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('authToken')
+    const token = getToken()
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }
@@ -37,9 +71,8 @@ api.interceptors.response.use(
       // Handle token expiration or invalid token
       if (error.response?.data?.error === 'TokenExpiredError' ||
           error.response?.data?.error === 'NoTokenError') {
-        // Clear all auth data
-        localStorage.removeItem('isLoggedIn')
-        localStorage.removeItem('authToken')
+        // Clear all auth data securely
+        removeToken()
         toast.error('Your session has expired. Please login again.')
       } else {
         toast.error(message)
@@ -57,6 +90,9 @@ api.interceptors.response.use(
     return Promise.reject(error)
   }
 )
+
+// Export token management functions for use in other components
+export { getToken, setToken, removeToken }
 
 // Auth API
 export const authAPI = {

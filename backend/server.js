@@ -27,16 +27,19 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-// CORS configuration
+// Security headers
 app.use((req, res, next) => {
-  // Allow requests from any origin
+  // CORS configuration
   res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
-  // Allow credentials
   res.header('Access-Control-Allow-Credentials', 'true');
-  // Allow specific headers
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-  // Allow specific methods
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+
+  // Security headers
+  res.header('X-Content-Type-Options', 'nosniff');
+  res.header('X-Frame-Options', 'DENY');
+  res.header('X-XSS-Protection', '1; mode=block');
+  res.header('Referrer-Policy', 'strict-origin-when-cross-origin');
 
   // Handle preflight requests
   if (req.method === 'OPTIONS') {
