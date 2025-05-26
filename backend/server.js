@@ -109,6 +109,94 @@ app.get('/api/reset-admin-password', async (req, res) => {
   }
 });
 
+// Debug admin user endpoint
+app.get('/api/debug-admin', async (req, res) => {
+  try {
+    const bcrypt = require('bcryptjs');
+    const User = require('./models/userModel');
+
+    // Find admin user
+    const admin = await User.findOne({ email: 'admin@caddcentre.com' });
+
+    if (!admin) {
+      return res.status(404).json({
+        message: 'Admin user not found'
+      });
+    }
+
+    // Test password comparison
+    const testPassword = 'Admin@123456';
+    const isMatch = await bcrypt.compare(testPassword, admin.password);
+
+    res.json({
+      message: 'Admin user debug info',
+      user: {
+        id: admin._id,
+        name: admin.name,
+        email: admin.email,
+        role: admin.role,
+        active: admin.active,
+        createdAt: admin.createdAt,
+        updatedAt: admin.updatedAt
+      },
+      passwordTest: {
+        testPassword: testPassword,
+        isMatch: isMatch,
+        hashedPassword: admin.password.substring(0, 20) + '...'
+      },
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: 'Error debugging admin user',
+      error: error.message
+    });
+  }
+});
+
+// Test login endpoint
+app.post('/api/test-login', async (req, res) => {
+  try {
+    const bcrypt = require('bcryptjs');
+    const User = require('./models/userModel');
+
+    const { email, password } = req.body;
+
+    // Find user
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(401).json({
+        message: 'User not found',
+        email: email
+      });
+    }
+
+    // Test password
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    res.json({
+      message: 'Login test result',
+      email: email,
+      userFound: true,
+      passwordMatch: isMatch,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        active: user.active
+      },
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: 'Error testing login',
+      error: error.message
+    });
+  }
+});
+
 // CORS test route
 app.post('/api/test-cors', (req, res) => {
   res.json({
