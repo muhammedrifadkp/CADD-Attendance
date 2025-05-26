@@ -115,9 +115,7 @@ const AdminLayout = () => {
                   <div className="hidden w-12 h-12 bg-gradient-to-br from-cadd-red to-cadd-pink rounded-xl flex items-center justify-center shadow-lg">
                     <span className="text-white font-bold text-lg">CC</span>
                   </div>
-                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-cadd-yellow rounded-full flex items-center justify-center">
-                    <span className="text-xs font-bold text-gray-900">A</span>
-                  </div>
+
                 </div>
               </div>
               <div className="text-center">
@@ -204,9 +202,7 @@ const AdminLayout = () => {
                   <div className="hidden w-12 h-12 bg-gradient-to-br from-cadd-red to-cadd-pink rounded-xl flex items-center justify-center shadow-lg">
                     <span className="text-white font-bold text-lg">CC</span>
                   </div>
-                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-cadd-yellow rounded-full flex items-center justify-center">
-                    <span className="text-xs font-bold text-gray-900">A</span>
-                  </div>
+
                 </div>
               </div>
               <div className="text-center">
