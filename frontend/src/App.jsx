@@ -1,5 +1,9 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
+import { useState } from 'react'
 import { useAuth } from './context/AuthContext'
+
+// Components
+import SplashScreen from './components/SplashScreen'
 
 // Layouts
 import AuthLayout from './layouts/AuthLayout'
@@ -49,11 +53,21 @@ import DebugLabFeatures from './components/DebugLabFeatures'
 
 function App() {
   const { user, loading } = useAuth()
+  const [showSplash, setShowSplash] = useState(true)
 
+  // Show splash screen on first load
+  if (showSplash) {
+    return <SplashScreen onComplete={() => setShowSplash(false)} />
+  }
+
+  // Show loading spinner for auth
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600"></div>
+      <div className="flex items-center justify-center min-h-screen bg-gray-900">
+        <div className="relative">
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-200"></div>
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-red-500 border-t-transparent absolute top-0 left-0"></div>
+        </div>
       </div>
     )
   }

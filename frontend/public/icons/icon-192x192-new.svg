@@ -2,6 +2,6 @@
   <!-- Background with rounded corners -->
   <rect width="192" height="192" rx="38" ry="38" fill="#322536"/>
 
-  <!-- Letter C -->
-  <text x="96" y="110" font-family="Arial, sans-serif" font-weight="900" font-size="105" text-anchor="middle" fill="#ff0000">C</text>
+  <!-- Letter C with reduced padding -->
+  <text x="96" y="112" font-family="Arial, sans-serif" font-weight="900" font-size="120" text-anchor="middle" fill="#ff0000">C</text>
 </svg>

@@ -2,13 +2,13 @@
   <defs>
     <style>
       .bg { fill: #322536; }
-      .text { fill: #ff0000; font-family: 'Arial Black', Arial, sans-serif; font-weight: 900; font-size: 280px; text-anchor: middle; dominant-baseline: central; }
+      .text { fill: #ff0000; font-family: 'Arial Black', Arial, sans-serif; font-weight: 900; font-size: 320px; text-anchor: middle; dominant-baseline: central; }
     </style>
   </defs>
 
   <!-- Background with rounded corners (20% radius) -->
   <rect width="512" height="512" rx="102" ry="102" class="bg"/>
 
-  <!-- Letter C with proper positioning -->
-  <text x="256" y="270" class="text">C</text>
+  <!-- Letter C with reduced padding and better positioning -->
+  <text x="256" y="275" class="text">C</text>
 </svg>
