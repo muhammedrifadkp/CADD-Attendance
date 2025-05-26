@@ -197,6 +197,45 @@ app.post('/api/test-login', async (req, res) => {
   }
 });
 
+// Recreate admin user endpoint
+app.get('/api/recreate-admin', async (req, res) => {
+  try {
+    const User = require('./models/userModel');
+
+    // Delete existing admin user
+    await User.deleteOne({ email: 'admin@caddcentre.com' });
+
+    // Create new admin user
+    const adminUser = await User.create({
+      name: 'Admin User',
+      email: 'admin@caddcentre.com',
+      password: 'Admin@123456',
+      role: 'admin'
+    });
+
+    res.json({
+      message: 'Admin user recreated successfully',
+      user: {
+        id: adminUser._id,
+        name: adminUser.name,
+        email: adminUser.email,
+        role: adminUser.role,
+        active: adminUser.active
+      },
+      credentials: {
+        email: 'admin@caddcentre.com',
+        password: 'Admin@123456'
+      },
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: 'Error recreating admin user',
+      error: error.message
+    });
+  }
+});
+
 // CORS test route
 app.post('/api/test-cors', (req, res) => {
   res.json({
