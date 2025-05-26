@@ -12,6 +12,20 @@ const api = axios.create({
   withCredentials: true,
 })
 
+// Add request interceptor to include token in headers
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('authToken')
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
+    return config
+  },
+  (error) => {
+    return Promise.reject(error)
+  }
+)
+
 // Add a response interceptor
 api.interceptors.response.use(
   (response) => response,
@@ -20,10 +34,12 @@ api.interceptors.response.use(
     const message = error.response?.data?.message || 'Something went wrong'
 
     if (error.response?.status === 401) {
-      // Handle token expiration
-      if (error.response?.data?.error === 'TokenExpiredError') {
-        // Clear localStorage and show specific message
+      // Handle token expiration or invalid token
+      if (error.response?.data?.error === 'TokenExpiredError' ||
+          error.response?.data?.error === 'NoTokenError') {
+        // Clear all auth data
         localStorage.removeItem('isLoggedIn')
+        localStorage.removeItem('authToken')
         toast.error('Your session has expired. Please login again.')
       } else {
         toast.error(message)

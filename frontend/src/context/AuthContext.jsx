@@ -13,11 +13,12 @@ export const AuthProvider = ({ children }) => {
   // Check if user is logged in
   useEffect(() => {
     const checkLoggedIn = async () => {
-      // Check if the user was previously logged in
+      // Check if the user was previously logged in and has a token
       const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true'
+      const token = localStorage.getItem('authToken')
 
-      if (!isLoggedIn) {
-        console.log('No login state found in localStorage')
+      if (!isLoggedIn || !token) {
+        console.log('No login state or token found in localStorage')
         setUser(null)
         setLoading(false)
         return
@@ -32,6 +33,7 @@ export const AuthProvider = ({ children }) => {
         console.log('User is not logged in or session expired')
         // Clear any stale login state
         localStorage.removeItem('isLoggedIn')
+        localStorage.removeItem('authToken')
         setUser(null)
       } finally {
         setLoading(false)
@@ -82,8 +84,10 @@ export const AuthProvider = ({ children }) => {
       // Store user in state
       setUser(res.data)
 
-      // Store a flag in localStorage to indicate the user is logged in
-      // This is just a flag, not the actual user data or token
+      // Store token and login flag in localStorage
+      if (res.data.token) {
+        localStorage.setItem('authToken', res.data.token)
+      }
       localStorage.setItem('isLoggedIn', 'true')
 
       return res.data
@@ -93,6 +97,7 @@ export const AuthProvider = ({ children }) => {
 
       // Clear any stale login state
       localStorage.removeItem('isLoggedIn')
+      localStorage.removeItem('authToken')
       setUser(null)
 
       throw new Error(
@@ -110,8 +115,9 @@ export const AuthProvider = ({ children }) => {
       // Clear user state
       setUser(null)
 
-      // Remove the login flag
+      // Remove all auth data
       localStorage.removeItem('isLoggedIn')
+      localStorage.removeItem('authToken')
 
       console.log('Logout successful')
     } catch (error) {
@@ -120,6 +126,7 @@ export const AuthProvider = ({ children }) => {
       // Even if the API call fails, clear the local state
       setUser(null)
       localStorage.removeItem('isLoggedIn')
+      localStorage.removeItem('authToken')
     }
   }
 
