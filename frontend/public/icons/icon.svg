@@ -2,7 +2,7 @@
   <defs>
     <style>
       .bg { fill: #322536; }
-      .text { fill: #ffffff; font-family: 'Arial Black', Arial, sans-serif; font-weight: 900; font-size: 280px; text-anchor: middle; dominant-baseline: central; }
+      .text { fill: #ff0000; font-family: 'Arial Black', Arial, sans-serif; font-weight: 900; font-size: 280px; text-anchor: middle; dominant-baseline: central; }
     </style>
   </defs>
 

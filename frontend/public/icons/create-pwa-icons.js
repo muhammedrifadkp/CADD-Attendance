@@ -9,16 +9,16 @@ function createIcon(size) {
     canvas.width = size;
     canvas.height = size;
     const ctx = canvas.getContext('2d');
-    
+
     // Fill background with the specified color
     ctx.fillStyle = backgroundColor;
     ctx.fillRect(0, 0, size, size);
-    
+
     // Create rounded corners (20% radius)
     ctx.globalCompositeOperation = 'destination-in';
     ctx.beginPath();
     const radius = size * 0.2;
-    
+
     // Manual rounded rectangle since roundRect might not be available
     ctx.moveTo(radius, 0);
     ctx.lineTo(size - radius, 0);
@@ -31,19 +31,19 @@ function createIcon(size) {
     ctx.quadraticCurveTo(0, 0, radius, 0);
     ctx.closePath();
     ctx.fill();
-    
+
     // Reset composite operation
     ctx.globalCompositeOperation = 'source-over';
-    
+
     // Draw the "C" letter
-    ctx.fillStyle = '#ffffff';
+    ctx.fillStyle = '#ff0000';
     ctx.font = `900 ${size * 0.55}px Arial, sans-serif`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    
+
     // Draw the "C" with slight vertical adjustment for better centering
     ctx.fillText('C', size / 2, size / 2 + size * 0.02);
-    
+
     return canvas;
 }
 
