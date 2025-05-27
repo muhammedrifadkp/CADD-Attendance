@@ -52,22 +52,14 @@ async function initializeOfflineServices() {
 
     console.log('✅ Offline services initialized successfully')
 
-    // Enable debug mode in development
+    // Load development utilities only in development mode
     if (import.meta.env.DEV) {
-      try {
-        // Dynamically import debug utilities only in development
-        const { default: offlineDebug } = await import('./utils/offlineDebug.js')
-        const { default: offlineTestData } = await import('./utils/offlineTestData.js')
-        const { default: systemHealth } = await import('./utils/systemHealthCheck.js')
+      console.log('🔍 Development mode detected - loading debug utilities...')
 
-        offlineDebug.enable()
-        console.log('🔍 Offline debug mode enabled for development')
-        console.log('💡 Use window.offlineDebug.help() for debugging commands')
-        console.log('🧪 Use window.offlineTestData.help() for test data commands')
-        console.log('🏥 Use window.systemHealth.help() for system health checks')
-      } catch (error) {
-        console.warn('Debug utilities not available:', error)
-      }
+      // Dynamically import development utilities to avoid production build issues
+      import('./dev-utils.js').catch(error => {
+        console.warn('Development utilities not available:', error)
+      })
     }
 
     // Preload essential data if online
