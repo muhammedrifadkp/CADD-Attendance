@@ -82,11 +82,39 @@ const getBookings = async (req, res) => {
   try {
     const { date, timeSlot, pc, status } = req.query;
 
+    console.log('🔍 getBookings called with query params:', req.query);
+
     let filter = {};
-    if (date) filter.date = new Date(date);
+
+    // Handle date parameter with better validation
+    if (date) {
+      const parsedDate = new Date(date);
+      if (isNaN(parsedDate.getTime())) {
+        console.log('❌ Invalid date format:', date);
+        return res.status(400).json({
+          message: 'Invalid date format. Please use YYYY-MM-DD format.',
+          receivedDate: date
+        });
+      }
+
+      // Set to start of day to match bookings properly
+      parsedDate.setHours(0, 0, 0, 0);
+      const endDate = new Date(parsedDate);
+      endDate.setHours(23, 59, 59, 999);
+
+      filter.date = {
+        $gte: parsedDate,
+        $lte: endDate
+      };
+
+      console.log('📅 Date filter applied:', { from: parsedDate, to: endDate });
+    }
+
     if (timeSlot) filter.timeSlot = timeSlot;
     if (pc) filter.pc = pc;
     if (status) filter.status = status;
+
+    console.log('🔍 Final filter:', filter);
 
     const bookings = await LabBooking.find(filter)
       .populate('pc', 'pcNumber rowNumber')
@@ -96,10 +124,16 @@ const getBookings = async (req, res) => {
       .populate('teacher', 'name email')
       .sort({ date: 1, timeSlot: 1 });
 
+    console.log('📋 Found bookings:', bookings.length);
+
     res.json(bookings);
   } catch (error) {
-    console.error('Error fetching bookings:', error);
-    res.status(500).json({ message: 'Server error fetching bookings' });
+    console.error('❌ Error fetching bookings:', error);
+    console.error('Error stack:', error.stack);
+    res.status(500).json({
+      message: 'Server error fetching bookings',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 };
 

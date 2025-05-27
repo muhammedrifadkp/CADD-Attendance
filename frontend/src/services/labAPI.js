@@ -5,6 +5,8 @@ const apiRequest = async (endpoint, options = {}) => {
   const { method = 'GET', body, ...config } = options
 
   try {
+    console.log(`📡 API Request: ${method} ${endpoint}`, { body, config })
+
     let response
     switch (method.toUpperCase()) {
       case 'POST':
@@ -24,8 +26,16 @@ const apiRequest = async (endpoint, options = {}) => {
       default:
         response = await api.get(endpoint, config)
     }
+
+    console.log(`✅ API Response: ${method} ${endpoint}`, response.data)
     return response.data
   } catch (error) {
+    console.error(`❌ API Error: ${method} ${endpoint}`, {
+      status: error.response?.status,
+      statusText: error.response?.statusText,
+      data: error.response?.data,
+      message: error.message
+    })
     throw error
   }
 }
@@ -71,6 +81,18 @@ export const pcAPI = {
 export const bookingAPI = {
   // Get all bookings
   getBookings: (params = {}) => {
+    // Ensure date is in proper format if provided
+    if (params.date) {
+      const date = new Date(params.date)
+      if (isNaN(date.getTime())) {
+        console.error('❌ Invalid date provided to getBookings:', params.date)
+        throw new Error('Invalid date format')
+      }
+      // Format as YYYY-MM-DD
+      params.date = date.toISOString().split('T')[0]
+    }
+
+    console.log('📡 getBookings called with params:', params)
     const queryString = new URLSearchParams(params).toString()
     return apiRequest(`/lab/bookings${queryString ? `?${queryString}` : ''}`)
   },
