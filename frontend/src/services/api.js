@@ -82,9 +82,13 @@ api.interceptors.response.use(
           const dataType = getDataTypeFromUrl(url)
           if (dataType) {
             // Use setTimeout to avoid blocking the response
-            setTimeout(() => {
-              offlineService.saveDataLocally(dataType, response.data)
-                .catch(error => console.error('Failed to cache response:', error))
+            setTimeout(async () => {
+              try {
+                await offlineService.saveDataLocally(dataType, response.data)
+                console.log(`✅ Cached ${dataType} data for offline use`)
+              } catch (error) {
+                console.error('❌ Failed to cache response:', error)
+              }
             }, 0)
           }
         }

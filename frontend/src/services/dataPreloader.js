@@ -1,5 +1,5 @@
 // Data preloader service to cache essential data for offline use
-import { studentsAPI, batchesAPI, teachersAPI } from './api.js'
+import api from './api.js'
 import { offlineService } from './offlineService.js'
 
 class DataPreloader {
@@ -65,7 +65,7 @@ class DataPreloader {
 
       // Wait for all preloads to complete
       await Promise.allSettled(preloadPromises)
-      
+
       console.log('📦 DataPreloader: Essential data preload completed')
 
     } catch (error) {
@@ -78,12 +78,15 @@ class DataPreloader {
   // Preload students data
   async preloadStudents() {
     try {
-      const response = await studentsAPI.getStudents()
+      // Use direct API call to avoid offline wrapper during preload
+      const response = await api.get('/students')
       const students = response.data || []
-      
+
       if (students.length > 0) {
         await offlineService.saveDataLocally('students', students)
         console.log(`📚 Cached ${students.length} students for offline use`)
+      } else {
+        console.log('📚 No students data to cache')
       }
     } catch (error) {
       console.error('Failed to preload students:', error)
@@ -94,12 +97,15 @@ class DataPreloader {
   // Preload batches data
   async preloadBatches() {
     try {
-      const response = await batchesAPI.getBatches()
+      // Use direct API call to avoid offline wrapper during preload
+      const response = await api.get('/batches')
       const batches = response.data || []
-      
+
       if (batches.length > 0) {
         await offlineService.saveDataLocally('batches', batches)
         console.log(`📚 Cached ${batches.length} batches for offline use`)
+      } else {
+        console.log('📚 No batches data to cache')
       }
     } catch (error) {
       console.error('Failed to preload batches:', error)
@@ -110,12 +116,15 @@ class DataPreloader {
   // Preload teachers data
   async preloadTeachers() {
     try {
-      const response = await teachersAPI.getTeachers()
+      // Use direct API call to avoid offline wrapper during preload
+      const response = await api.get('/users/teachers')
       const teachers = response.data || []
-      
+
       if (teachers.length > 0) {
         await offlineService.saveDataLocally('teachers', teachers)
         console.log(`📚 Cached ${teachers.length} teachers for offline use`)
+      } else {
+        console.log('📚 No teachers data to cache')
       }
     } catch (error) {
       console.error('Failed to preload teachers:', error)
@@ -151,13 +160,13 @@ class DataPreloader {
 
     try {
       console.log('🔄 DataPreloader: Refreshing all cached data...')
-      
+
       // Clear preloaded flags to force refresh
       this.preloadedData.clear()
-      
+
       // Preload fresh data
       await this.preloadEssentialData()
-      
+
       console.log('✅ DataPreloader: All data refreshed')
       return true
     } catch (error) {
@@ -169,7 +178,7 @@ class DataPreloader {
   // Auto-preload when user logs in
   async onUserLogin() {
     console.log('DataPreloader: User logged in, starting auto-preload...')
-    
+
     // Small delay to let the app settle
     setTimeout(() => {
       this.preloadEssentialData()

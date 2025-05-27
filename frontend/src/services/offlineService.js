@@ -20,6 +20,7 @@ class OfflineService {
   async init() {
     try {
       await indexedDBService.init()
+      this.isInitialized = true
       console.log('OfflineService: Initialized successfully')
 
       // Check for pending sync operations on startup
@@ -28,6 +29,8 @@ class OfflineService {
       }
     } catch (error) {
       console.error('OfflineService: Initialization failed:', error)
+      this.isInitialized = false
+      throw error
     }
   }
 
@@ -182,9 +185,21 @@ class OfflineService {
     return operation
   }
 
+  // Ensure service is initialized
+  async ensureInitialized() {
+    if (!this.isInitialized) {
+      console.log('OfflineService: Not initialized, initializing now...')
+      await this.init()
+    }
+  }
+
   // Data management methods
   async saveDataLocally(type, data) {
     try {
+      await this.ensureInitialized()
+
+      console.log(`💾 OfflineService: Saving ${type} data locally...`, Array.isArray(data) ? `${data.length} items` : 'object')
+
       switch (type) {
         case 'students':
           return await indexedDBService.saveStudents(data)
@@ -209,31 +224,46 @@ class OfflineService {
 
   async getDataLocally(type, params = {}) {
     try {
+      await this.ensureInitialized()
+
+      console.log(`📖 OfflineService: Getting ${type} data locally...`)
+
+      let result
       switch (type) {
         case 'students':
-          return await indexedDBService.getStudents()
+          result = await indexedDBService.getStudents()
+          break
         case 'batches':
-          return await indexedDBService.getBatches()
+          result = await indexedDBService.getBatches()
+          break
         case 'teachers':
-          return await indexedDBService.getTeachers()
+          result = await indexedDBService.getTeachers()
+          break
         case 'attendance':
           if (params.date) {
-            return await indexedDBService.getAttendanceByDate(params.date)
+            result = await indexedDBService.getAttendanceByDate(params.date)
+          } else if (params.studentId) {
+            result = await indexedDBService.getAttendanceByStudent(params.studentId)
+          } else {
+            result = []
           }
-          if (params.studentId) {
-            return await indexedDBService.getAttendanceByStudent(params.studentId)
-          }
-          return []
+          break
         case 'labBookings':
           if (params.date) {
-            return await indexedDBService.getLabBookingsByDate(params.date)
+            result = await indexedDBService.getLabBookingsByDate(params.date)
+          } else {
+            result = []
           }
-          return []
+          break
         case 'pcs':
-          return await indexedDBService.getPCs()
+          result = await indexedDBService.getPCs()
+          break
         default:
           throw new Error(`Unknown data type: ${type}`)
       }
+
+      console.log(`📖 OfflineService: Retrieved ${type}:`, Array.isArray(result) ? `${result.length} items` : 'object')
+      return result || []
     } catch (error) {
       console.error('OfflineService: Failed to get data locally:', error)
       return []
