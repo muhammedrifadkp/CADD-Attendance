@@ -41,7 +41,7 @@ const getPCs = async (req, res) => {
 
     const pcs = await PC.find(filter)
       .populate('createdBy', 'name email')
-      .sort({ rowNumber: 1, pcNumber: 1 });
+      .sort({ createdAt: 1 }); // Sort by creation date (oldest first)
 
     res.json(pcs);
   } catch (error) {
@@ -133,7 +133,7 @@ const getPCsByRow = async (req, res) => {
   try {
     const pcs = await PC.find({ status: { $ne: 'inactive' } })
       .populate('createdBy', 'name email')
-      .sort({ rowNumber: 1, pcNumber: 1 });
+      .sort({ createdAt: 1 }); // Sort by creation date (oldest first)
 
     // Group PCs by row
     const pcsByRow = pcs.reduce((acc, pc) => {
