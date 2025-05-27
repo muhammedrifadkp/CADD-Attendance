@@ -1,8 +1,6 @@
 import { createContext, useState, useContext, useEffect } from 'react'
 import { authAPI, getToken, setToken, removeToken } from '../services/api'
 import { toast } from 'react-toastify'
-import { offlineService } from '../services/offlineService'
-import { dataPreloader } from '../services/dataPreloader'
 
 const AuthContext = createContext()
 
@@ -28,63 +26,13 @@ export const AuthProvider = ({ children }) => {
 
       try {
         console.log('Checking if user is logged in...')
-
-        // If offline, try to get user data from local storage
-        if (!navigator.onLine) {
-          console.log('Offline: Checking cached user profile...')
-          const cachedUser = localStorage.getItem('cachedUserProfile')
-          if (cachedUser) {
-            try {
-              const userData = JSON.parse(cachedUser)
-              console.log('Using cached user profile:', userData)
-              setUser(userData)
-              setLoading(false)
-              return
-            } catch (parseError) {
-              console.error('Failed to parse cached user profile:', parseError)
-            }
-          }
-
-          // If no cached user data and offline, assume logged out
-          console.log('No cached user profile available offline')
-          removeToken()
-          setUser(null)
-          setLoading(false)
-          return
-        }
-
-        // Online: fetch from server
         const res = await authAPI.getProfile()
         console.log('User is logged in:', res.data)
-
-        // Cache user profile for offline use
-        localStorage.setItem('cachedUserProfile', JSON.stringify(res.data))
         setUser(res.data)
-
-        // Trigger data preload for offline use
-        dataPreloader.onUserLogin()
       } catch (error) {
         console.log('User is not logged in or session expired')
-
-        // If offline and we have cached data, use it
-        if (!navigator.onLine) {
-          const cachedUser = localStorage.getItem('cachedUserProfile')
-          if (cachedUser) {
-            try {
-              const userData = JSON.parse(cachedUser)
-              console.log('Using cached user profile due to network error:', userData)
-              setUser(userData)
-              setLoading(false)
-              return
-            } catch (parseError) {
-              console.error('Failed to parse cached user profile:', parseError)
-            }
-          }
-        }
-
         // Clear any stale login state securely
         removeToken()
-        localStorage.removeItem('cachedUserProfile')
         setUser(null)
       } finally {
         setLoading(false)
@@ -141,12 +89,6 @@ export const AuthProvider = ({ children }) => {
       }
       localStorage.setItem('isLoggedIn', 'true')
 
-      // Cache user profile for offline use
-      localStorage.setItem('cachedUserProfile', JSON.stringify(res.data))
-
-      // Trigger data preload for offline use
-      dataPreloader.onUserLogin()
-
       return res.data
     } catch (error) {
       console.error('Login error:', error)
@@ -166,27 +108,13 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       console.log('Logging out...')
-
-      // Only try to call logout API if online
-      if (navigator.onLine) {
-        await authAPI.logout()
-      } else {
-        console.log('Offline: Skipping logout API call')
-      }
+      await authAPI.logout()
 
       // Clear user state
       setUser(null)
 
       // Remove all auth data securely
       removeToken()
-      localStorage.removeItem('cachedUserProfile')
-
-      // Clear offline data if needed
-      try {
-        await offlineService.clearAllData()
-      } catch (error) {
-        console.error('Failed to clear offline data:', error)
-      }
 
       console.log('Logout successful')
     } catch (error) {
@@ -195,7 +123,6 @@ export const AuthProvider = ({ children }) => {
       // Even if the API call fails, clear the local state
       setUser(null)
       removeToken()
-      localStorage.removeItem('cachedUserProfile')
     }
   }
 

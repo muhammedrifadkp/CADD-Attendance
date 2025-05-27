@@ -15,11 +15,13 @@ export default defineConfig({
   },
   build: {
     rollupOptions: {
+      input: {
+        main: './index.html',
+        sw: './public/sw.js'
+      },
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom'],
-          router: ['react-router-dom'],
-          ui: ['@headlessui/react', '@heroicons/react']
+        entryFileNames: (chunkInfo) => {
+          return chunkInfo.name === 'sw' ? 'sw.js' : '[name]-[hash].js'
         }
       }
     }
