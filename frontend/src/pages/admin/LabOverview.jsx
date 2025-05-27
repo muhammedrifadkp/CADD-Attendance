@@ -29,10 +29,13 @@ const LabOverview = () => {
     loading: true,
   })
   const [recentActivity, setRecentActivity] = useState([])
+  const [pcsByRow, setPcsByRow] = useState({})
+  const [loadingPCs, setLoadingPCs] = useState(true)
 
   useEffect(() => {
     fetchStats()
     fetchRecentActivity()
+    fetchPCsByRow()
   }, [])
 
   const fetchStats = async () => {
@@ -113,10 +116,25 @@ const LabOverview = () => {
         await pcAPI.clearAllPCs()
         toast.success('All PCs cleared successfully')
         fetchStats() // Refresh stats
+        fetchPCsByRow() // Refresh PC display
       } catch (error) {
         console.error('Error clearing PCs:', error)
         toast.error('Failed to clear PCs')
       }
+    }
+  }
+
+  const fetchPCsByRow = async () => {
+    try {
+      setLoadingPCs(true)
+      const response = await pcAPI.getPCsByRow()
+      const pcsData = response?.data || response || {}
+      setPcsByRow(pcsData)
+    } catch (error) {
+      console.error('Error fetching PCs by row:', error)
+      setPcsByRow({})
+    } finally {
+      setLoadingPCs(false)
     }
   }
 
@@ -334,6 +352,87 @@ const LabOverview = () => {
             </Link>
           ))}
         </div>
+
+        {/* PC Layout Display */}
+        {stats.totalPCs > 0 && (
+          <div className="mt-8">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h3 className="text-lg font-bold text-gray-900">Lab Layout</h3>
+                <p className="text-sm text-gray-600">Current PC arrangement by rows</p>
+              </div>
+              <Link
+                to="/admin/lab/management"
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-semibold rounded-xl text-white bg-gradient-to-r from-cadd-red to-cadd-pink hover:from-cadd-pink hover:to-cadd-red transition-all duration-300"
+              >
+                <ComputerDesktopIcon className="h-4 w-4 mr-2" />
+                Manage Lab
+              </Link>
+            </div>
+
+            {loadingPCs ? (
+              <div className="flex items-center justify-center py-12">
+                <div className="relative">
+                  <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-200"></div>
+                  <div className="animate-spin rounded-full h-12 w-12 border-4 border-cadd-red border-t-transparent absolute top-0 left-0"></div>
+                </div>
+              </div>
+            ) : Object.keys(pcsByRow).length === 0 ? (
+              <div className="text-center py-8">
+                <ComputerDesktopIcon className="mx-auto h-12 w-12 text-gray-400" />
+                <h3 className="mt-2 text-sm font-medium text-gray-900">No PCs found</h3>
+                <p className="mt-1 text-sm text-gray-500">
+                  No computers are available in the lab.
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {Object.entries(pcsByRow).sort(([a], [b]) => parseInt(a) - parseInt(b)).map(([rowNumber, rowPCs]) => (
+                  <div key={rowNumber} className="bg-gray-50 rounded-2xl p-6">
+                    <div className="flex items-center space-x-3 mb-4">
+                      <div className="w-8 h-8 bg-gradient-to-br from-cadd-red to-cadd-pink rounded-lg flex items-center justify-center">
+                        <span className="text-white font-bold text-sm">{rowNumber}</span>
+                      </div>
+                      <h4 className="text-lg font-semibold text-gray-900">Row {rowNumber}</h4>
+                      <div className="flex-1 h-px bg-gray-200"></div>
+                      <span className="text-sm text-gray-500">
+                        {rowPCs.length} PCs
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-3">
+                      {rowPCs.map((pc) => (
+                        <div
+                          key={pc._id}
+                          className={`
+                            relative p-3 rounded-lg text-center text-sm font-medium transition-all duration-200
+                            ${pc.status === 'active'
+                              ? 'bg-green-100 border-2 border-green-300 text-green-800'
+                              : pc.status === 'maintenance'
+                                ? 'bg-yellow-100 border-2 border-yellow-300 text-yellow-800'
+                                : 'bg-gray-100 border-2 border-gray-300 text-gray-800'
+                            }
+                          `}
+                          title={`${pc.pcNumber} - ${pc.status}`}
+                        >
+                          <div className="font-bold">{pc.pcNumber}</div>
+                          <div className="text-xs mt-1 opacity-75 capitalize">
+                            {pc.status}
+                          </div>
+
+                          {/* Status indicator */}
+                          <div className={`absolute -top-1 -right-1 w-3 h-3 rounded-full ${pc.status === 'active' ? 'bg-green-400' :
+                              pc.status === 'maintenance' ? 'bg-yellow-400' : 'bg-gray-400'
+                            }`}></div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Empty State for No PCs */}
         {stats.totalPCs === 0 && (
