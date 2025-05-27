@@ -13,6 +13,7 @@ import { indexedDBService } from './services/indexedDB.js'
 import { dataPreloader } from './services/dataPreloader.js'
 import offlineDebug from './utils/offlineDebug.js'
 import offlineTestData from './utils/offlineTestData.js'
+import systemHealth from './utils/systemHealthCheck.js'
 
 // Register service worker for offline functionality
 if ('serviceWorker' in navigator) {
@@ -59,6 +60,7 @@ async function initializeOfflineServices() {
       console.log('🔍 Offline debug mode enabled for development')
       console.log('💡 Use window.offlineDebug.help() for debugging commands')
       console.log('🧪 Use window.offlineTestData.help() for test data commands')
+      console.log('🏥 Use window.systemHealth.help() for system health checks')
     }
 
     // Preload essential data if online

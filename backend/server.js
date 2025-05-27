@@ -11,6 +11,7 @@ const batchRoutes = require('./routes/batchRoutes');
 const studentRoutes = require('./routes/studentRoutes');
 const attendanceRoutes = require('./routes/attendanceRoutes');
 const labRoutes = require('./routes/labRoutes');
+const healthRoutes = require('./routes/healthRoutes');
 
 // Load environment variables
 dotenv.config();
@@ -251,6 +252,7 @@ app.post('/api/test-cors', (req, res) => {
 });
 
 // Routes
+app.use('/api', healthRoutes); // Health check routes
 app.use('/api/users', userRoutes);
 app.use('/api/batches', batchRoutes);
 app.use('/api/students', studentRoutes);
@@ -260,7 +262,7 @@ app.use('/api/lab', labRoutes);
 // Error handler
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
 // Global error handlers
 process.on('uncaughtException', (err) => {

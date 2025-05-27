@@ -33,7 +33,8 @@ router.route('/admins')
 
 // Teacher management routes
 router.route('/teachers')
-  .get(protect, admin, getTeachers);
+  .post(protect, admin, createTeacher)
+  .get(protect, getTeachers); // Allow both admin and teachers to get teachers list
 
 router.route('/teachers/:id')
   .get(protect, admin, getTeacherById)

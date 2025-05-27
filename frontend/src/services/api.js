@@ -100,7 +100,7 @@ api.interceptors.response.use(
   },
   async (error) => {
     // Handle errors globally
-    const message = error.response?.data?.message || 'Something went wrong'
+    const message = error.response?.data?.message || error.message || 'Something went wrong'
 
     // Check if this is a network error (no response) or offline
     const isNetworkError = !error.response
