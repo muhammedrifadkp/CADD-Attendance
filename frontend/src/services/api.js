@@ -73,15 +73,19 @@ api.interceptors.response.use(
           '/batches',
           '/users/teachers',
           '/users/profile',
-          '/lab/pcs'
+          '/lab/pcs',
+          '/lab/bookings'
         ].some(pattern => url.includes(pattern))
 
         if (isCacheable) {
           // Save data locally for offline access
           const dataType = getDataTypeFromUrl(url)
           if (dataType) {
-            offlineService.saveDataLocally(dataType, response.data)
-              .catch(error => console.error('Failed to cache response:', error))
+            // Use setTimeout to avoid blocking the response
+            setTimeout(() => {
+              offlineService.saveDataLocally(dataType, response.data)
+                .catch(error => console.error('Failed to cache response:', error))
+            }, 0)
           }
         }
       } catch (error) {
@@ -94,18 +98,24 @@ api.interceptors.response.use(
     // Handle errors globally
     const message = error.response?.data?.message || 'Something went wrong'
 
-    // Check if this is a network error and we're offline
-    if (!error.response && offlineService.isOffline()) {
-      // Try to get data from local storage
+    // Check if this is a network error (no response) or offline
+    const isNetworkError = !error.response
+    const isOffline = !navigator.onLine
+
+    if (isNetworkError || isOffline) {
+      // Try to get data from local storage for GET requests
       const url = error.config?.url
-      if (url && error.config?.method === 'get') {
+      if (url && error.config?.method?.toLowerCase() === 'get') {
         try {
           const dataType = getDataTypeFromUrl(url)
           if (dataType) {
+            console.log('Attempting to serve from offline cache:', dataType)
             const localData = await offlineService.getDataLocally(dataType)
-            if (localData && localData.length > 0) {
-              console.log('Serving data from offline cache:', dataType)
-              return { data: localData, fromCache: true }
+            if (localData && (Array.isArray(localData) ? localData.length > 0 : Object.keys(localData).length > 0)) {
+              console.log('✅ Serving data from offline cache:', dataType, localData.length || 'object')
+              return { data: localData, fromCache: true, offline: true }
+            } else {
+              console.log('❌ No cached data available for:', dataType)
             }
           }
         } catch (cacheError) {
@@ -113,7 +123,28 @@ api.interceptors.response.use(
         }
       }
 
-      toast.warning('You are offline. Some data may not be available.')
+      // For non-GET requests when offline, queue them
+      if (isOffline && error.config?.method?.toLowerCase() !== 'get') {
+        try {
+          const operationType = getOperationTypeFromUrl(url)
+          if (operationType) {
+            await offlineService.queueOperation(
+              operationType,
+              error.config.method.toUpperCase(),
+              error.config.data ? JSON.parse(error.config.data) : {},
+              url
+            )
+            toast.info('Operation saved for sync when online')
+            return { data: {}, queued: true, offline: true }
+          }
+        } catch (queueError) {
+          console.error('Error queuing operation:', queueError)
+        }
+      }
+
+      if (isOffline) {
+        toast.warning('You are offline. Some data may not be available.')
+      }
       return Promise.reject(error)
     }
 
@@ -149,6 +180,15 @@ function getDataTypeFromUrl(url) {
   if (url.includes('/lab/pcs')) return 'pcs'
   if (url.includes('/attendance')) return 'attendance'
   if (url.includes('/lab/bookings')) return 'labBookings'
+  return null
+}
+
+// Helper function to determine operation type from URL
+function getOperationTypeFromUrl(url) {
+  if (url.includes('/attendance')) return 'attendance'
+  if (url.includes('/lab/bookings')) return 'labBooking'
+  if (url.includes('/students')) return 'student'
+  if (url.includes('/batches')) return 'batch'
   return null
 }
 
@@ -202,25 +242,69 @@ export const teachersAPI = {
   resetPassword: (id) => api.put(`/users/teachers/${id}/reset-password`),
 }
 
-// Batches API
+// Batches API with offline support
 export const batchesAPI = {
-  getBatches: () => api.get('/batches'),
+  getBatches: async () => {
+    try {
+      return await api.get('/batches')
+    } catch (error) {
+      if (!navigator.onLine) {
+        console.log('Offline: Getting batches from local storage')
+        const localBatches = await offlineService.getDataLocally('batches')
+        return { data: localBatches, fromCache: true }
+      }
+      throw error
+    }
+  },
   getBatch: (id) => api.get(`/batches/${id}`),
   createBatch: (batch) => api.post('/batches', batch),
   updateBatch: (id, batch) => api.put(`/batches/${id}`, batch),
   deleteBatch: (id) => api.delete(`/batches/${id}`),
-  getBatchStudents: (id) => api.get(`/batches/${id}/students`),
+  getBatchStudents: async (id) => {
+    try {
+      return await api.get(`/batches/${id}/students`)
+    } catch (error) {
+      if (!navigator.onLine) {
+        const localStudents = await offlineService.getDataLocally('students')
+        const batchStudents = localStudents.filter(student => student.batch === id)
+        return { data: batchStudents, fromCache: true }
+      }
+      throw error
+    }
+  },
 }
 
-// Students API
+// Students API with offline support
 export const studentsAPI = {
-  getStudents: (params) => api.get('/students', { params }),
+  getStudents: async (params) => {
+    try {
+      return await api.get('/students', { params })
+    } catch (error) {
+      if (!navigator.onLine) {
+        console.log('Offline: Getting students from local storage')
+        const localStudents = await offlineService.getDataLocally('students')
+        return { data: localStudents, fromCache: true }
+      }
+      throw error
+    }
+  },
   getStudent: (id) => api.get(`/students/${id}`),
   createStudent: (student) => api.post('/students', student),
   updateStudent: (id, student) => api.put(`/students/${id}`, student),
   deleteStudent: (id) => api.delete(`/students/${id}`),
   bulkCreateStudents: (data) => api.post('/students/bulk', data),
-  getStudentsByBatch: (batchId) => api.get(`/batches/${batchId}/students`),
+  getStudentsByBatch: async (batchId) => {
+    try {
+      return await api.get(`/batches/${batchId}/students`)
+    } catch (error) {
+      if (!navigator.onLine) {
+        const localStudents = await offlineService.getDataLocally('students')
+        const batchStudents = localStudents.filter(student => student.batch === batchId)
+        return { data: batchStudents, fromCache: true }
+      }
+      throw error
+    }
+  },
 }
 
 // Attendance API with offline support

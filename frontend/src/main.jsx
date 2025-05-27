@@ -7,6 +7,11 @@ import { AuthProvider } from './context/AuthContext'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
+// Initialize offline services
+import { offlineService } from './services/offlineService.js'
+import { indexedDBService } from './services/indexedDB.js'
+import offlineDebug from './utils/offlineDebug.js'
+
 // Register service worker for offline functionality
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
@@ -33,6 +38,28 @@ if ('serviceWorker' in navigator) {
       })
   })
 }
+
+// Initialize offline services
+async function initializeOfflineServices() {
+  try {
+    console.log('Initializing offline services...')
+    await indexedDBService.init()
+    await offlineService.init()
+    console.log('✅ Offline services initialized successfully')
+
+    // Enable debug mode in development
+    if (import.meta.env.DEV) {
+      offlineDebug.enable()
+      console.log('🔍 Offline debug mode enabled for development')
+      console.log('💡 Use window.offlineDebug.help() for debugging commands')
+    }
+  } catch (error) {
+    console.error('❌ Failed to initialize offline services:', error)
+  }
+}
+
+// Initialize offline services when the app starts
+initializeOfflineServices()
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

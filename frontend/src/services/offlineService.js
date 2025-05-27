@@ -141,8 +141,13 @@ class OfflineService {
 
   async processSyncOperation(operation) {
     // Import syncService dynamically to avoid circular dependency
-    const { syncService } = await import('./syncService.js')
-    return await syncService.processOperation(operation)
+    try {
+      const { syncService } = await import('./syncService.js')
+      return await syncService.processOperation(operation)
+    } catch (error) {
+      console.error('OfflineService: Failed to process sync operation:', error)
+      throw error
+    }
   }
 
   // Schedule periodic sync checks
