@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { toast } from 'react-toastify'
+import { offlineService } from './offlineService.js'
 
 // Create axios instance
 const api = axios.create({
@@ -62,10 +63,59 @@ api.interceptors.request.use(
 
 // Add a response interceptor
 api.interceptors.response.use(
-  (response) => response,
-  (error) => {
+  (response) => {
+    // Cache successful responses for offline use
+    if (response.config.method === 'get' && response.status === 200) {
+      try {
+        const url = response.config.url
+        const isCacheable = [
+          '/students',
+          '/batches',
+          '/users/teachers',
+          '/users/profile',
+          '/lab/pcs'
+        ].some(pattern => url.includes(pattern))
+
+        if (isCacheable) {
+          // Save data locally for offline access
+          const dataType = getDataTypeFromUrl(url)
+          if (dataType) {
+            offlineService.saveDataLocally(dataType, response.data)
+              .catch(error => console.error('Failed to cache response:', error))
+          }
+        }
+      } catch (error) {
+        console.error('Error caching response:', error)
+      }
+    }
+    return response
+  },
+  async (error) => {
     // Handle errors globally
     const message = error.response?.data?.message || 'Something went wrong'
+
+    // Check if this is a network error and we're offline
+    if (!error.response && offlineService.isOffline()) {
+      // Try to get data from local storage
+      const url = error.config?.url
+      if (url && error.config?.method === 'get') {
+        try {
+          const dataType = getDataTypeFromUrl(url)
+          if (dataType) {
+            const localData = await offlineService.getDataLocally(dataType)
+            if (localData && localData.length > 0) {
+              console.log('Serving data from offline cache:', dataType)
+              return { data: localData, fromCache: true }
+            }
+          }
+        } catch (cacheError) {
+          console.error('Error retrieving cached data:', cacheError)
+        }
+      }
+
+      toast.warning('You are offline. Some data may not be available.')
+      return Promise.reject(error)
+    }
 
     if (error.response?.status === 401) {
       // Handle token expiration or invalid token
@@ -90,6 +140,41 @@ api.interceptors.response.use(
     return Promise.reject(error)
   }
 )
+
+// Helper function to determine data type from URL
+function getDataTypeFromUrl(url) {
+  if (url.includes('/students')) return 'students'
+  if (url.includes('/batches')) return 'batches'
+  if (url.includes('/users/teachers')) return 'teachers'
+  if (url.includes('/lab/pcs')) return 'pcs'
+  if (url.includes('/attendance')) return 'attendance'
+  if (url.includes('/lab/bookings')) return 'labBookings'
+  return null
+}
+
+// Offline-aware API wrapper
+async function offlineAwareRequest(requestFn, fallbackData = null, operationType = null) {
+  try {
+    const response = await requestFn()
+    return response
+  } catch (error) {
+    if (offlineService.isOffline() && operationType) {
+      // Queue the operation for later sync
+      const config = error.config || {}
+      await offlineService.queueOperation(
+        operationType,
+        config.method?.toUpperCase() || 'GET',
+        config.data,
+        config.url
+      )
+
+      if (fallbackData) {
+        return { data: fallbackData, offline: true }
+      }
+    }
+    throw error
+  }
+}
 
 // Export token management functions for use in other components
 export { getToken, setToken, removeToken }
@@ -138,14 +223,46 @@ export const studentsAPI = {
   getStudentsByBatch: (batchId) => api.get(`/batches/${batchId}/students`),
 }
 
-// Attendance API
+// Attendance API with offline support
 export const attendanceAPI = {
-  markAttendance: (attendance) => api.post('/attendance', attendance),
-  markBulkAttendance: (data) => api.post('/attendance/bulk', data),
-  getBatchAttendance: (batchId, date) =>
-    api.get(`/attendance/batch/${batchId}`, { params: { date } }),
-  getStudentAttendance: (studentId, params) =>
-    api.get(`/attendance/student/${studentId}`, { params }),
+  markAttendance: async (attendance) => {
+    return offlineAwareRequest(
+      () => api.post('/attendance', attendance),
+      null,
+      'attendance'
+    )
+  },
+  markBulkAttendance: async (data) => {
+    return offlineAwareRequest(
+      () => api.post('/attendance/bulk', data),
+      null,
+      'attendance'
+    )
+  },
+  getBatchAttendance: async (batchId, date) => {
+    try {
+      return await api.get(`/attendance/batch/${batchId}`, { params: { date } })
+    } catch (error) {
+      if (offlineService.isOffline()) {
+        // Get attendance from local storage
+        const localAttendance = await offlineService.getDataLocally('attendance', { date })
+        const batchAttendance = localAttendance.filter(att => att.batch === batchId)
+        return { data: batchAttendance, fromCache: true }
+      }
+      throw error
+    }
+  },
+  getStudentAttendance: async (studentId, params) => {
+    try {
+      return await api.get(`/attendance/student/${studentId}`, { params })
+    } catch (error) {
+      if (offlineService.isOffline()) {
+        const localAttendance = await offlineService.getDataLocally('attendance', { studentId })
+        return { data: localAttendance, fromCache: true }
+      }
+      throw error
+    }
+  },
   getBatchAttendanceStats: (batchId, params) =>
     api.get(`/attendance/stats/batch/${batchId}`, { params }),
   // Admin analytics endpoints

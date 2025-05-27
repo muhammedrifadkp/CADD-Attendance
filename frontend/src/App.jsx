@@ -4,6 +4,7 @@ import { useAuth } from './context/AuthContext'
 
 // Components
 import SplashScreen from './components/SplashScreen'
+import OfflineIndicator from './components/OfflineIndicator'
 
 // Layouts
 import AuthLayout from './layouts/AuthLayout'
@@ -85,96 +86,101 @@ function App() {
   }
 
   return (
-    <Routes>
-      {/* Public Routes */}
-      <Route element={<AuthLayout />}>
-        <Route path="/login" element={!user ? <Login /> : <Navigate to="/" replace />} />
-      </Route>
+    <>
+      <Routes>
+        {/* Public Routes */}
+        <Route element={<AuthLayout />}>
+          <Route path="/login" element={!user ? <Login /> : <Navigate to="/" replace />} />
+        </Route>
 
-      {/* Admin Routes */}
-      <Route
-        path="/admin"
-        element={
-          user && user.role === 'admin' ? (
-            <AdminLayout />
-          ) : (
-            <Navigate to="/login" replace />
-          )
-        }
-      >
-        <Route index element={<AdminDashboard />} />
-        <Route path="admins" element={<AdminsList />} />
-        <Route path="admins/new" element={<CreateAdmin />} />
-        <Route path="teachers" element={<TeachersList />} />
-        <Route path="teachers/new" element={<TeacherForm />} />
-        <Route path="teachers/:id" element={<TeacherDetails />} />
-        <Route path="teachers/:id/edit" element={<TeacherForm />} />
-        <Route path="students" element={<StudentsList />} />
-        <Route path="attendance" element={<AttendanceDashboard />} />
-        <Route path="attendance/calendar" element={<AttendanceCalendar />} />
-        <Route path="attendance/report" element={<AdminAttendanceReport />} />
-        <Route path="batches" element={<BatchesList />} />
-        <Route path="batches/new" element={<BatchForm />} />
-        <Route path="batches/:id/edit" element={<BatchForm />} />
-        <Route path="batches/:id" element={<BatchDetails />} />
-        <Route path="batches/:id/students" element={<BatchStudents />} />
-        <Route path="batches/:id/students/new" element={<StudentForm />} />
-        <Route path="batches/:id/students/:studentId/edit" element={<StudentForm />} />
-        <Route path="batches/:id/attendance" element={<AttendanceForm />} />
-        <Route path="batches/:id/attendance/report" element={<AttendanceReport />} />
-        <Route path="lab" element={<LabOverview />} />
-        <Route path="lab/management" element={<LabManagement />} />
-        <Route path="lab/control" element={<AdminLabControl />} />
-        <Route path="lab/maintenance" element={<AdminMaintenancePage />} />
-        <Route path="lab/pcs" element={<AdminPCList />} />
-        <Route path="lab/pcs/new" element={<AdminPCForm />} />
-        <Route path="lab/pcs/:id/edit" element={<AdminPCForm />} />
-        <Route path="lab/book" element={<AdminBookLab />} />
-        <Route path="debug-lab" element={<DebugLabFeatures />} />
-      </Route>
-
-
-
-      {/* Teacher Routes */}
-      <Route
-        path="/"
-        element={
-          user ? <TeacherLayout /> : <Navigate to="/login" replace />
-        }
-      >
-        <Route index element={<TeacherDashboard />} />
-        <Route path="attendance" element={<AttendancePage />} />
-        <Route path="attendance/calendar" element={<AttendanceCalendar />} />
-
-        <Route path="students" element={<TeacherStudentsList />} />
-        <Route path="lab-availability" element={<LabAvailability />} />
-        <Route path="batches" element={<BatchesList />} />
-        <Route path="batches/new" element={<BatchForm />} />
-        <Route path="batches/:id/edit" element={<BatchForm />} />
-        <Route path="batches/:id" element={<BatchDetails />} />
-        <Route path="batches/:id/students" element={<BatchStudents />} />
-        <Route path="batches/:id/students/new" element={<StudentForm />} />
-        <Route path="batches/:id/students/:studentId/edit" element={<StudentForm />} />
-        <Route path="batches/:id/attendance" element={<AttendanceForm />} />
-        <Route path="batches/:id/attendance/report" element={<AttendanceReport />} />
-      </Route>
-
-      {/* Catch all - redirect to appropriate dashboard */}
-      <Route
-        path="*"
-        element={
-          user ? (
-            user.role === 'admin' ? (
-              <Navigate to="/admin" replace />
+        {/* Admin Routes */}
+        <Route
+          path="/admin"
+          element={
+            user && user.role === 'admin' ? (
+              <AdminLayout />
             ) : (
-              <Navigate to="/" replace />
+              <Navigate to="/login" replace />
             )
-          ) : (
-            <Navigate to="/login" replace />
-          )
-        }
-      />
-    </Routes>
+          }
+        >
+          <Route index element={<AdminDashboard />} />
+          <Route path="admins" element={<AdminsList />} />
+          <Route path="admins/new" element={<CreateAdmin />} />
+          <Route path="teachers" element={<TeachersList />} />
+          <Route path="teachers/new" element={<TeacherForm />} />
+          <Route path="teachers/:id" element={<TeacherDetails />} />
+          <Route path="teachers/:id/edit" element={<TeacherForm />} />
+          <Route path="students" element={<StudentsList />} />
+          <Route path="attendance" element={<AttendanceDashboard />} />
+          <Route path="attendance/calendar" element={<AttendanceCalendar />} />
+          <Route path="attendance/report" element={<AdminAttendanceReport />} />
+          <Route path="batches" element={<BatchesList />} />
+          <Route path="batches/new" element={<BatchForm />} />
+          <Route path="batches/:id/edit" element={<BatchForm />} />
+          <Route path="batches/:id" element={<BatchDetails />} />
+          <Route path="batches/:id/students" element={<BatchStudents />} />
+          <Route path="batches/:id/students/new" element={<StudentForm />} />
+          <Route path="batches/:id/students/:studentId/edit" element={<StudentForm />} />
+          <Route path="batches/:id/attendance" element={<AttendanceForm />} />
+          <Route path="batches/:id/attendance/report" element={<AttendanceReport />} />
+          <Route path="lab" element={<LabOverview />} />
+          <Route path="lab/management" element={<LabManagement />} />
+          <Route path="lab/control" element={<AdminLabControl />} />
+          <Route path="lab/maintenance" element={<AdminMaintenancePage />} />
+          <Route path="lab/pcs" element={<AdminPCList />} />
+          <Route path="lab/pcs/new" element={<AdminPCForm />} />
+          <Route path="lab/pcs/:id/edit" element={<AdminPCForm />} />
+          <Route path="lab/book" element={<AdminBookLab />} />
+          <Route path="debug-lab" element={<DebugLabFeatures />} />
+        </Route>
+
+
+
+        {/* Teacher Routes */}
+        <Route
+          path="/"
+          element={
+            user ? <TeacherLayout /> : <Navigate to="/login" replace />
+          }
+        >
+          <Route index element={<TeacherDashboard />} />
+          <Route path="attendance" element={<AttendancePage />} />
+          <Route path="attendance/calendar" element={<AttendanceCalendar />} />
+
+          <Route path="students" element={<TeacherStudentsList />} />
+          <Route path="lab-availability" element={<LabAvailability />} />
+          <Route path="batches" element={<BatchesList />} />
+          <Route path="batches/new" element={<BatchForm />} />
+          <Route path="batches/:id/edit" element={<BatchForm />} />
+          <Route path="batches/:id" element={<BatchDetails />} />
+          <Route path="batches/:id/students" element={<BatchStudents />} />
+          <Route path="batches/:id/students/new" element={<StudentForm />} />
+          <Route path="batches/:id/students/:studentId/edit" element={<StudentForm />} />
+          <Route path="batches/:id/attendance" element={<AttendanceForm />} />
+          <Route path="batches/:id/attendance/report" element={<AttendanceReport />} />
+        </Route>
+
+        {/* Catch all - redirect to appropriate dashboard */}
+        <Route
+          path="*"
+          element={
+            user ? (
+              user.role === 'admin' ? (
+                <Navigate to="/admin" replace />
+              ) : (
+                <Navigate to="/" replace />
+              )
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+      </Routes>
+
+      {/* Offline indicator - only show when user is logged in */}
+      {user && <OfflineIndicator />}
+    </>
   )
 }
 
