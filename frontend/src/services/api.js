@@ -101,6 +101,12 @@ export const authAPI = {
   getProfile: () => api.get('/users/profile'),
 }
 
+// Admins API
+export const adminsAPI = {
+  getAdmins: () => api.get('/users/admins'),
+  createAdmin: (admin) => api.post('/users/admins', admin),
+}
+
 // Teachers API
 export const teachersAPI = {
   getTeachers: () => api.get('/users/teachers'),

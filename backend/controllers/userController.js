@@ -143,6 +143,68 @@ const createTeacher = async (req, res) => {
   }
 };
 
+// @desc    Create a new admin
+// @route   POST /api/users/admins
+// @access  Private/Admin
+const createAdmin = async (req, res) => {
+  const { name, email, password } = req.body;
+
+  try {
+    // Check if user exists
+    const userExists = await User.findOne({ email });
+
+    if (userExists) {
+      return res.status(400).json({
+        message: 'User already exists'
+      });
+    }
+
+    // Create admin user
+    const user = await User.create({
+      name,
+      email,
+      password,
+      role: 'admin',
+    });
+
+    if (user) {
+      res.status(201).json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        message: 'Admin created successfully'
+      });
+    } else {
+      res.status(400).json({
+        message: 'Invalid user data'
+      });
+    }
+  } catch (error) {
+    console.error('Create admin error:', error);
+    res.status(500).json({
+      message: 'Server error during admin creation',
+      error: error.message
+    });
+  }
+};
+
+// @desc    Get all admins
+// @route   GET /api/users/admins
+// @access  Private/Admin
+const getAdmins = async (req, res) => {
+  try {
+    const admins = await User.find({ role: 'admin' }).select('-password');
+    res.json(admins);
+  } catch (error) {
+    console.error('Get admins error:', error);
+    res.status(500).json({
+      message: 'Server error fetching admins',
+      error: error.message
+    });
+  }
+};
+
 // @desc    Get all teachers
 // @route   GET /api/users/teachers
 // @access  Private/Admin
@@ -241,6 +303,8 @@ module.exports = {
   logoutUser,
   getUserProfile,
   createTeacher,
+  createAdmin,
+  getAdmins,
   getTeachers,
   getTeacherById,
   updateTeacher,

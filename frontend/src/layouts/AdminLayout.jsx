@@ -10,6 +10,7 @@ import {
   ClipboardDocumentListIcon,
   ArrowLeftOnRectangleIcon,
   ComputerDesktopIcon,
+  ShieldCheckIcon,
 } from '@heroicons/react/24/outline'
 
 const AdminLayout = () => {
@@ -30,6 +31,12 @@ const AdminLayout = () => {
       href: '/admin/attendance',
       icon: ClipboardDocumentListIcon,
       current: location.pathname.startsWith('/admin/attendance'),
+    },
+    {
+      name: 'Admins',
+      href: '/admin/admins',
+      icon: ShieldCheckIcon,
+      current: location.pathname.startsWith('/admin/admins'),
     },
     {
       name: 'Teachers',

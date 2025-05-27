@@ -5,6 +5,8 @@ const {
   logoutUser,
   getUserProfile,
   createTeacher,
+  createAdmin,
+  getAdmins,
   getTeachers,
   getTeacherById,
   updateTeacher,
@@ -24,6 +26,12 @@ router.get('/profile', protect, getUserProfile);
 router.route('/')
   .post(protect, admin, createTeacher);
 
+// Admin management routes
+router.route('/admins')
+  .post(protect, admin, createAdmin)
+  .get(protect, admin, getAdmins);
+
+// Teacher management routes
 router.route('/teachers')
   .get(protect, admin, getTeachers);
 

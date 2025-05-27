@@ -16,6 +16,8 @@ import Login from './pages/auth/Login'
 
 // Admin Pages
 import AdminDashboard from './pages/admin/Dashboard'
+import AdminsList from './pages/admin/admins/AdminsList'
+import CreateAdmin from './pages/admin/admins/CreateAdmin'
 import TeachersList from './pages/admin/teachers/TeachersList'
 import TeacherForm from './pages/admin/teachers/TeacherForm'
 import TeacherDetails from './pages/admin/teachers/TeacherDetails'
@@ -101,6 +103,8 @@ function App() {
         }
       >
         <Route index element={<AdminDashboard />} />
+        <Route path="admins" element={<AdminsList />} />
+        <Route path="admins/new" element={<CreateAdmin />} />
         <Route path="teachers" element={<TeachersList />} />
         <Route path="teachers/new" element={<TeacherForm />} />
         <Route path="teachers/:id" element={<TeacherDetails />} />
