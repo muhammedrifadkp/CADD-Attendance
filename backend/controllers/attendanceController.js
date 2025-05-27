@@ -77,22 +77,40 @@ const restoreLabBookingsForStudent = async (studentId, attendanceDate, batchTimi
 // Helper function to update lab bookings based on attendance
 const updateLabBookingsBasedOnAttendance = async (studentId, attendanceStatus, attendanceDate, batchTiming) => {
   try {
+    console.log('🔄 updateLabBookingsBasedOnAttendance called:', {
+      studentId,
+      attendanceStatus,
+      attendanceDate,
+      batchTiming
+    });
+
     // Only process if student is marked as absent (late students might still come)
     if (attendanceStatus !== 'absent') {
+      console.log('⏭️ Skipping lab booking update - student not absent');
       return { updated: 0, message: 'No lab booking updates needed for present/late students' };
     }
 
     // Get student details
     const student = await Student.findById(studentId);
     if (!student) {
+      console.log('❌ Student not found:', studentId);
       return { updated: 0, message: 'Student not found' };
     }
+
+    console.log('👤 Found student:', student.name);
 
     // Find lab bookings for this student on this date with the batch timing
     const targetDate = new Date(attendanceDate);
     targetDate.setHours(0, 0, 0, 0);
     const endDate = new Date(targetDate);
     endDate.setHours(23, 59, 59, 999);
+
+    console.log('🔍 Searching for lab bookings with criteria:', {
+      studentName: student.name,
+      dateRange: { from: targetDate, to: endDate },
+      timeSlot: batchTiming,
+      status: 'confirmed'
+    });
 
     const labBookings = await LabBooking.find({
       studentName: student.name,
@@ -104,11 +122,20 @@ const updateLabBookingsBasedOnAttendance = async (studentId, attendanceStatus, a
       status: 'confirmed'
     }).populate('pc', 'pcNumber rowNumber');
 
+    console.log('📋 Found lab bookings:', labBookings.length, labBookings.map(b => ({
+      id: b._id,
+      pc: b.pc?.pcNumber,
+      timeSlot: b.timeSlot,
+      status: b.status
+    })));
+
     let updatedCount = 0;
     const updatedBookings = [];
 
     // Update each matching booking
     for (const booking of labBookings) {
+      console.log('🔄 Updating booking:', booking._id, 'from', booking.status, 'to completed');
+
       booking.status = 'completed';
       booking.notes = booking.notes ?
         `${booking.notes} - Student marked absent in attendance at ${new Date().toLocaleTimeString()}` :
@@ -121,7 +148,14 @@ const updateLabBookingsBasedOnAttendance = async (studentId, attendanceStatus, a
         timeSlot: booking.timeSlot,
         studentName: booking.studentName
       });
+
+      console.log('✅ Updated booking successfully:', booking._id);
     }
+
+    console.log('📊 Lab booking update summary:', {
+      updatedCount,
+      updatedBookings
+    });
 
     return {
       updated: updatedCount,
@@ -203,7 +237,10 @@ const markAttendance = async (req, res) => {
 
   // Update lab bookings based on attendance status
   let labBookingUpdate = null;
+  console.log('🎯 Processing lab booking updates for attendance status:', status);
+
   if (status === 'absent') {
+    console.log('❌ Student marked absent - completing lab bookings');
     // Complete bookings for absent students
     labBookingUpdate = await updateLabBookingsBasedOnAttendance(
       studentId,
@@ -212,6 +249,7 @@ const markAttendance = async (req, res) => {
       batch.timing
     );
   } else if (status === 'present' || status === 'late') {
+    console.log('✅ Student marked present/late - restoring lab bookings');
     // Restore bookings for present/late students (in case they were previously marked absent)
     labBookingUpdate = await restoreLabBookingsForStudent(
       studentId,
@@ -219,6 +257,8 @@ const markAttendance = async (req, res) => {
       batch.timing
     );
   }
+
+  console.log('📋 Lab booking update result:', labBookingUpdate);
 
   // Prepare response
   const response = {

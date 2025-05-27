@@ -40,6 +40,31 @@ const LabOverview = () => {
     fetchPCsByRow()
   }, [])
 
+  // Listen for lab availability updates from attendance submissions
+  useEffect(() => {
+    const handleLabUpdate = (event) => {
+      const { date, updates } = event.detail
+      console.log('🔄 Lab availability updated via attendance, refreshing lab overview...')
+
+      // Refresh both stats and PC display
+      fetchStats()
+      fetchPCsByRow()
+
+      // Show a brief notification
+      if (updates && updates.length > 0) {
+        toast.info('Lab availability updated based on attendance changes', {
+          duration: 3000
+        })
+      }
+    }
+
+    window.addEventListener('labAvailabilityUpdate', handleLabUpdate)
+
+    return () => {
+      window.removeEventListener('labAvailabilityUpdate', handleLabUpdate)
+    }
+  }, [])
+
   const fetchStats = async () => {
     try {
       let pcs = []

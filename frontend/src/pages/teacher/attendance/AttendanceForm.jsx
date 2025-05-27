@@ -250,6 +250,11 @@ const AttendanceForm = () => {
       }
 
       // Trigger a custom event to notify lab components to refresh
+      console.log('🚀 Dispatching labAvailabilityUpdate event:', {
+        date: attendanceDate,
+        updates: response.labBookingUpdates || []
+      })
+
       window.dispatchEvent(new CustomEvent('labAvailabilityUpdate', {
         detail: {
           date: attendanceDate,

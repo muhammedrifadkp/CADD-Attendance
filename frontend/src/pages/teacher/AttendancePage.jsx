@@ -123,6 +123,11 @@ const AttendancePage = () => {
       toast.success(successMessage)
 
       // Trigger a custom event to notify lab components to refresh
+      console.log('🚀 Dispatching labAvailabilityUpdate event from AttendancePage:', {
+        date: selectedDate,
+        updates: response.labBookingUpdates || []
+      })
+
       window.dispatchEvent(new CustomEvent('labAvailabilityUpdate', {
         detail: {
           date: selectedDate,
