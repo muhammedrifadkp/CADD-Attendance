@@ -109,10 +109,16 @@ api.interceptors.response.use(
         try {
           const dataType = getDataTypeFromUrl(url)
           if (dataType) {
-            console.log('Attempting to serve from offline cache:', dataType)
+            console.log('🔄 Attempting to serve from offline cache:', dataType)
             const localData = await offlineService.getDataLocally(dataType)
             if (localData && (Array.isArray(localData) ? localData.length > 0 : Object.keys(localData).length > 0)) {
-              console.log('✅ Serving data from offline cache:', dataType, localData.length || 'object')
+              console.log('✅ Serving data from offline cache:', dataType, Array.isArray(localData) ? localData.length + ' items' : 'object')
+
+              // Show user-friendly message for offline data
+              if (isOffline) {
+                console.log('📱 Using offline data for:', dataType)
+              }
+
               return { data: localData, fromCache: true, offline: true }
             } else {
               console.log('❌ No cached data available for:', dataType)

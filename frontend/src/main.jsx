@@ -10,6 +10,7 @@ import 'react-toastify/dist/ReactToastify.css'
 // Initialize offline services
 import { offlineService } from './services/offlineService.js'
 import { indexedDBService } from './services/indexedDB.js'
+import { dataPreloader } from './services/dataPreloader.js'
 import offlineDebug from './utils/offlineDebug.js'
 
 // Register service worker for offline functionality
@@ -45,6 +46,10 @@ async function initializeOfflineServices() {
     console.log('Initializing offline services...')
     await indexedDBService.init()
     await offlineService.init()
+
+    // Setup data preloader
+    dataPreloader.setupAutoPreload()
+
     console.log('✅ Offline services initialized successfully')
 
     // Enable debug mode in development
@@ -52,6 +57,13 @@ async function initializeOfflineServices() {
       offlineDebug.enable()
       console.log('🔍 Offline debug mode enabled for development')
       console.log('💡 Use window.offlineDebug.help() for debugging commands')
+    }
+
+    // Preload essential data if online
+    if (navigator.onLine) {
+      setTimeout(() => {
+        dataPreloader.preloadEssentialData()
+      }, 2000) // Wait 2 seconds for app to settle
     }
   } catch (error) {
     console.error('❌ Failed to initialize offline services:', error)

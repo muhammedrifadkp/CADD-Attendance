@@ -12,7 +12,9 @@ const STATIC_ASSETS = [
   '/manifest.json',
   '/icons/icon-192x192.png',
   '/icons/icon-512x512.png',
-  '/logos/cadd_logo.png'
+  '/logos/cadd_logo.png',
+  '/vite.svg',
+  '/favicon.ico'
 ]
 
 // API endpoints to cache
@@ -27,7 +29,7 @@ const CACHEABLE_API_PATTERNS = [
 // Install event - cache static assets
 self.addEventListener('install', (event) => {
   console.log('Service Worker: Installing...')
-  
+
   event.waitUntil(
     Promise.all([
       caches.open(STATIC_CACHE).then((cache) => {
@@ -48,7 +50,7 @@ self.addEventListener('install', (event) => {
 // Activate event - clean up old caches
 self.addEventListener('activate', (event) => {
   console.log('Service Worker: Activating...')
-  
+
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
@@ -90,7 +92,7 @@ self.addEventListener('fetch', (event) => {
 async function handleAPIRequest(request) {
   const url = new URL(request.url)
   const isCacheable = CACHEABLE_API_PATTERNS.some(pattern => pattern.test(url.pathname))
-  
+
   if (!isCacheable) {
     // For non-cacheable requests, try network only
     try {
@@ -99,7 +101,7 @@ async function handleAPIRequest(request) {
       console.log('Service Worker: Network request failed:', error)
       return new Response(
         JSON.stringify({ error: 'Network unavailable', offline: true }),
-        { 
+        {
           status: 503,
           headers: { 'Content-Type': 'application/json' }
         }
@@ -110,33 +112,33 @@ async function handleAPIRequest(request) {
   // Network-first strategy for cacheable API requests
   try {
     const networkResponse = await fetch(request)
-    
+
     if (networkResponse.ok) {
       // Cache successful responses
       const cache = await caches.open(API_CACHE)
       cache.put(request, networkResponse.clone())
       console.log('Service Worker: Cached API response:', url.pathname)
     }
-    
+
     return networkResponse
   } catch (error) {
     console.log('Service Worker: Network failed, trying cache:', url.pathname)
-    
+
     // Try to get from cache
     const cachedResponse = await caches.match(request)
     if (cachedResponse) {
       console.log('Service Worker: Serving from cache:', url.pathname)
       return cachedResponse
     }
-    
+
     // Return offline response
     return new Response(
-      JSON.stringify({ 
-        error: 'Data unavailable offline', 
+      JSON.stringify({
+        error: 'Data unavailable offline',
         offline: true,
         message: 'This data is not available offline. Please check your connection.'
       }),
-      { 
+      {
         status: 503,
         headers: { 'Content-Type': 'application/json' }
       }
@@ -155,22 +157,22 @@ async function handleStaticRequest(request) {
   // Try network
   try {
     const networkResponse = await fetch(request)
-    
+
     if (networkResponse.ok) {
       // Cache the response
       const cache = await caches.open(STATIC_CACHE)
       cache.put(request, networkResponse.clone())
     }
-    
+
     return networkResponse
   } catch (error) {
     console.log('Service Worker: Static asset not available:', request.url)
-    
+
     // Return a basic offline page for navigation requests
     if (request.mode === 'navigate') {
       return caches.match('/index.html')
     }
-    
+
     return new Response('Resource not available offline', { status: 503 })
   }
 }
@@ -178,7 +180,7 @@ async function handleStaticRequest(request) {
 // Handle background sync for offline actions
 self.addEventListener('sync', (event) => {
   console.log('Service Worker: Background sync triggered:', event.tag)
-  
+
   if (event.tag === 'attendance-sync') {
     event.waitUntil(syncAttendanceData())
   } else if (event.tag === 'booking-sync') {
@@ -191,7 +193,7 @@ async function syncAttendanceData() {
   try {
     // This will be implemented with IndexedDB integration
     console.log('Service Worker: Syncing attendance data...')
-    
+
     // Notify the main thread about sync completion
     const clients = await self.clients.matchAll()
     clients.forEach(client => {
@@ -209,7 +211,7 @@ async function syncAttendanceData() {
 async function syncBookingData() {
   try {
     console.log('Service Worker: Syncing booking data...')
-    
+
     // Notify the main thread about sync completion
     const clients = await self.clients.matchAll()
     clients.forEach(client => {
@@ -226,7 +228,7 @@ async function syncBookingData() {
 // Handle messages from main thread
 self.addEventListener('message', (event) => {
   const { type, data } = event.data
-  
+
   switch (type) {
     case 'SKIP_WAITING':
       self.skipWaiting()
