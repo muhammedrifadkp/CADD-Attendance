@@ -11,9 +11,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import { offlineService } from './services/offlineService.js'
 import { indexedDBService } from './services/indexedDB.js'
 import { dataPreloader } from './services/dataPreloader.js'
-import offlineDebug from './utils/offlineDebug.js'
-import offlineTestData from './utils/offlineTestData.js'
-import systemHealth from './utils/systemHealthCheck.js'
+// Debug utilities will be imported conditionally in development
 
 // Register service worker for offline functionality
 if ('serviceWorker' in navigator) {
@@ -56,11 +54,20 @@ async function initializeOfflineServices() {
 
     // Enable debug mode in development
     if (import.meta.env.DEV) {
-      offlineDebug.enable()
-      console.log('🔍 Offline debug mode enabled for development')
-      console.log('💡 Use window.offlineDebug.help() for debugging commands')
-      console.log('🧪 Use window.offlineTestData.help() for test data commands')
-      console.log('🏥 Use window.systemHealth.help() for system health checks')
+      try {
+        // Dynamically import debug utilities only in development
+        const { default: offlineDebug } = await import('./utils/offlineDebug.js')
+        const { default: offlineTestData } = await import('./utils/offlineTestData.js')
+        const { default: systemHealth } = await import('./utils/systemHealthCheck.js')
+
+        offlineDebug.enable()
+        console.log('🔍 Offline debug mode enabled for development')
+        console.log('💡 Use window.offlineDebug.help() for debugging commands')
+        console.log('🧪 Use window.offlineTestData.help() for test data commands')
+        console.log('🏥 Use window.systemHealth.help() for system health checks')
+      } catch (error) {
+        console.warn('Debug utilities not available:', error)
+      }
     }
 
     // Preload essential data if online
