@@ -4,6 +4,7 @@
   "description": "A full-stack attendance management system for educational institutions",
   "main": "index.js",
   "scripts": {
+    "build": "cd frontend && npm install && npm run build",
     "start": "node backend/server.js",
     "server": "nodemon backend/server.js",
     "client": "cd frontend && npm run dev",
