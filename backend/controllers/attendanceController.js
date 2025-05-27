@@ -2,21 +2,38 @@ const Attendance = require('../models/attendanceModel');
 const Student = require('../models/studentModel');
 const Batch = require('../models/batchModel');
 const LabBooking = require('../models/labBookingModel');
+const labUpdateBroadcaster = require('../utils/labUpdateBroadcaster');
 
 // Helper function to restore lab bookings when student is marked present/late after being absent
 const restoreLabBookingsForStudent = async (studentId, attendanceDate, batchTiming) => {
   try {
+    console.log('🔄 restoreLabBookingsForStudent called:', {
+      studentId,
+      attendanceDate,
+      batchTiming
+    });
+
     // Get student details
     const student = await Student.findById(studentId);
     if (!student) {
+      console.log('❌ Student not found:', studentId);
       return { updated: 0, message: 'Student not found' };
     }
+
+    console.log('👤 Found student for restore:', student.name);
 
     // Find completed lab bookings for this student on this date with the batch timing
     const targetDate = new Date(attendanceDate);
     targetDate.setHours(0, 0, 0, 0);
     const endDate = new Date(targetDate);
     endDate.setHours(23, 59, 59, 999);
+
+    console.log('🔍 Searching for completed bookings to restore:', {
+      studentName: student.name,
+      dateRange: { from: targetDate, to: endDate },
+      timeSlot: batchTiming,
+      status: 'completed'
+    });
 
     const completedBookings = await LabBooking.find({
       studentName: student.name,
@@ -28,11 +45,20 @@ const restoreLabBookingsForStudent = async (studentId, attendanceDate, batchTimi
       status: 'completed'
     }).populate('pc', 'pcNumber rowNumber');
 
+    console.log('📋 Found completed bookings to restore:', completedBookings.length, completedBookings.map(b => ({
+      id: b._id,
+      pc: b.pc?.pcNumber,
+      timeSlot: b.timeSlot,
+      status: b.status
+    })));
+
     let restoredCount = 0;
     const restoredBookings = [];
 
     // Restore each completed booking back to confirmed
     for (const booking of completedBookings) {
+      console.log('🔄 Checking booking for restore:', booking._id, 'PC:', booking.pc?.pcNumber);
+
       // Check if the slot is still available (no new confirmed booking)
       const conflictBooking = await LabBooking.findOne({
         pc: booking.pc._id,
@@ -46,6 +72,8 @@ const restoreLabBookingsForStudent = async (studentId, attendanceDate, batchTimi
       });
 
       if (!conflictBooking) {
+        console.log('✅ No conflict found, restoring booking:', booking._id);
+
         booking.status = 'confirmed';
         booking.notes = booking.notes ?
           `${booking.notes} - Booking restored (student marked present/late) at ${new Date().toLocaleTimeString()}` :
@@ -58,8 +86,17 @@ const restoreLabBookingsForStudent = async (studentId, attendanceDate, batchTimi
           timeSlot: booking.timeSlot,
           studentName: booking.studentName
         });
+
+        console.log('✅ Restored booking successfully:', booking._id);
+      } else {
+        console.log('⚠️ Conflict found, cannot restore booking:', booking._id, 'Conflict with:', conflictBooking._id);
       }
     }
+
+    console.log('📊 Lab booking restore summary:', {
+      restoredCount,
+      restoredBookings
+    });
 
     return {
       updated: restoredCount,
@@ -260,6 +297,22 @@ const markAttendance = async (req, res) => {
 
   console.log('📋 Lab booking update result:', labBookingUpdate);
 
+  // Broadcast lab availability update if bookings were changed
+  if (labBookingUpdate && labBookingUpdate.updated > 0) {
+    const updateData = {
+      type: 'attendance_update',
+      date: attendanceDate.toISOString().split('T')[0],
+      timeSlot: batch.timing,
+      studentName: student.name,
+      attendanceStatus: status,
+      labBookingUpdates: labBookingUpdate.bookings || [],
+      timestamp: new Date().toISOString()
+    };
+
+    console.log('📡 Broadcasting lab availability update:', updateData);
+    labUpdateBroadcaster.broadcastLabUpdate(updateData);
+  }
+
   // Prepare response
   const response = {
     attendance: attendanceRecord,
@@ -360,13 +413,30 @@ const markBulkAttendance = async (req, res) => {
       }
     }
 
+    // Broadcast lab availability update if any bookings were changed
+    const totalUpdates = labBookingUpdates.reduce((sum, update) => sum + update.updated, 0);
+    if (totalUpdates > 0) {
+      const updateData = {
+        type: 'bulk_attendance_update',
+        date: attendanceDate.toISOString().split('T')[0],
+        timeSlot: batch.timing,
+        totalStudentsUpdated: attendanceRecords.length,
+        totalBookingsUpdated: totalUpdates,
+        labBookingUpdates: labBookingUpdates.flatMap(update => update.bookings || []),
+        timestamp: new Date().toISOString()
+      };
+
+      console.log('📡 Broadcasting bulk lab availability update:', updateData);
+      labUpdateBroadcaster.broadcastLabUpdate(updateData);
+    }
+
     // Prepare response with lab booking updates
     const response = {
       attendanceResults: results,
       labBookingUpdates: labBookingUpdates,
       summary: {
         attendanceRecordsProcessed: results.length,
-        labBookingsUpdated: labBookingUpdates.reduce((sum, update) => sum + update.updated, 0)
+        labBookingsUpdated: totalUpdates
       }
     };
 

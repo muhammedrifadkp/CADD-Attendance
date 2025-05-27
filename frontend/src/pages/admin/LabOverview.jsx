@@ -17,6 +17,7 @@ import { teachersAPI } from '../../services/api'
 import { toast } from 'react-toastify'
 import { showConfirm } from '../../utils/popup'
 import BackButton from '../../components/BackButton'
+import labUpdateService from '../../services/labUpdateService'
 
 const LabOverview = () => {
   const [stats, setStats] = useState({
@@ -40,28 +41,41 @@ const LabOverview = () => {
     fetchPCsByRow()
   }, [])
 
-  // Listen for lab availability updates from attendance submissions
+  // Initialize lab update service and listen for updates
   useEffect(() => {
-    const handleLabUpdate = (event) => {
-      const { date, updates } = event.detail
-      console.log('🔄 Lab availability updated via attendance, refreshing lab overview...')
+    // Initialize the lab update service
+    labUpdateService.init()
 
-      // Refresh both stats and PC display
-      fetchStats()
-      fetchPCsByRow()
+    // Subscribe to lab availability updates
+    const unsubscribe = labUpdateService.subscribe(['lab_availability', 'booking', 'pc_status'], (update) => {
+      console.log('🔄 Lab update received in LabOverview:', update)
 
-      // Show a brief notification
-      if (updates && updates.length > 0) {
-        toast.info('Lab availability updated based on attendance changes', {
-          duration: 3000
-        })
+      // Refresh data based on update type
+      switch (update.type) {
+        case 'lab_availability':
+          console.log('📊 Refreshing lab overview due to availability update')
+          fetchStats()
+          fetchPCsByRow()
+          break
+        case 'booking':
+          console.log('📋 Refreshing stats due to booking update')
+          fetchStats()
+          break
+        case 'pc_status':
+          console.log('💻 Refreshing PC display due to PC status update')
+          fetchStats()
+          fetchPCsByRow()
+          break
+        default:
+          console.log('🔄 General refresh triggered')
+          fetchStats()
+          fetchPCsByRow()
       }
-    }
+    })
 
-    window.addEventListener('labAvailabilityUpdate', handleLabUpdate)
-
+    // Cleanup function
     return () => {
-      window.removeEventListener('labAvailabilityUpdate', handleLabUpdate)
+      unsubscribe()
     }
   }, [])
 
