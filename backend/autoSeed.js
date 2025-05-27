@@ -26,18 +26,8 @@ const autoSeedAdmin = async () => {
       console.log('🔑 Password: Admin@123456');
       console.log('');
     } else {
+      // Admin exists, no need to show credentials every time
       console.log('✅ Admin user already exists');
-
-      // Update password to ensure it's correct
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash('Admin@123456', salt);
-
-      adminExists.password = hashedPassword;
-      await adminExists.save();
-
-      console.log('🔄 Admin password updated to ensure consistency');
-      console.log('📧 Email: admin@caddcentre.com');
-      console.log('🔑 Password: Admin@123456');
     }
   } catch (error) {
     console.error('❌ Error creating admin user:', error.message);
