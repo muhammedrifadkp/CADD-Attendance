@@ -8,7 +8,9 @@ import {
   ExclamationTriangleIcon,
   CheckCircleIcon,
   XCircleIcon,
-  ClockIcon
+  ClockIcon,
+  TrashIcon,
+  PencilIcon
 } from '@heroicons/react/24/outline'
 import { pcAPI, bookingAPI } from '../../services/labAPI'
 import { teachersAPI } from '../../services/api'
@@ -135,6 +137,25 @@ const LabOverview = () => {
       setPcsByRow({})
     } finally {
       setLoadingPCs(false)
+    }
+  }
+
+  const handleDeletePC = async (pc) => {
+    const confirmed = await showConfirm(
+      `Are you sure you want to delete PC ${pc.pcNumber}?\n\nThis action cannot be undone and will remove all associated bookings.`,
+      'Delete PC'
+    )
+
+    if (confirmed) {
+      try {
+        await pcAPI.deletePC(pc._id)
+        toast.success(`PC ${pc.pcNumber} deleted successfully`)
+        fetchStats() // Refresh stats
+        fetchPCsByRow() // Refresh PC display
+      } catch (error) {
+        console.error('Error deleting PC:', error)
+        toast.error('Failed to delete PC')
+      }
     }
   }
 
@@ -353,84 +374,132 @@ const LabOverview = () => {
           ))}
         </div>
 
-        {/* PC Layout Display */}
+        {/* PC Layout Display - Grid View */}
         {stats.totalPCs > 0 && (
-          <div className="mt-8">
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h3 className="text-lg font-bold text-gray-900">Lab Layout</h3>
-                <p className="text-sm text-gray-600">Current PC arrangement by rows</p>
+          <div className="mt-8 bg-white rounded-2xl shadow-lg overflow-hidden">
+            <div className="px-6 py-4 border-b border-gray-200">
+              <div className="flex justify-between items-center">
+                <div>
+                  <h2 className="text-xl font-bold text-gray-900">Lab Layout - Grid View</h2>
+                  <p className="text-sm text-gray-500 mt-1">
+                    PC arrangement and status overview
+                  </p>
+                </div>
+                <Link
+                  to="/admin/lab/management"
+                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-semibold rounded-xl text-white bg-gradient-to-r from-cadd-red to-cadd-pink hover:from-cadd-pink hover:to-cadd-red transition-all duration-300"
+                >
+                  <ComputerDesktopIcon className="h-4 w-4 mr-2" />
+                  Full Lab Management
+                </Link>
               </div>
-              <Link
-                to="/admin/lab/management"
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-semibold rounded-xl text-white bg-gradient-to-r from-cadd-red to-cadd-pink hover:from-cadd-pink hover:to-cadd-red transition-all duration-300"
-              >
-                <ComputerDesktopIcon className="h-4 w-4 mr-2" />
-                Manage Lab
-              </Link>
             </div>
 
-            {loadingPCs ? (
-              <div className="flex items-center justify-center py-12">
-                <div className="relative">
-                  <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-200"></div>
-                  <div className="animate-spin rounded-full h-12 w-12 border-4 border-cadd-red border-t-transparent absolute top-0 left-0"></div>
+            <div className="p-6">
+              {/* Status Legend */}
+              <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+                <h4 className="text-sm font-semibold text-gray-700 mb-3">Status Legend:</h4>
+                <div className="flex flex-wrap gap-4 text-xs">
+                  <div className="flex items-center">
+                    <div className="w-4 h-4 bg-green-500 rounded mr-2"></div>
+                    <span>Active</span>
+                  </div>
+                  <div className="flex items-center">
+                    <div className="w-4 h-4 bg-yellow-500 rounded mr-2"></div>
+                    <span>Maintenance</span>
+                  </div>
+                  <div className="flex items-center">
+                    <div className="w-4 h-4 bg-gray-500 rounded mr-2"></div>
+                    <span>Inactive</span>
+                  </div>
                 </div>
               </div>
-            ) : Object.keys(pcsByRow).length === 0 ? (
-              <div className="text-center py-8">
-                <ComputerDesktopIcon className="mx-auto h-12 w-12 text-gray-400" />
-                <h3 className="mt-2 text-sm font-medium text-gray-900">No PCs found</h3>
-                <p className="mt-1 text-sm text-gray-500">
-                  No computers are available in the lab.
-                </p>
-              </div>
-            ) : (
-              <div className="space-y-6">
-                {Object.entries(pcsByRow).sort(([a], [b]) => parseInt(a) - parseInt(b)).map(([rowNumber, rowPCs]) => (
-                  <div key={rowNumber} className="bg-gray-50 rounded-2xl p-6">
-                    <div className="flex items-center space-x-3 mb-4">
-                      <div className="w-8 h-8 bg-gradient-to-br from-cadd-red to-cadd-pink rounded-lg flex items-center justify-center">
-                        <span className="text-white font-bold text-sm">{rowNumber}</span>
-                      </div>
-                      <h4 className="text-lg font-semibold text-gray-900">Row {rowNumber}</h4>
-                      <div className="flex-1 h-px bg-gray-200"></div>
-                      <span className="text-sm text-gray-500">
-                        {rowPCs.length} PCs
-                      </span>
-                    </div>
 
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-3">
-                      {rowPCs.map((pc) => (
-                        <div
-                          key={pc._id}
-                          className={`
-                            relative p-3 rounded-lg text-center text-sm font-medium transition-all duration-200
-                            ${pc.status === 'active'
-                              ? 'bg-green-100 border-2 border-green-300 text-green-800'
-                              : pc.status === 'maintenance'
-                                ? 'bg-yellow-100 border-2 border-yellow-300 text-yellow-800'
-                                : 'bg-gray-100 border-2 border-gray-300 text-gray-800'
-                            }
-                          `}
-                          title={`${pc.pcNumber} - ${pc.status}`}
-                        >
-                          <div className="font-bold">{pc.pcNumber}</div>
-                          <div className="text-xs mt-1 opacity-75 capitalize">
-                            {pc.status}
-                          </div>
-
-                          {/* Status indicator */}
-                          <div className={`absolute -top-1 -right-1 w-3 h-3 rounded-full ${pc.status === 'active' ? 'bg-green-400' :
-                              pc.status === 'maintenance' ? 'bg-yellow-400' : 'bg-gray-400'
-                            }`}></div>
-                        </div>
-                      ))}
-                    </div>
+              {loadingPCs ? (
+                <div className="flex items-center justify-center py-12">
+                  <div className="relative">
+                    <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-200"></div>
+                    <div className="animate-spin rounded-full h-12 w-12 border-4 border-cadd-red border-t-transparent absolute top-0 left-0"></div>
                   </div>
-                ))}
-              </div>
-            )}
+                </div>
+              ) : Object.keys(pcsByRow).length === 0 ? (
+                <div className="text-center py-8">
+                  <ComputerDesktopIcon className="mx-auto h-12 w-12 text-gray-400" />
+                  <h3 className="mt-2 text-sm font-medium text-gray-900">No PCs found</h3>
+                  <p className="mt-1 text-sm text-gray-500">
+                    No computers are available in the lab.
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  {Object.entries(pcsByRow).sort(([a], [b]) => parseInt(a) - parseInt(b)).map(([rowNumber, rowPCs]) => (
+                    <div key={rowNumber} className="space-y-3">
+                      <div className="flex items-center space-x-3">
+                        <h3 className="text-lg font-semibold text-gray-900">Row {rowNumber}</h3>
+                        <div className="flex-1 h-px bg-gray-200"></div>
+                        <span className="text-sm text-gray-500">
+                          {rowPCs.length} PCs
+                        </span>
+                      </div>
+
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-9 gap-3">
+                        {rowPCs.map((pc) => {
+                          const getGridPCStatusColor = (status) => {
+                            switch (status) {
+                              case 'active':
+                                return 'bg-green-500 hover:bg-green-600 text-white'
+                              case 'maintenance':
+                                return 'bg-yellow-500 hover:bg-yellow-600 text-white'
+                              default:
+                                return 'bg-gray-300 hover:bg-gray-400 text-gray-700'
+                            }
+                          }
+
+                          return (
+                            <div
+                              key={`${pc.rowNumber}-${pc.pcNumber}`}
+                              className={`
+                                relative group p-3 rounded-lg text-center text-sm font-medium transition-all duration-200 cursor-pointer
+                                ${getGridPCStatusColor(pc.status)}
+                                transform hover:scale-105 shadow-sm hover:shadow-md
+                              `}
+                              title={`${pc.pcNumber} - ${pc.status}`}
+                            >
+                              <div className="font-bold">{pc.pcNumber}</div>
+                              <div className="text-xs mt-1 opacity-90 capitalize">
+                                {pc.status}
+                              </div>
+
+                              {/* Action buttons - show on hover */}
+                              <div className="absolute inset-0 bg-black bg-opacity-50 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center space-x-1">
+                                <Link
+                                  to={`/admin/lab/pcs/${pc._id}/edit`}
+                                  className="p-1.5 bg-blue-500 hover:bg-blue-600 text-white rounded transition-colors duration-200"
+                                  title="Edit PC"
+                                  onClick={(e) => e.stopPropagation()}
+                                >
+                                  <PencilIcon className="h-3 w-3" />
+                                </Link>
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    handleDeletePC(pc)
+                                  }}
+                                  className="p-1.5 bg-red-500 hover:bg-red-600 text-white rounded transition-colors duration-200"
+                                  title="Delete PC"
+                                >
+                                  <TrashIcon className="h-3 w-3" />
+                                </button>
+                              </div>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         )}
 
@@ -454,7 +523,6 @@ const LabOverview = () => {
           </div>
         )}
       </div>
-
     </div>
   )
 }
