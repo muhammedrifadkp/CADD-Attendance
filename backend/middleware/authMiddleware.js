@@ -35,7 +35,11 @@ const protect = async (req, res, next) => {
     // Validate token fingerprint
     const userAgent = req.get('User-Agent') || '';
     const clientIP = req.ip || req.connection.remoteAddress || '';
-    const expectedFingerprint = crypto.createHash('sha256').update(`${userAgent}-${clientIP}`).digest('hex').substring(0, 16);
+    const expectedFingerprint = crypto
+      .createHash('sha256')
+      .update(`${userAgent}-${clientIP}`)
+      .digest('hex')
+      .substring(0, 16);
 
     if (decoded.fp && decoded.fp !== expectedFingerprint) {
       return res.status(401).json({
@@ -55,14 +59,6 @@ const protect = async (req, res, next) => {
       });
     }
 
-    // Check if user is locked
-    if (user.lockUntil && user.lockUntil > Date.now()) {
-      return res.status(423).json({
-        message: 'Account is locked. Please try again later.',
-        error: 'AccountLocked'
-      });
-    }
-
     // Attach user to request
     req.user = user;
     next();
@@ -71,28 +67,25 @@ const protect = async (req, res, next) => {
 
     // Clear the invalid cookie if present
     if (req.cookies.jwt) {
-      res.clearCookie('jwt');
+      res.clearCookie('jwt', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
+        path: '/'
+      });
     }
 
     // Handle specific JWT errors
     if (error.name === 'TokenExpiredError') {
       return res.status(401).json({
-        message: 'Token expired, please refresh your token',
+        message: 'Token expired',
         error: 'TokenExpiredError',
         shouldRefresh: true
       });
     }
 
-    if (error.name === 'JsonWebTokenError') {
-      return res.status(401).json({
-        message: 'Invalid token',
-        error: 'InvalidTokenError'
-      });
-    }
-
-    // Handle other errors
     return res.status(401).json({
-      message: 'Not authorized, token failed',
+      message: 'Not authorized',
       error: error.name
     });
   }

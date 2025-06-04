@@ -11,16 +11,21 @@ const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@
 
 // Generate JWT with enhanced security
 const generateToken = (id, userAgent = '', ip = '') => {
+  const fingerprint = crypto.createHash('sha256')
+    .update(`${userAgent}-${ip}`)
+    .digest('hex')
+    .substring(0, 16);
+
   return jwt.sign(
     {
       id,
-      iat: Math.floor(Date.now() / 1000),
-      // Add fingerprinting for additional security
-      fp: crypto.createHash('sha256').update(`${userAgent}-${ip}`).digest('hex').substring(0, 16)
+      fp: fingerprint,
+      type: 'access',
+      iat: Math.floor(Date.now() / 1000)
     },
     process.env.JWT_SECRET,
     {
-      expiresIn: '15m', // Shorter expiry for better security
+      expiresIn: '15m',
       issuer: 'cadd-attendance',
       audience: 'cadd-attendance-users'
     }
@@ -29,12 +34,17 @@ const generateToken = (id, userAgent = '', ip = '') => {
 
 // Generate refresh token with enhanced security
 const generateRefreshToken = (id, userAgent = '', ip = '') => {
+  const fingerprint = crypto.createHash('sha256')
+    .update(`${userAgent}-${ip}`)
+    .digest('hex')
+    .substring(0, 16);
+
   return jwt.sign(
     {
       id,
+      fp: fingerprint,
       type: 'refresh',
-      iat: Math.floor(Date.now() / 1000),
-      fp: crypto.createHash('sha256').update(`${userAgent}-${ip}`).digest('hex').substring(0, 16)
+      iat: Math.floor(Date.now() / 1000)
     },
     process.env.JWT_REFRESH_SECRET,
     {
