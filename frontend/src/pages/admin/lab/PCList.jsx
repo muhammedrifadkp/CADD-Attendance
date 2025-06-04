@@ -12,7 +12,7 @@ import {
   MagnifyingGlassIcon,
   FunnelIcon
 } from '@heroicons/react/24/outline'
-import { labAPI } from '../../../services/labAPI'
+import { pcAPI } from '../../../services/labAPI'
 import { toast } from 'react-toastify'
 import { showConfirm } from '../../../utils/popup'
 import { formatDateSimple } from '../../../utils/dateUtils'
@@ -31,10 +31,10 @@ const PCList = () => {
     setLoading(true)
     try {
       const params = {}
-      if (filter.row) params.rowNumber = filter.row
+      if (filter.row) params.row = filter.row
       if (filter.status) params.status = filter.status
 
-      const response = await labAPI.pcs.getPCs(params)
+      const response = await pcAPI.getPCs(params)
       // Handle response format - check if data is nested
       const pcsData = response?.data || response || []
       setPCs(Array.isArray(pcsData) ? pcsData : [])
@@ -51,7 +51,7 @@ const PCList = () => {
     const confirmed = await showConfirm('Are you sure you want to delete this PC?', 'Delete PC')
     if (confirmed) {
       try {
-        await labAPI.pcs.deletePC(pcId)
+        await pcAPI.deletePC(pcId)
         toast.success('PC deleted successfully')
         setPCs(pcs.filter(pc => pc._id !== pcId))
       } catch (error) {
@@ -113,6 +113,30 @@ const PCList = () => {
           <p className="mt-2 text-sm text-gray-700">
             Manage all laboratory computers and their configurations
           </p>
+          {/* Quick Stats */}
+          <div className="mt-3 flex items-center space-x-6 text-sm">
+            <div className="flex items-center">
+              <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
+              <span className="text-gray-600">
+                {pcs.filter(pc => pc.status === 'active').length} Active
+              </span>
+            </div>
+            <div className="flex items-center">
+              <div className="w-3 h-3 bg-yellow-500 rounded-full mr-2"></div>
+              <span className="text-gray-600">
+                {pcs.filter(pc => pc.status === 'maintenance').length} Maintenance
+              </span>
+            </div>
+            <div className="flex items-center">
+              <div className="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
+              <span className="text-gray-600">
+                {pcs.filter(pc => pc.status === 'inactive').length} Inactive
+              </span>
+            </div>
+            <div className="text-gray-500">
+              Total: {pcs.length} PCs
+            </div>
+          </div>
         </div>
         <div className="mt-4 sm:mt-0">
           <Link
@@ -200,7 +224,7 @@ const PCList = () => {
                     <ComputerDesktopIcon className="h-8 w-8 text-cadd-red mr-3" />
                     <div>
                       <h3 className="text-lg font-medium text-gray-900">{pc.pcNumber}</h3>
-                      <p className="text-sm text-gray-500">Row {pc.rowNumber}</p>
+                      <p className="text-sm text-gray-500">Row {pc.row}, Position {pc.position}</p>
                     </div>
                   </div>
                   <div className="flex items-center">
@@ -213,10 +237,41 @@ const PCList = () => {
 
 
 
-                <div className="flex justify-between items-center">
+                {/* Specifications Preview */}
+                {pc.specifications && (Object.values(pc.specifications).some(spec => spec)) && (
+                  <div className="mt-3 pt-3 border-t border-gray-100">
+                    <div className="grid grid-cols-2 gap-2 text-xs text-gray-600">
+                      {pc.specifications.processor && (
+                        <div>
+                          <span className="font-medium">CPU:</span> {pc.specifications.processor}
+                        </div>
+                      )}
+                      {pc.specifications.ram && (
+                        <div>
+                          <span className="font-medium">RAM:</span> {pc.specifications.ram}
+                        </div>
+                      )}
+                      {pc.specifications.storage && (
+                        <div>
+                          <span className="font-medium">Storage:</span> {pc.specifications.storage}
+                        </div>
+                      )}
+                      {pc.specifications.graphics && (
+                        <div>
+                          <span className="font-medium">GPU:</span> {pc.specifications.graphics}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                <div className="flex justify-between items-center mt-4">
                   <div className="text-xs text-gray-500">
                     {pc.lastMaintenance && (
                       <p>Last maintenance: {formatDateSimple(pc.lastMaintenance)}</p>
+                    )}
+                    {pc.createdAt && (
+                      <p>Added: {formatDateSimple(pc.createdAt)}</p>
                     )}
                   </div>
                   <div className="flex space-x-2">

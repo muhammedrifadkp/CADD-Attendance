@@ -1,140 +1,140 @@
-# CADD Attendance Management System
+# CDC Attendance Management System
 
-A full-stack web application designed to streamline attendance tracking and management for CADD Centre (software training institute). It features role-based access control, with distinct roles for Admin and Teacher, along with comprehensive lab management capabilities.
+A full-stack web application for managing attendance at CDC.
 
-## Tech Stack
+## Prerequisites
 
-- **Frontend**: React + Vite, Tailwind CSS
-- **Backend**: Node.js, Express.js
-- **Database**: MongoDB with Mongoose ODM
-- **Authentication**: JWT + Cookies
-
-## Features
-
-### Authentication & Authorization
-- Role-based access control (Admin, Teacher)
-- Secure password handling with bcrypt
-- JWT token-based authentication
-- Automatic logout after inactivity
-
-### Admin Dashboard
-- Teacher management (CRUD operations)
-- Student overview across all batches
-- System analytics and reporting
-- Lab management with PC booking system
-- Attendance reports with advanced visualizations
-
-### Teacher Dashboard
-- Batch management with time slot restrictions
-- Student management with profile photos
-- Daily attendance tracking
-- Lab availability and booking management
-- Attendance reports and analytics
-
-### Responsive Design
-- Mobile-first approach with Tailwind CSS
-- Adaptive layouts for different screen sizes
-
-## Getting Started
-
-### Prerequisites
 - Node.js (v14 or higher)
-- MongoDB (local or Atlas)
+- MongoDB
+- Redis (for rate limiting)
+- npm or yarn
 
-### Installation
+## Quick Start
 
-1. Clone the repository
-   ```bash
-   git clone https://github.com/muhammedrifadkp/CADD-Attendance.git
-   cd CADD-Attendance
-   ```
+### Option 1: Automated Setup (Windows)
+```bash
+# Double-click start.bat or run:
+start.bat
+```
 
-2. Install dependencies
-   ```bash
-   npm install
-   cd frontend
-   npm install
-   cd ../backend
-   npm install
-   cd ..
-   ```
+### Option 2: Manual Setup
 
-3. Set up environment variables
-   Create a `.env` file in the `backend` directory with the following variables:
-   ```env
-   NODE_ENV=development
-   PORT=5001
-   MONGO_URI=mongodb://localhost:27017/cadd_attendance
-   JWT_SECRET=your_jwt_secret_key_here_make_it_long_and_secure
-   JWT_EXPIRE=30d
-   ```
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd cdc-attendance
+```
 
-4. Seed the database with admin user
-   ```bash
-   node backend/seeder.js
-   ```
+2. Verify setup and configuration (optional):
+```bash
+node setup-check.js
+node config-check.js
+```
 
-5. Run the application
-   ```bash
-   npm run dev
-   ```
+3. Install all dependencies:
+```bash
+npm run install-all
+```
 
-   This will start:
-   - Backend server on http://localhost:5001
-   - Frontend development server on http://localhost:5173
+4. Start the application:
+```bash
+npm run dev
+```
+
+The application will be available at:
+- Frontend: http://localhost:5170
+- Backend API: http://localhost:5000
+
+## Environment Configuration
+
+The `.env` files are already configured with consistent values:
+
+### Backend (.env already exists)
+- **Port**: 5000 (standardized)
+- **MongoDB URI**: Cloud database configured
+- **JWT secrets**: Secure defaults provided
+- **CORS Origins**: Configured for frontend port 5170
+- **Optional**: Redis, email configuration
+
+### Frontend (.env already exists)
+- **Development API**: http://localhost:5000/api
+- **Production API**: https://cdc-attendance.onrender.com/api
+- **Local Override**: http://localhost:5000/api (highest priority)
+- **PWA settings**: Enabled
+- **Debug settings**: Configured
+
+### Port Configuration (Fixed)
+- **Frontend**: http://localhost:5170
+- **Backend**: http://localhost:5000
+- **API Endpoint**: http://localhost:5000/api
+
+## Prerequisites
+
+**Required:**
+- Node.js (v18 or higher)
+- MongoDB (local or cloud)
+
+**Optional:**
+- Redis (for advanced rate limiting)
+- SMTP server (for email notifications)
 
 ## Default Admin Credentials
-- **Email**: admin@caddcentre.com
-- **Password**: admin123
 
-## API Endpoints
+After the first run, an admin user will be automatically created with these credentials:
+- Email: admin@caddcentre.com
+- Password: Admin*******
 
-### Authentication
-- `POST /api/users/login` - User login
-- `POST /api/users/logout` - User logout
+**Important**: Change the default admin password immediately after first login.
 
-### User Management
-- `GET /api/users/profile` - Get user profile
-- `POST /api/users` - Create a teacher (Admin only)
-- `GET /api/users/teachers` - Get all teachers (Admin only)
-- `GET /api/users/teachers/:id` - Get teacher by ID (Admin only)
-- `PUT /api/users/teachers/:id` - Update teacher (Admin only)
-- `DELETE /api/users/teachers/:id` - Delete teacher (Admin only)
-- `PUT /api/users/teachers/:id/reset-password` - Reset teacher password (Admin only)
+## Development Scripts
 
-### Batch Management
-- `POST /api/batches` - Create a batch
-- `GET /api/batches` - Get all batches
-- `GET /api/batches/:id` - Get batch by ID
-- `PUT /api/batches/:id` - Update batch
-- `DELETE /api/batches/:id` - Delete batch
-- `GET /api/batches/:id/students` - Get students in a batch
+- `npm run dev`: Start both frontend and backend in development mode
+- `npm run server`: Start only the backend server
+- `npm run client`: Start only the frontend server
+- `npm run build`: Build the frontend for production
 
-### Student Management
-- `POST /api/students` - Create a student
-- `GET /api/students` - Get all students
-- `GET /api/students/:id` - Get student by ID
-- `PUT /api/students/:id` - Update student
-- `DELETE /api/students/:id` - Delete student
-- `POST /api/students/bulk` - Bulk create students
+## Security Features
 
-### Attendance Management
-- `POST /api/attendance` - Mark attendance for a student
-- `POST /api/attendance/bulk` - Mark attendance for multiple students
-- `GET /api/attendance/batch/:batchId` - Get attendance for a batch on a specific date
-- `GET /api/attendance/student/:studentId` - Get attendance for a student
-- `GET /api/attendance/stats/batch/:batchId` - Get attendance statistics for a batch
+The application includes several security features:
+- JWT-based authentication
+- Rate limiting
+- IP intelligence
+- Device fingerprinting
+- Security monitoring
+- Audit logging
 
-### Lab Management
-- `POST /api/lab/pcs` - Create a new PC
-- `GET /api/lab/pcs` - Get all PCs
-- `PUT /api/lab/pcs/:id` - Update PC details
-- `DELETE /api/lab/pcs/:id` - Delete a PC
-- `POST /api/lab/bookings` - Create a lab booking
-- `GET /api/lab/bookings` - Get lab bookings for a specific date
-- `PUT /api/lab/bookings/:id` - Update booking details
-- `DELETE /api/lab/bookings/:id` - Cancel a booking
+## Directory Structure
 
-## License
+```
+cdc-attendance/
+├── backend/           # Backend server
+│   ├── config/       # Configuration files
+│   ├── controllers/  # Route controllers
+│   ├── middleware/   # Custom middleware
+│   ├── models/       # Database models
+│   ├── routes/       # API routes
+│   └── server.js     # Server entry point
+├── frontend/         # Frontend application
+│   ├── src/         # Source files
+│   └── public/      # Static files
+└── package.json     # Root package.json
+```
 
-This project is licensed under the MIT License.
+## Troubleshooting
+
+1. If MongoDB fails to start:
+   - Check if MongoDB service is running
+   - Verify MongoDB connection string in .env
+
+2. If Redis fails to start:
+   - Check if Redis service is running
+   - Verify Redis connection settings
+
+3. If the application fails to start:
+   - Check if all dependencies are installed
+   - Verify all environment variables are set
+   - Check console for specific error messages
+
+## Support
+
+For support, please contact the system administrator or raise an issue in the repository.

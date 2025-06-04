@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
-import { useParams, Link } from 'react-router-dom'
-import { teachersAPI, batchesAPI, studentsAPI } from '../../../services/api'
+import { useParams, Link, useNavigate } from 'react-router-dom'
+import toast from 'react-hot-toast'
+import { teachersAPI, batchesAPI } from '../../../services/api'
 import {
   UserIcon,
   ArrowLeftIcon,
@@ -11,79 +12,105 @@ import {
   ClipboardDocumentCheckIcon,
   ChartBarIcon,
   PencilIcon,
-  ArrowPathIcon
+  ArrowPathIcon,
+  BuildingOfficeIcon,
+  PhoneIcon,
+  MapPinIcon,
+  CheckCircleIcon,
+  XCircleIcon,
+  StarIcon,
+  BriefcaseIcon,
+  TrashIcon
 } from '@heroicons/react/24/outline'
-import { toast } from 'react-toastify'
 import { useAuth } from '../../../context/AuthContext'
 import { showConfirm } from '../../../utils/popup'
 import { formatDateLong, formatDateSimple } from '../../../utils/dateUtils'
+import BackButton from '../../../components/BackButton'
 
 const TeacherDetails = () => {
   const { id } = useParams()
-  const { user } = useAuth()
+  const navigate = useNavigate()
   const [teacher, setTeacher] = useState(null)
-  const [stats, setStats] = useState({
-    batchesCount: 0,
-    studentsCount: 0,
-    totalAttendanceRecords: 0,
-  })
+  const [stats, setStats] = useState(null)
   const [batches, setBatches] = useState([])
   const [loading, setLoading] = useState(true)
+  const [actionLoading, setActionLoading] = useState(false)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
 
   useEffect(() => {
     const fetchTeacherData = async () => {
       try {
         setLoading(true)
 
-        // Fetch teacher details
-        const teacherRes = await teachersAPI.getTeacher(id)
-        setTeacher(teacherRes.data)
+        // Fetch teacher details and statistics in parallel
+        const [teacherRes, statsRes, batchesRes] = await Promise.all([
+          teachersAPI.getTeacher(id),
+          teachersAPI.getTeacherStats(id),
+          batchesAPI.getBatches()
+        ])
 
-        // Fetch all batches to filter by this teacher
-        const batchesRes = await batchesAPI.getBatches()
+        setTeacher(teacherRes.data)
+        setStats(statsRes.data.stats)
+
+        // Filter batches by this teacher
         const teacherBatches = batchesRes.data.filter(batch =>
           batch.createdBy && batch.createdBy._id === id
         )
         setBatches(teacherBatches)
 
-        // Calculate stats
-        let totalStudents = 0
-        for (const batch of teacherBatches) {
-          try {
-            const studentsRes = await batchesAPI.getBatchStudents(batch._id)
-            totalStudents += studentsRes.data.length
-          } catch (error) {
-            console.error('Error fetching students for batch:', batch._id)
-          }
-        }
-
-        setStats({
-          batchesCount: teacherBatches.length,
-          studentsCount: totalStudents,
-          totalAttendanceRecords: 0, // This would need attendance API integration
-        })
-
       } catch (error) {
         console.error('Error fetching teacher data:', error)
         toast.error('Failed to fetch teacher details')
+        navigate('/admin/teachers')
       } finally {
         setLoading(false)
       }
     }
 
     fetchTeacherData()
-  }, [id])
+  }, [id, navigate])
 
   const handleResetPassword = async () => {
     const confirmed = await showConfirm('Are you sure you want to reset this teacher\'s password?', 'Reset Password')
     if (confirmed) {
       try {
         const res = await teachersAPI.resetPassword(id)
-        toast.success(`Password reset successfully. New password: ${res.data.newPassword}`)
+
+        // Check if email was sent successfully
+        if (res.data.emailSent) {
+          toast.success('Password reset successfully. An email with the new password has been sent to the teacher.')
+        } else {
+          // If email failed, show the password in the UI
+          toast.success(`Password reset successfully. New password: ${res.data.temporaryPassword}`)
+          toast.info('The password reset email could not be sent. Please provide this password to the teacher securely.')
+        }
       } catch (error) {
         toast.error('Failed to reset password')
       }
     }
+  }
+
+  const handleDelete = async () => {
+    try {
+      setActionLoading(true)
+      await teachersAPI.deleteTeacher(id)
+      toast.success('Teacher deleted successfully')
+      navigate('/admin/teachers')
+    } catch (error) {
+      console.error('Error deleting teacher:', error)
+      toast.error(error.response?.data?.message || 'Failed to delete teacher')
+    } finally {
+      setActionLoading(false)
+      setShowDeleteModal(false)
+    }
+  }
+
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    })
   }
 
   if (loading) {
@@ -196,7 +223,7 @@ const TeacherDetails = () => {
                 <AcademicCapIcon className="h-8 w-8 text-white" />
               </div>
               <div className="text-right">
-                <div className="text-3xl font-bold text-gray-900">{stats.batchesCount}</div>
+                <div className="text-3xl font-bold text-gray-900">{stats?.batches?.total || 0}</div>
                 <div className="text-sm font-medium text-gray-500">Total Batches</div>
               </div>
             </div>
@@ -204,11 +231,21 @@ const TeacherDetails = () => {
               <div className="text-sm text-gray-600">
                 Batches created and managed by this teacher
               </div>
+              {stats?.batches && (
+                <div className="flex items-center space-x-4 text-xs">
+                  <span className="text-green-600 font-medium">
+                    {stats.batches.active} Active
+                  </span>
+                  <span className="text-gray-500">
+                    {stats.batches.finished} Finished
+                  </span>
+                </div>
+              )}
             </div>
           </div>
           <div className="bg-gradient-to-r from-green-50 to-green-100 px-6 py-4 border-t border-green-200">
             <div className="text-sm font-semibold text-green-700">
-              {stats.batchesCount > 0 ? 'View batches below' : 'No batches yet'}
+              {stats?.batches?.total > 0 ? 'View batches below' : 'No batches yet'}
             </div>
           </div>
         </div>
@@ -221,7 +258,7 @@ const TeacherDetails = () => {
                 <UserGroupIcon className="h-8 w-8 text-white" />
               </div>
               <div className="text-right">
-                <div className="text-3xl font-bold text-gray-900">{stats.studentsCount}</div>
+                <div className="text-3xl font-bold text-gray-900">{stats?.students?.total || 0}</div>
                 <div className="text-sm font-medium text-gray-500">Total Students</div>
               </div>
             </div>
@@ -229,11 +266,21 @@ const TeacherDetails = () => {
               <div className="text-sm text-gray-600">
                 Students across all batches managed by this teacher
               </div>
+              {stats?.students && (
+                <div className="flex items-center space-x-4 text-xs">
+                  <span className="text-blue-600 font-medium">
+                    {stats.students.active} Active
+                  </span>
+                  <span className="text-gray-500">
+                    Avg: {stats.students.averageBatchSize} per batch
+                  </span>
+                </div>
+              )}
             </div>
           </div>
           <div className="bg-gradient-to-r from-blue-50 to-blue-100 px-6 py-4 border-t border-blue-200">
             <div className="text-sm font-semibold text-blue-700">
-              {stats.studentsCount > 0 ? 'Distributed across batches' : 'No students yet'}
+              {stats?.students?.total > 0 ? 'Distributed across batches' : 'No students yet'}
             </div>
           </div>
         </div>

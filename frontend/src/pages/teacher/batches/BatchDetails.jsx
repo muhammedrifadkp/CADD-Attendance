@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link, useLocation } from 'react-router-dom'
 import { batchesAPI, attendanceAPI } from '../../../services/api'
-import { UserGroupIcon, ClipboardDocumentCheckIcon, ChartBarIcon, ArrowLeftIcon, CalendarDaysIcon, AcademicCapIcon, ClockIcon } from '@heroicons/react/24/outline'
+import { UserGroupIcon, ClipboardDocumentCheckIcon, ChartBarIcon, ArrowLeftIcon, CalendarDaysIcon, AcademicCapIcon, ClockIcon, CheckCircleIcon, ArrowPathIcon } from '@heroicons/react/24/outline'
 import { toast } from 'react-toastify'
 import { useAuth } from '../../../context/AuthContext'
+import { showConfirm } from '../../../utils/popup'
 
 const BatchDetails = () => {
   const { id } = useParams()
@@ -42,6 +43,20 @@ const BatchDetails = () => {
   }
 
   const baseRoute = getBaseRoute()
+
+  const handleToggleFinished = async () => {
+    const action = batch.isFinished ? 'mark as active' : 'mark as finished'
+    const confirmed = await showConfirm(`Are you sure you want to ${action} this batch?`, 'Toggle Batch Status')
+    if (confirmed) {
+      try {
+        const res = await batchesAPI.toggleBatchFinished(id)
+        toast.success(res.data.message)
+        setBatch(prev => ({ ...prev, isFinished: !prev.isFinished }))
+      } catch (error) {
+        toast.error('Failed to update batch status')
+      }
+    }
+  }
 
   useEffect(() => {
     const fetchBatchAndStats = async () => {
@@ -113,6 +128,15 @@ const BatchDetails = () => {
                       <span>•</span>
                       <span className="px-3 py-1 bg-yellow-500/20 text-yellow-200 rounded-full text-sm font-medium">
                         Archived
+                      </span>
+                    </>
+                  )}
+                  {batch.isFinished && (
+                    <>
+                      <span>•</span>
+                      <span className="px-3 py-1 bg-green-500/20 text-green-200 rounded-full text-sm font-medium flex items-center">
+                        <CheckCircleIcon className="h-4 w-4 mr-1" />
+                        Finished
                       </span>
                     </>
                   )}
@@ -283,7 +307,7 @@ const BatchDetails = () => {
       {/* Quick Actions */}
       <div className="bg-white rounded-2xl shadow-lg p-6">
         <h3 className="text-lg font-bold text-gray-900 mb-6">Quick Actions</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
           <Link
             to={`${baseRoute}/${id}/students`}
             className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-sm font-semibold rounded-xl text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
@@ -305,6 +329,25 @@ const BatchDetails = () => {
             <ChartBarIcon className="h-5 w-5 mr-2" />
             View Reports
           </Link>
+          <button
+            onClick={handleToggleFinished}
+            className={`inline-flex items-center justify-center px-6 py-3 border border-transparent text-sm font-semibold rounded-xl text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 ${batch.isFinished
+                ? 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 focus:ring-blue-500'
+                : 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 focus:ring-green-500'
+              } focus:outline-none focus:ring-2 focus:ring-offset-2`}
+          >
+            {batch.isFinished ? (
+              <>
+                <ArrowPathIcon className="h-5 w-5 mr-2" />
+                Mark Active
+              </>
+            ) : (
+              <>
+                <CheckCircleIcon className="h-5 w-5 mr-2" />
+                Mark Finished
+              </>
+            )}
+          </button>
           <Link
             to={`${baseRoute}/${id}/edit`}
             className="inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-sm font-semibold rounded-xl text-gray-700 bg-white hover:bg-gray-50 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cadd-red shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"

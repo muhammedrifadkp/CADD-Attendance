@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { studentsAPI, batchesAPI } from '../../../services/api'
+import { studentsAPI, batchesAPI, coursesAPI } from '../../../services/api'
+import api from '../../../services/api'
 import {
   UserIcon,
   MagnifyingGlassIcon,
@@ -26,10 +27,14 @@ const TeacherStudentsList = () => {
   const { user } = useAuth()
   const [students, setStudents] = useState([])
   const [batches, setBatches] = useState([])
+  const [courses, setCourses] = useState([])
+  const [departments, setDepartments] = useState([])
   const [filteredStudents, setFilteredStudents] = useState([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedBatch, setSelectedBatch] = useState('all')
+  const [selectedDepartment, setSelectedDepartment] = useState('all')
+  const [selectedCourse, setSelectedCourse] = useState('all')
   const [selectedStatus, setSelectedStatus] = useState('all')
   const [viewMode, setViewMode] = useState('grid') // 'grid' or 'table'
 
@@ -52,13 +57,25 @@ const TeacherStudentsList = () => {
     const fetchData = async () => {
       try {
         setLoading(true)
-        const [studentsRes, batchesRes] = await Promise.all([
+        const [studentsRes, batchesRes, coursesRes, departmentsRes] = await Promise.all([
           studentsAPI.getStudents(),
-          batchesAPI.getBatches()
+          batchesAPI.getBatches(),
+          api.get('/courses?active=true'),
+          api.get('/departments?active=true')
         ])
 
-        setStudents(studentsRes.data)
-        setBatches(batchesRes.data)
+        // Handle students response structure
+        const studentsData = studentsRes.data?.students || studentsRes.data || []
+        setStudents(studentsData)
+        setBatches(batchesRes.data || [])
+        setCourses(coursesRes.data?.courses || coursesRes.data || [])
+
+        // Filter departments to only include the 4 required ones
+        const allDepartments = departmentsRes.data || []
+        const requiredDepartments = allDepartments.filter(dept =>
+          ['CADD', 'LIVEWIRE', 'DREAMZONE', 'SYNERGY'].includes(dept.name)
+        )
+        setDepartments(requiredDepartments)
       } catch (error) {
         console.error('Error fetching data:', error)
         toast.error('Failed to fetch students data')
@@ -78,9 +95,28 @@ const TeacherStudentsList = () => {
       filtered = filtered.filter(student =>
         student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         student.rollNo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        student.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         student.contactInfo?.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        student.batch?.name?.toLowerCase().includes(searchTerm.toLowerCase())
+        student.batch?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        student.course?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        student.department?.name?.toLowerCase().includes(searchTerm.toLowerCase())
       )
+    }
+
+    // Filter by department
+    if (selectedDepartment !== 'all') {
+      filtered = filtered.filter(student => {
+        const studentDept = student.department?._id || student.department
+        return studentDept === selectedDepartment
+      })
+    }
+
+    // Filter by course
+    if (selectedCourse !== 'all') {
+      filtered = filtered.filter(student => {
+        const studentCourse = student.course?._id || student.course
+        return studentCourse === selectedCourse
+      })
     }
 
     // Filter by batch
@@ -96,7 +132,7 @@ const TeacherStudentsList = () => {
     }
 
     setFilteredStudents(filtered)
-  }, [students, searchTerm, selectedBatch, selectedStatus])
+  }, [students, searchTerm, selectedDepartment, selectedCourse, selectedBatch, selectedStatus])
 
   const getStudentStats = () => {
     const total = students.length
@@ -129,8 +165,8 @@ const TeacherStudentsList = () => {
 
       {/* Enhanced Header */}
       <div className="relative overflow-hidden bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 rounded-2xl shadow-2xl">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-indigo-500/10"></div>
-        <div className="relative px-8 py-12">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-indigo-500/10 pointer-events-none"></div>
+        <div className="relative px-8 py-12 z-10">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-4xl font-bold text-white mb-2">
@@ -234,7 +270,45 @@ const TeacherStudentsList = () => {
           </div>
 
           {/* Filters */}
-          <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
+          <div className="flex flex-col lg:flex-row space-y-2 lg:space-y-0 lg:space-x-4">
+            <select
+              value={selectedDepartment}
+              onChange={(e) => {
+                setSelectedDepartment(e.target.value)
+                setSelectedCourse('all') // Reset course when department changes
+              }}
+              className="px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cadd-red focus:border-cadd-red transition-all duration-200"
+            >
+              <option value="all">All Departments</option>
+              {departments.map(dept => (
+                <option key={dept._id} value={dept._id}>
+                  {dept.name}
+                </option>
+              ))}
+            </select>
+
+            <select
+              value={selectedCourse}
+              onChange={(e) => setSelectedCourse(e.target.value)}
+              className="px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cadd-red focus:border-cadd-red transition-all duration-200"
+              disabled={selectedDepartment === 'all'}
+            >
+              <option value="all">
+                {selectedDepartment === 'all' ? 'Select Department First' : 'All Courses'}
+              </option>
+              {selectedDepartment !== 'all' && courses
+                .filter(course => {
+                  const courseDept = course.department?._id || course.department
+                  return courseDept === selectedDepartment
+                })
+                .map(course => (
+                  <option key={course._id} value={course._id}>
+                    {course.name} ({course.code})
+                  </option>
+                ))
+              }
+            </select>
+
             <select
               value={selectedBatch}
               onChange={(e) => setSelectedBatch(e.target.value)}
@@ -260,7 +334,7 @@ const TeacherStudentsList = () => {
 
             <button
               onClick={() => setViewMode(viewMode === 'grid' ? 'table' : 'grid')}
-              className="px-4 py-3 bg-gray-100 hover:bg-gray-200 rounded-xl transition-all duration-200 flex items-center space-x-2"
+              className="px-4 py-3 bg-gray-100 hover:bg-gray-200 rounded-xl transition-all duration-200 flex items-center space-x-2 whitespace-nowrap"
             >
               <FunnelIcon className="h-5 w-5" />
               <span>{viewMode === 'grid' ? 'Table View' : 'Grid View'}</span>
@@ -279,11 +353,11 @@ const TeacherStudentsList = () => {
           <UserIcon className="mx-auto h-16 w-16 text-gray-400 mb-4" />
           <h3 className="text-xl font-semibold text-gray-900 mb-2">No students found</h3>
           <p className="text-gray-600 mb-6">
-            {searchTerm || selectedBatch !== 'all' || selectedStatus !== 'all'
+            {searchTerm || selectedDepartment !== 'all' || selectedCourse !== 'all' || selectedBatch !== 'all' || selectedStatus !== 'all'
               ? 'Try adjusting your search or filter criteria.'
               : 'No students have been added yet.'}
           </p>
-          {(!searchTerm && selectedBatch === 'all' && selectedStatus === 'all') && (
+          {(!searchTerm && selectedDepartment === 'all' && selectedCourse === 'all' && selectedBatch === 'all' && selectedStatus === 'all') && (
             <Link
               to="/batches"
               className="inline-flex items-center px-6 py-3 border border-transparent text-sm font-semibold rounded-xl text-white bg-gradient-to-r from-cadd-red to-cadd-pink hover:from-cadd-pink hover:to-cadd-red transition-all duration-300"
@@ -339,46 +413,76 @@ const TeacherStudentsList = () => {
 
               {/* Student Details */}
               <div className="p-6 space-y-4">
-                {/* Batch Information */}
-                {student.batch && (
-                  <div className="bg-gray-50 rounded-xl p-4">
-                    <div className="flex items-center space-x-2 mb-2">
-                      <AcademicCapIcon className="h-5 w-5 text-cadd-red" />
-                      <span className="font-semibold text-gray-900">Batch Details</span>
-                    </div>
-                    <div className="space-y-1 text-sm">
-                      <p className="font-medium text-gray-900">{student.batch.name}</p>
-                      <p className="text-gray-600">{student.batch.academicYear} • Section {student.batch.section}</p>
-                      {student.batch.timing && (
-                        <div className="flex items-center text-cadd-red font-medium">
-                          <ClockIcon className="h-4 w-4 mr-1" />
-                          {formatTiming(student.batch.timing)}
-                        </div>
-                      )}
-                    </div>
+                {/* Department & Course Information */}
+                <div className="bg-gray-50 rounded-xl p-4">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <AcademicCapIcon className="h-5 w-5 text-cadd-red" />
+                    <span className="font-semibold text-gray-900">Academic Details</span>
                   </div>
-                )}
+                  <div className="space-y-2 text-sm">
+                    {student.department && (
+                      <div className="flex items-center justify-between">
+                        <span className="text-gray-600">Department:</span>
+                        <span className="font-medium text-gray-900">
+                          {student.department.name || student.department}
+                        </span>
+                      </div>
+                    )}
+                    {student.course && (
+                      <div className="flex items-center justify-between">
+                        <span className="text-gray-600">Course:</span>
+                        <span className="font-medium text-gray-900">
+                          {student.course.name || student.course}
+                        </span>
+                      </div>
+                    )}
+                    {student.batch && (
+                      <>
+                        <div className="flex items-center justify-between">
+                          <span className="text-gray-600">Batch:</span>
+                          <span className="font-medium text-gray-900">{student.batch.name}</span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-gray-600">Academic Year:</span>
+                          <span className="font-medium text-gray-900">{student.batch.academicYear}</span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-gray-600">Section:</span>
+                          <span className="font-medium text-gray-900">{student.batch.section}</span>
+                        </div>
+                        {student.batch.timing && (
+                          <div className="flex items-center justify-between">
+                            <span className="text-gray-600">Timing:</span>
+                            <span className="font-medium text-cadd-red">
+                              {formatTiming(student.batch.timing)}
+                            </span>
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </div>
+                </div>
 
                 {/* Contact Information */}
                 <div className="space-y-2">
                   <h4 className="font-semibold text-gray-900 text-sm">Contact Information</h4>
                   <div className="space-y-2 text-sm">
-                    {student.contactInfo?.email && (
+                    {(student.email || student.contactInfo?.email) && (
                       <div className="flex items-center space-x-2 text-gray-600">
                         <EnvelopeIcon className="h-4 w-4 text-gray-400" />
-                        <span className="truncate">{student.contactInfo.email}</span>
+                        <span className="truncate">{student.email || student.contactInfo.email}</span>
                       </div>
                     )}
-                    {student.contactInfo?.phone && (
+                    {(student.phone || student.contactInfo?.phone) && (
                       <div className="flex items-center space-x-2 text-gray-600">
                         <PhoneIcon className="h-4 w-4 text-gray-400" />
-                        <span>{student.contactInfo.phone}</span>
+                        <span>{student.phone || student.contactInfo.phone}</span>
                       </div>
                     )}
-                    {student.contactInfo?.address && (
+                    {(student.address || student.contactInfo?.address) && (
                       <div className="flex items-center space-x-2 text-gray-600">
                         <MapPinIcon className="h-4 w-4 text-gray-400" />
-                        <span className="truncate">{student.contactInfo.address}</span>
+                        <span className="truncate">{student.address || student.contactInfo.address}</span>
                       </div>
                     )}
                   </div>
@@ -432,6 +536,12 @@ const TeacherStudentsList = () => {
                     Student
                   </th>
                   <th scope="col" className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Department
+                  </th>
+                  <th scope="col" className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Course
+                  </th>
+                  <th scope="col" className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Batch
                   </th>
                   <th scope="col" className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -461,15 +571,31 @@ const TeacherStudentsList = () => {
                         <div>
                           <div className="text-sm font-medium text-gray-900">{student.name}</div>
                           <div className="text-sm text-gray-500">Roll: {student.rollNo}</div>
-                          {/* Class Time Display in Table */}
-                          {student.batch?.timing && (
-                            <div className="flex items-center mt-1 text-xs text-cadd-red font-semibold">
-                              <ClockIcon className="h-3 w-3 mr-1" />
-                              {formatTiming(student.batch.timing)}
-                            </div>
-                          )}
                         </div>
                       </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {student.department ? (
+                        <div className="text-sm font-medium text-gray-900">
+                          {student.department.name || student.department}
+                        </div>
+                      ) : (
+                        <span className="text-sm text-gray-500">Not assigned</span>
+                      )}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {student.course ? (
+                        <div>
+                          <div className="text-sm font-medium text-gray-900">
+                            {student.course.name || student.course}
+                          </div>
+                          {student.course.code && (
+                            <div className="text-sm text-gray-500">({student.course.code})</div>
+                          )}
+                        </div>
+                      ) : (
+                        <span className="text-sm text-gray-500">Not assigned</span>
+                      )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       {student.batch ? (
@@ -488,16 +614,16 @@ const TeacherStudentsList = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-900">
-                        {student.contactInfo?.email && (
+                        {(student.email || student.contactInfo?.email) && (
                           <div className="flex items-center mb-1">
                             <EnvelopeIcon className="h-4 w-4 text-gray-400 mr-1" />
-                            <span className="truncate max-w-32">{student.contactInfo.email}</span>
+                            <span className="truncate max-w-32">{student.email || student.contactInfo.email}</span>
                           </div>
                         )}
-                        {student.contactInfo?.phone && (
+                        {(student.phone || student.contactInfo?.phone) && (
                           <div className="flex items-center">
                             <PhoneIcon className="h-4 w-4 text-gray-400 mr-1" />
-                            <span>{student.contactInfo.phone}</span>
+                            <span>{student.phone || student.contactInfo.phone}</span>
                           </div>
                         )}
                       </div>

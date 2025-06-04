@@ -205,8 +205,8 @@ const AttendancePage = () => {
             <div className="hidden lg:block">
               <img
                 className="h-20 w-auto opacity-80"
-                src="/logos/cadd_logo.png"
-                alt="CADD Centre"
+                src="/logos/cdc_logo.png"
+                alt="CDC"
                 onError={(e) => {
                   e.target.style.display = 'none'
                 }}
@@ -218,54 +218,54 @@ const AttendancePage = () => {
 
       {/* Batch Selection and Date */}
       <div className="attendance-batch-selector bg-white rounded-2xl shadow-lg p-4 sm:p-6">
-        <div className="form-grid grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-3">
-          <div className="form-group">
-            <label className="form-label block text-sm font-medium text-gray-700 mb-2">
-              Select Batch
-            </label>
-            <select
-              value={selectedBatch?._id || ''}
-              onChange={(e) => {
-                const batch = batches.find(b => b._id === e.target.value)
-                setSelectedBatch(batch)
-              }}
-              className="form-select block w-full border-gray-300 rounded-xl shadow-sm focus:ring-cadd-red focus:border-cadd-red"
-            >
-              {batches.map(batch => (
-                <option key={batch._id} value={batch._id}>
-                  {batch.name} - {batch.section} {batch.timing && `(${batch.timing})`}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="form-group">
-            <label className="form-label block text-sm font-medium text-gray-700 mb-2">
-              Date
-            </label>
-            <input
-              type="date"
-              value={selectedDate}
-              onChange={(e) => setSelectedDate(e.target.value)}
-              className="form-input block w-full border-gray-300 rounded-xl shadow-sm focus:ring-cadd-red focus:border-cadd-red"
-            />
-          </div>
-          <div className="form-group">
-            <label className="form-label block text-sm font-medium text-gray-700 mb-2">
-              Search Students
-            </label>
-            <div className="search-container relative">
-              <MagnifyingGlassIcon className="h-5 w-5 absolute left-3 top-3 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search by name or roll number..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="search-input pl-10 block w-full border-gray-300 rounded-xl shadow-sm focus:ring-cadd-red focus:border-cadd-red"
-              />
-            </div>
-          </div>
-        </div>
+  <div className="form-grid grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-3">
+    <div className="form-group">
+      <label className="form-label block text-sm font-medium text-gray-700 mb-2">
+        Select Batch
+      </label>
+      <select
+        value={selectedBatch?._id || ''}
+        onChange={(e) => {
+          const batch = batches.find(b => b._id === e.target.value)
+          setSelectedBatch(batch)
+        }}
+        className="form-select block w-full h-12 border border-gray-300 bg-white rounded-xl shadow-sm focus:ring-2 focus:ring-cadd-red focus:border-cadd-red transition duration-300 ease-in-out px-4 py-3"
+      >
+        {batches.map(batch => (
+          <option key={batch._id} value={batch._id}>
+            {batch.name} - {batch.section} {batch.timing && `(${batch.timing})`}
+          </option>
+        ))}
+      </select>
+    </div>
+    <div className="form-group">
+      <label className="form-label block text-sm font-medium text-gray-700 mb-2">
+        Date
+      </label>
+      <input
+        type="date"
+        value={selectedDate}
+        onChange={(e) => setSelectedDate(e.target.value)}
+        className="form-input block w-full h-12 border border-gray-300 bg-white rounded-xl shadow-sm focus:ring-2 focus:ring-cadd-red focus:border-cadd-red transition duration-300 ease-in-out px-4 py-3"
+      />
+    </div>
+    <div className="form-group">
+      <label className="form-label block text-sm font-medium text-gray-700 mb-2">
+        Search Students
+      </label>
+      <div className="search-container relative">
+        <MagnifyingGlassIcon className="h-5 w-5 absolute left-3 top-3 text-gray-400" />
+        <input
+          type="text"
+          placeholder="Search by name or roll number..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="search-input pl-10 block w-full h-12 border border-gray-300 bg-white rounded-xl shadow-sm focus:ring-2 focus:ring-cadd-red focus:border-cadd-red transition duration-300 ease-in-out px-4 py-3"
+        />
       </div>
+    </div>
+  </div>
+</div>
 
       {/* Stats Cards */}
       {selectedBatch && (

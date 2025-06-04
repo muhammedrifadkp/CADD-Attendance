@@ -148,8 +148,8 @@ const BatchStudents = () => {
                       {student.rollNo}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {student.contactInfo?.email || 'No email'}<br />
-                      {student.contactInfo?.phone || 'No phone'}
+                      {student.email || student.contactInfo?.email || 'No email'}<br />
+                      {student.phone || student.contactInfo?.phone || 'No phone'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${student.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'

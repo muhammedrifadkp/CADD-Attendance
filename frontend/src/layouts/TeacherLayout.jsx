@@ -26,10 +26,10 @@ const TeacherLayout = () => {
       current: location.pathname === '/',
     },
     {
-      name: 'Attendance',
-      href: '/attendance',
-      icon: ClipboardDocumentListIcon,
-      current: location.pathname.startsWith('/attendance'),
+      name: 'Batches',
+      href: '/batches',
+      icon: UserGroupIcon,
+      current: location.pathname.startsWith('/batches'),
     },
     {
       name: 'Students',
@@ -38,16 +38,16 @@ const TeacherLayout = () => {
       current: location.pathname === '/students',
     },
     {
+      name: 'Attendance',
+      href: '/attendance',
+      icon: ClipboardDocumentListIcon,
+      current: location.pathname.startsWith('/attendance'),
+    },
+    {
       name: 'Lab Availability',
       href: '/lab-availability',
       icon: ComputerDesktopIcon,
       current: location.pathname.startsWith('/lab-availability'),
-    },
-    {
-      name: 'Batches',
-      href: '/batches',
-      icon: UserGroupIcon,
-      current: location.pathname.startsWith('/batches'),
     },
   ]
 
@@ -93,20 +93,20 @@ const TeacherLayout = () => {
           </div>
 
           <div className="flex-1 h-0 pt-6 pb-4 overflow-y-auto">
-            {/* Mobile Header with CADD Branding */}
+            {/* Mobile Header with CDC Branding */}
             <div className="px-4 mb-8">
               <div className="flex items-center justify-center mb-4">
                 <div className="relative">
                   <img
                     className="h-10 w-auto"
-                    src="/logos/cadd_logo.png"
-                    alt="CADD Centre"
+                    src="/logos/cdc_logo.png"
+                    alt="CDC"
                     onError={(e) => {
                       e.target.style.display = 'none'
                       e.target.nextSibling.style.display = 'block'
                     }}
                   />
-                  <div className="hidden text-white text-lg font-bold">CADD Centre</div>
+                  <div className="hidden text-white text-lg font-bold">CDC</div>
                 </div>
               </div>
               <div className="text-center">
@@ -175,20 +175,20 @@ const TeacherLayout = () => {
             background: 'linear-gradient(180deg, #1f2937 0%, #111827 50%, #0f172a 100%)'
           }}>
           <div className="flex-1 flex flex-col pt-6 pb-4 overflow-y-auto">
-            {/* Teacher Header with CADD Branding */}
+            {/* Teacher Header with CDC Branding */}
             <div className="px-4 mb-8">
               <div className="flex items-center justify-center mb-4">
                 <div className="relative">
                   <img
                     className="h-12 w-auto"
-                    src="/logos/cadd_logo.png"
-                    alt="CADD Centre"
+                    src="/logos/cdc_logo.png"
+                    alt="CDC"
                     onError={(e) => {
                       e.target.style.display = 'none'
                       e.target.nextSibling.style.display = 'block'
                     }}
                   />
-                  <div className="hidden text-white text-xl font-bold">CADD Centre</div>
+                  <div className="hidden text-white text-xl font-bold">CDC</div>
                 </div>
               </div>
               <div className="text-center">
@@ -265,18 +265,18 @@ const TeacherLayout = () => {
             <div className="flex items-center">
               <img
                 className="h-8 w-auto mr-2"
-                src="/logos/cadd_logo.png"
-                alt="CADD Centre"
+                src="/logos/cdc_logo.png"
+                alt="CDC"
                 onError={(e) => {
                   e.target.style.display = 'none'
                   e.target.nextSibling.style.display = 'block'
                 }}
               />
               <div className="hidden w-8 h-8 bg-gradient-to-br from-cadd-red to-cadd-pink rounded-lg flex items-center justify-center mr-2">
-                <span className="text-white font-bold text-sm">CC</span>
+                <span className="text-white font-bold text-sm">CDC</span>
               </div>
               <div className="text-center">
-                <h1 className="text-lg font-bold bg-gradient-to-r from-cadd-red to-cadd-pink bg-clip-text text-transparent">CADD Centre</h1>
+                <h1 className="text-lg font-bold bg-gradient-to-r from-cadd-red to-cadd-pink bg-clip-text text-transparent">CDC</h1>
                 <p className="text-xs text-gray-500 font-medium">Teacher Portal</p>
               </div>
             </div>

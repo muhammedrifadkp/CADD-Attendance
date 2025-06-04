@@ -11,6 +11,8 @@ import {
   ArrowLeftOnRectangleIcon,
   ComputerDesktopIcon,
   ShieldCheckIcon,
+  BuildingOfficeIcon,
+  AcademicCapIcon,
 } from '@heroicons/react/24/outline'
 
 const AdminLayout = () => {
@@ -27,16 +29,22 @@ const AdminLayout = () => {
       current: location.pathname === '/admin',
     },
     {
-      name: 'Attendance',
-      href: '/admin/attendance',
-      icon: ClipboardDocumentListIcon,
-      current: location.pathname.startsWith('/admin/attendance'),
-    },
-    {
       name: 'Admins',
       href: '/admin/admins',
       icon: ShieldCheckIcon,
       current: location.pathname.startsWith('/admin/admins'),
+    },
+    {
+      name: 'Departments',
+      href: '/admin/departments',
+      icon: BuildingOfficeIcon,
+      current: location.pathname.startsWith('/admin/departments'),
+    },
+    {
+      name: 'Courses',
+      href: '/admin/courses',
+      icon: AcademicCapIcon,
+      current: location.pathname.startsWith('/admin/courses'),
     },
     {
       name: 'Teachers',
@@ -45,16 +53,22 @@ const AdminLayout = () => {
       current: location.pathname.startsWith('/admin/teachers'),
     },
     {
+      name: 'Batches',
+      href: '/admin/batches',
+      icon: UserGroupIcon,
+      current: location.pathname.startsWith('/admin/batches'),
+    },
+    {
       name: 'Students',
       href: '/admin/students',
       icon: UserGroupIcon,
       current: location.pathname.startsWith('/admin/students'),
     },
     {
-      name: 'Batches',
-      href: '/admin/batches',
-      icon: UserGroupIcon,
-      current: location.pathname.startsWith('/admin/batches'),
+      name: 'Attendance',
+      href: '/admin/attendance',
+      icon: ClipboardDocumentListIcon,
+      current: location.pathname.startsWith('/admin/attendance'),
     },
     {
       name: 'Lab Management',
@@ -103,27 +117,27 @@ const AdminLayout = () => {
           </div>
 
           <div className="flex-1 h-0 pt-6 pb-4 overflow-y-auto">
-            {/* Admin Header with CADD Branding */}
+            {/* Admin Header with CDC Branding */}
             <div className="px-4 mb-8">
               <div className="flex items-center justify-center mb-4">
                 <div className="relative">
                   <img
                     className="h-12 w-auto"
-                    src="/logos/cadd_logo.png"
-                    alt="CADD Centre"
+                    src="/logos/cdc_logo.png"
+                    alt="CDC"
                     onError={(e) => {
                       e.target.style.display = 'none'
                       e.target.nextSibling.style.display = 'block'
                     }}
                   />
                   <div className="hidden w-12 h-12 bg-gradient-to-br from-cadd-red to-cadd-pink rounded-xl flex items-center justify-center shadow-lg">
-                    <span className="text-white font-bold text-lg">CC</span>
+                    <span className="text-white font-bold text-lg">CDC</span>
                   </div>
 
                 </div>
               </div>
               <div className="text-center">
-                <h1 className="text-white text-xl font-bold mb-1">CADD Centre</h1>
+                <h1 className="text-white text-xl font-bold mb-1">CDC</h1>
                 <p className="text-gray-300 text-sm font-medium mb-1">Administration Panel</p>
                 <div className="w-16 h-0.5 bg-gradient-to-r from-cadd-red to-cadd-yellow mx-auto rounded-full"></div>
               </div>
@@ -190,14 +204,14 @@ const AdminLayout = () => {
             background: 'linear-gradient(180deg, #1f2937 0%, #111827 50%, #0f172a 100%)'
           }}>
           <div className="flex-1 flex flex-col pt-6 pb-4 overflow-y-auto">
-            {/* Admin Header with CADD Branding */}
+            {/* Admin Header with CDC Branding */}
             <div className="px-4 mb-8">
               <div className="flex items-center justify-center mb-4">
                 <div className="relative">
                   <img
                     className="h-12 w-auto"
-                    src="/logos/cadd_logo.png"
-                    alt="CADD Centre"
+                    src="/logos/cdc_logo.png"
+                    alt="CDC"
                     onError={(e) => {
                       e.target.style.display = 'none'
                       e.target.nextSibling.style.display = 'block'
@@ -210,7 +224,7 @@ const AdminLayout = () => {
                 </div>
               </div>
               <div className="text-center">
-                <h1 className="text-white text-xl font-bold mb-1">CADD Centre</h1>
+                <h1 className="text-white text-xl font-bold mb-1">CDC</h1>
                 <p className="text-gray-300 text-sm font-medium mb-1">Administration Panel</p>
                 <div className="w-16 h-0.5 bg-gradient-to-r from-cadd-red to-cadd-yellow mx-auto rounded-full"></div>
               </div>
@@ -285,18 +299,18 @@ const AdminLayout = () => {
             <div className="flex items-center">
               <img
                 className="h-8 w-auto mr-2"
-                src="/logos/cadd_logo.png"
-                alt="CADD Centre"
+                src="/logos/cdc_logo.png"
+                alt="CDC"
                 onError={(e) => {
                   e.target.style.display = 'none'
                   e.target.nextSibling.style.display = 'block'
                 }}
               />
               <div className="hidden w-8 h-8 bg-gradient-to-br from-cadd-red to-cadd-pink rounded-lg flex items-center justify-center mr-2">
-                <span className="text-white font-bold text-sm">CC</span>
+                <span className="text-white font-bold text-sm">CDC</span>
               </div>
               <div className="text-center">
-                <h1 className="text-lg font-bold bg-gradient-to-r from-cadd-red to-cadd-pink bg-clip-text text-transparent">CADD Centre</h1>
+                <h1 className="text-lg font-bold bg-gradient-to-r from-cadd-red to-cadd-pink bg-clip-text text-transparent">CDC</h1>
                 <p className="text-xs text-gray-500 font-medium">Admin Panel</p>
               </div>
             </div>
@@ -312,7 +326,7 @@ const AdminLayout = () => {
                   <div className="w-2 h-8 bg-gradient-to-b from-cadd-red to-cadd-pink rounded-full mr-4"></div>
                   <div>
                     <h1 className="text-xl font-bold text-gray-900">Administration Dashboard</h1>
-                    <p className="text-sm text-gray-500">CADD Centre Management System</p>
+                    <p className="text-sm text-gray-500">CDC Management System</p>
                   </div>
                 </div>
               </div>

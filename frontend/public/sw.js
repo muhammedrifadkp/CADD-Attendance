@@ -1,9 +1,9 @@
-// Service Worker for CADD Attendance Management System
+// Service Worker for CDC Attendance Management System
 // Provides offline functionality and caching strategies
 
-const CACHE_NAME = 'cadd-attendance-v1'
-const STATIC_CACHE = 'cadd-static-v1'
-const API_CACHE = 'cadd-api-v1'
+const CACHE_NAME = 'cdc-attendance-v1'
+const STATIC_CACHE = 'cdc-static-v1'
+const API_CACHE = 'cdc-api-v1'
 
 // Static assets to cache
 const STATIC_ASSETS = [
@@ -12,7 +12,7 @@ const STATIC_ASSETS = [
   '/manifest.json',
   '/icons/icon-192x192.png',
   '/icons/icon-512x512.png',
-  '/logos/cadd_logo.png'
+  '/logos/cdc_logo.png'
 ]
 
 // API endpoints to cache

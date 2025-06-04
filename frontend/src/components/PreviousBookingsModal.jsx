@@ -13,11 +13,11 @@ import { formatDateLong } from '../utils/dateUtils'
 
 const PreviousBookingsModal = ({ isOpen, onClose, previousBookings, previousDate }) => {
   const timeSlots = [
-    '09:00-10:30',
-    '10:30-12:00',
-    '12:00-13:30',
-    '14:00-15:30',
-    '15:30-17:00'
+    '09:00 AM - 10:30 AM',
+    '10:30 AM - 12:00 PM',
+    '12:00 PM - 01:30 PM',
+    '02:00 PM - 03:30 PM',
+    '03:30 PM - 05:00 PM'
   ]
 
   const getTimeSlotLabel = (slot) => {

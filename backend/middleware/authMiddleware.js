@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 const User = require('../models/userModel');
 
 // Protect routes
@@ -17,43 +18,125 @@ const protect = async (req, res, next) => {
     token = req.cookies.jwt;
   }
 
-  if (token) {
-    try {
-      // Verify token
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-      // Get user from the token
-      req.user = await User.findById(decoded.id).select('-password');
-
-      // If user not found or not active
-      if (!req.user || !req.user.active) {
-        return res.status(401).json({
-          message: 'User not found or inactive',
-          error: 'UserNotFoundOrInactive'
-        });
-      }
-
-      next();
-    } catch (error) {
-      console.error('Token verification error:', error.message);
-
-      // Clear the invalid cookie if present
-      if (req.cookies.jwt) {
-        res.clearCookie('jwt');
-      }
-
-      // Send proper JSON response instead of throwing error
-      return res.status(401).json({
-        message: error.name === 'TokenExpiredError'
-          ? 'Token expired, please login again'
-          : 'Not authorized, token failed',
-        error: error.name
-      });
-    }
-  } else {
+  if (!token) {
     return res.status(401).json({
       message: 'Not authorized, no token',
       error: 'NoTokenError'
+    });
+  }
+
+  try {
+    // Verify token with enhanced options
+    const decoded = jwt.verify(token, process.env.JWT_SECRET, {
+      issuer: 'cadd-attendance',
+      audience: 'cadd-attendance-users'
+    });
+
+    // Validate token fingerprint
+    const userAgent = req.get('User-Agent') || '';
+    const clientIP = req.ip || req.connection.remoteAddress || '';
+    const expectedFingerprint = crypto.createHash('sha256').update(`${userAgent}-${clientIP}`).digest('hex').substring(0, 16);
+
+    if (decoded.fp && decoded.fp !== expectedFingerprint) {
+      return res.status(401).json({
+        message: 'Token fingerprint mismatch',
+        error: 'TokenFingerprintMismatch'
+      });
+    }
+
+    // Get user from the token
+    const user = await User.findById(decoded.id).select('-password');
+
+    // If user not found or not active
+    if (!user || !user.active) {
+      return res.status(401).json({
+        message: 'User not found or inactive',
+        error: 'UserNotFoundOrInactive'
+      });
+    }
+
+    // Check if user is locked
+    if (user.lockUntil && user.lockUntil > Date.now()) {
+      return res.status(423).json({
+        message: 'Account is locked. Please try again later.',
+        error: 'AccountLocked'
+      });
+    }
+
+    // Attach user to request
+    req.user = user;
+    next();
+  } catch (error) {
+    console.error('Token verification error:', error.message);
+
+    // Clear the invalid cookie if present
+    if (req.cookies.jwt) {
+      res.clearCookie('jwt');
+    }
+
+    // Handle specific JWT errors
+    if (error.name === 'TokenExpiredError') {
+      return res.status(401).json({
+        message: 'Token expired, please refresh your token',
+        error: 'TokenExpiredError',
+        shouldRefresh: true
+      });
+    }
+
+    if (error.name === 'JsonWebTokenError') {
+      return res.status(401).json({
+        message: 'Invalid token',
+        error: 'InvalidTokenError'
+      });
+    }
+
+    // Handle other errors
+    return res.status(401).json({
+      message: 'Not authorized, token failed',
+      error: error.name
+    });
+  }
+};
+
+// Verify refresh token
+const verifyRefreshToken = async (req, res, next) => {
+  const { refreshToken } = req.cookies;
+
+  if (!refreshToken) {
+    return res.status(401).json({
+      message: 'Refresh token not provided',
+      error: 'NoRefreshTokenError'
+    });
+  }
+
+  try {
+    // Verify refresh token
+    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+
+    // Get user from the token
+    const user = await User.findById(decoded.id).select('+refreshToken');
+
+    if (!user || user.refreshToken !== refreshToken) {
+      return res.status(401).json({
+        message: 'Invalid refresh token',
+        error: 'InvalidRefreshTokenError'
+      });
+    }
+
+    // Attach user to request
+    req.user = user;
+    next();
+  } catch (error) {
+    console.error('Refresh token verification error:', error.message);
+
+    // Clear the invalid cookie if present
+    if (req.cookies.refreshToken) {
+      res.clearCookie('refreshToken');
+    }
+
+    return res.status(401).json({
+      message: 'Invalid refresh token',
+      error: error.name
     });
   }
 };
@@ -94,4 +177,10 @@ const labAccess = (req, res, next) => {
   }
 };
 
-module.exports = { protect, admin, teacher, labAccess };
+module.exports = { 
+  protect, 
+  verifyRefreshToken,
+  admin, 
+  teacher, 
+  labAccess 
+};

@@ -106,7 +106,10 @@ const AttendanceForm = () => {
 
   const filteredData = attendanceData.filter(item => {
     const matchesSearch = item.student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.student.rollNo.toLowerCase().includes(searchTerm.toLowerCase())
+      item.student.rollNo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.student.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.student.course?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.student.department?.name?.toLowerCase().includes(searchTerm.toLowerCase())
     const matchesFilter = filterStatus === 'all' ||
       (filterStatus === 'not-marked' && !item.attendance?.status) ||
       item.attendance?.status === filterStatus
@@ -436,8 +439,8 @@ const AttendanceForm = () => {
                     </div>
                     <input
                       type="text"
-                      placeholder="Search students by name or roll number..."
-                      className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                      placeholder="Search students by name, roll number, email, course, or department..."
+                      className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-cadd-red focus:border-cadd-red sm:text-sm"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />

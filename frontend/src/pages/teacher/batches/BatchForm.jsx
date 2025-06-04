@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { batchesAPI } from '../../../services/api'
+import api from '../../../services/api'
 import { toast } from 'react-toastify'
 import { ClockIcon } from '@heroicons/react/24/outline'
 
@@ -11,49 +12,102 @@ const BatchForm = () => {
 
   // Institute time slots (same as lab time slots)
   const timeSlots = [
-    { id: '09:00-10:30', label: '09:00 AM - 10:30 AM', icon: '🌅' },
-    { id: '10:30-12:00', label: '10:30 AM - 12:00 PM', icon: '☀️' },
-    { id: '12:00-13:30', label: '12:00 PM - 01:30 PM', icon: '🌞' },
-    { id: '14:00-15:30', label: '02:00 PM - 03:30 PM', icon: '🌤️' },
-    { id: '15:30-17:00', label: '03:30 PM - 05:00 PM', icon: '🌇' },
+    { id: '09:00 AM - 10:30 AM', label: '09:00 AM - 10:30 AM', icon: '🌅' },
+    { id: '10:30 AM - 12:00 PM', label: '10:30 AM - 12:00 PM', icon: '☀️' },
+    { id: '12:00 PM - 01:30 PM', label: '12:00 PM - 01:30 PM', icon: '🌞' },
+    { id: '02:00 PM - 03:30 PM', label: '02:00 PM - 03:30 PM', icon: '🌤️' },
+    { id: '03:30 PM - 05:00 PM', label: '03:30 PM - 05:00 PM', icon: '🌇' },
   ]
 
   const [formData, setFormData] = useState({
     name: '',
+    course: '',
+    department: '',
     academicYear: '',
     section: '',
     timing: '',
+    startDate: '',
+    maxStudents: 20,
     isArchived: false,
+    isFinished: false,
   })
   const [loading, setLoading] = useState(false)
   const [fetchLoading, setFetchLoading] = useState(isEditMode)
+  const [courses, setCourses] = useState([])
+  const [departments, setDepartments] = useState([])
+
+  // Fixed departments as per requirements (CADD, LIVEWIRE, DREAMZONE, SYNERGY)
+  // These will be fetched from backend but should only include these 4 departments
 
   useEffect(() => {
-    const fetchBatch = async () => {
-      if (isEditMode) {
-        try {
-          setFetchLoading(true)
-          const res = await batchesAPI.getBatch(id)
-          const { name, academicYear, section, timing, isArchived } = res.data
-          setFormData({ name, academicYear, section, timing: timing || '', isArchived })
-        } catch (error) {
-          toast.error('Failed to fetch batch details')
-          navigate('/batches')
-        } finally {
-          setFetchLoading(false)
+    const fetchData = async () => {
+      try {
+        // Fetch courses and departments
+        const [coursesRes, departmentsRes] = await Promise.all([
+          api.get('/courses?active=true'),
+          api.get('/departments?active=true')
+        ]);
+
+        setCourses(coursesRes.data.courses || coursesRes.data || []);
+
+        // Filter departments to only include the 4 required ones
+        const allDepartments = departmentsRes.data || [];
+        const requiredDepartments = allDepartments.filter(dept =>
+          ['CADD', 'LIVEWIRE', 'DREAMZONE', 'SYNERGY'].includes(dept.name)
+        );
+        setDepartments(requiredDepartments);
+
+        // Fetch batch data if editing
+        if (isEditMode) {
+          setFetchLoading(true);
+          const res = await batchesAPI.getBatch(id);
+          const batch = res.data;
+
+          setFormData({
+            name: batch.name || '',
+            course: batch.course?._id || '',
+            department: batch.course?.department?._id || batch.course?.department || '',
+            academicYear: batch.academicYear || '',
+            section: batch.section || '',
+            timing: batch.timing || '',
+            startDate: batch.startDate ? new Date(batch.startDate).toISOString().split('T')[0] : '',
+            maxStudents: batch.maxStudents || 20,
+            isArchived: batch.isArchived || false,
+            isFinished: batch.isFinished || false,
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        toast.error('Failed to fetch data');
+        if (isEditMode) {
+          navigate('/batches');
+        }
+      } finally {
+        if (isEditMode) {
+          setFetchLoading(false);
         }
       }
-    }
+    };
 
-    fetchBatch()
-  }, [id, isEditMode, navigate])
+    fetchData();
+  }, [id, isEditMode, navigate]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target
-    setFormData({
-      ...formData,
-      [name]: type === 'checkbox' ? checked : value,
-    })
+
+    // If department changes, reset course selection
+    if (name === 'department') {
+      setFormData({
+        ...formData,
+        [name]: type === 'checkbox' ? checked : value,
+        course: '' // Reset course when department changes
+      })
+    } else {
+      setFormData({
+        ...formData,
+        [name]: type === 'checkbox' ? checked : value,
+      })
+    }
   }
 
   const handleSubmit = async (e) => {
@@ -107,8 +161,65 @@ const BatchForm = () => {
                 className="form-input"
                 value={formData.name}
                 onChange={handleChange}
-                placeholder="e.g. Computer Science 101"
+                placeholder="e.g. AutoCAD Batch A"
               />
+            </div>
+
+            <div>
+              <label htmlFor="department" className="form-label">
+                Department
+              </label>
+              <select
+                name="department"
+                id="department"
+                required
+                className="form-input"
+                value={formData.department}
+                onChange={handleChange}
+              >
+                <option value="">Select a department</option>
+                {departments.map(dept => (
+                  <option key={dept._id} value={dept._id}>
+                    {dept.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label htmlFor="course" className="form-label">
+                Course
+              </label>
+              <select
+                name="course"
+                id="course"
+                required
+                className="form-input"
+                value={formData.course}
+                onChange={handleChange}
+                disabled={!formData.department}
+              >
+                <option value="">
+                  {!formData.department ? 'Select department first' : 'Select a course'}
+                </option>
+                {formData.department && courses
+                  .filter(course => {
+                    // Filter courses by selected department
+                    const courseDept = course.department?._id || course.department;
+                    return courseDept === formData.department;
+                  })
+                  .map(course => (
+                    <option key={course._id} value={course._id}>
+                      {course.name} ({course.code})
+                    </option>
+                  ))
+                }
+              </select>
+              {!formData.department && (
+                <p className="mt-1 text-sm text-gray-500">
+                  Please select a department to see available courses
+                </p>
+              )}
             </div>
 
             <div>
@@ -143,6 +254,24 @@ const BatchForm = () => {
               />
             </div>
 
+            <div>
+              <label htmlFor="startDate" className="form-label">
+                Start Date
+              </label>
+              <input
+                type="date"
+                name="startDate"
+                id="startDate"
+                required
+                className="form-input"
+                value={formData.startDate}
+                onChange={handleChange}
+              />
+              <p className="mt-1 text-sm text-gray-500">
+                End date will be set automatically when the batch is marked as finished
+              </p>
+            </div>
+
             {/* Batch Timing Selection */}
             <div className="sm:col-span-2">
               <label className="form-label flex items-center">
@@ -157,8 +286,8 @@ const BatchForm = () => {
                   <label
                     key={slot.id}
                     className={`relative flex cursor-pointer rounded-lg border p-4 focus:outline-none transition-all duration-200 ${formData.timing === slot.id
-                        ? 'border-cadd-red bg-red-50 ring-2 ring-cadd-red'
-                        : 'border-gray-300 bg-white hover:border-gray-400 hover:bg-gray-50'
+                      ? 'border-cadd-red bg-red-50 ring-2 ring-cadd-red'
+                      : 'border-gray-300 bg-white hover:border-gray-400 hover:bg-gray-50'
                       }`}
                   >
                     <input

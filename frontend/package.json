@@ -5,9 +5,27 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:host": "vite --host",
+    "dev:debug": "vite --debug",
     "build": "vite build",
+    "build:analyze": "echo 'Bundle analyzer not available. Install rollup-plugin-visualizer first.' && vite build",
+    "build:staging": "vite build --mode staging",
+    "build:production": "vite build --mode production",
+    "build:clean": "rimraf dist && vite build",
+    "preview": "vite preview",
+    "preview:dist": "vite preview --port 4173",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "lint:fix": "eslint . --ext js,jsx --fix",
+    "type-check": "tsc --noEmit",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage",
+    "clean": "rimraf dist node_modules/.vite",
+    "clean:all": "rimraf dist node_modules/.vite node_modules",
+    "deps:check": "npm outdated",
+    "deps:update": "npm update",
+    "size-check": "echo 'Bundle size check not available. Run: npm run install:optional' && npm run build",
+    "install:optional": "node install-optional-deps.js"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.17",
@@ -15,13 +33,14 @@
     "axios": "^1.6.2",
     "chart.js": "^4.4.1",
     "date-fns": "^2.30.0",
+    "exceljs": "^4.4.0",
     "framer-motion": "^12.14.0",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
+    "react-hot-toast": "^2.5.2",
     "react-router-dom": "^6.20.1",
-    "react-toastify": "^9.1.3",
-    "xlsx": "^0.18.5"
+    "react-toastify": "^11.0.5"
   },
   "devDependencies": {
     "@types/react": "^18.2.37",

@@ -49,10 +49,11 @@ const Login = () => {
       console.error('Login error in component:', error)
       toast.error(error.message || 'Login failed. Please check your credentials.')
 
-      // Display the exact credentials being used for debugging
-      console.log('Attempted login with:')
-      console.log('Email:', formData.email)
-      console.log('Password:', formData.password)
+      // Only log credentials in development mode
+      if (import.meta.env.DEV) {
+        console.log('Attempted login with email:', formData.email)
+        // Never log passwords, even in development
+      }
     } finally {
       setLoading(false)
     }
@@ -91,10 +92,10 @@ const Login = () => {
 
       <form className="form-grid space-y-6" onSubmit={handleSubmit}>
         <div className="space-y-4">
-          {/* Email Field */}
+          {/* Email or Employee ID Field */}
           <div className="form-group">
             <label htmlFor="email" className="form-label">
-              Email Address
+              {loginType === 'teacher' ? 'Email or Employee ID' : 'Email Address'}
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -103,15 +104,22 @@ const Login = () => {
               <input
                 id="email"
                 name="email"
-                type="email"
+                type="text"
                 autoComplete="email"
                 required
                 className="form-input pl-10"
-                placeholder={`Enter your ${loginType} email`}
+                placeholder={loginType === 'teacher'
+                  ? 'Enter email or Employee ID (e.g., CADD-001)'
+                  : `Enter your ${loginType} email`}
                 value={formData.email}
                 onChange={handleChange}
               />
             </div>
+            {loginType === 'teacher' && (
+              <p className="text-xs text-gray-500 mt-1">
+                You can login using either your email address or Employee ID
+              </p>
+            )}
           </div>
 
           {/* Password Field */}

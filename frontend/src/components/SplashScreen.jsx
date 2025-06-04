@@ -24,7 +24,7 @@ const SplashScreen = ({ onComplete }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-gray-900 via-purple-900 to-gray-800">
       <div className="relative z-10 text-center">
-        {/* Stage 1: Animated CADD Centre Text with Special C */}
+        {/* Stage 1: Animated CDC Text with Special C */}
         <AnimatePresence>
           {currentStage >= 1 && (
             <motion.div
@@ -80,7 +80,7 @@ const SplashScreen = ({ onComplete }) => {
                   />
                 </motion.span>
 
-                {/* ADD text */}
+                {/* DC text */}
                 <motion.span
                   className="ml-2"
                   initial={{ opacity: 0, x: -20 }}
@@ -107,18 +107,8 @@ const SplashScreen = ({ onComplete }) => {
                       backgroundClip: 'text'
                     }}
                   >
-                    ADD
+                    DC
                   </motion.span>
-                </motion.span>
-
-                {/* Centre text */}
-                <motion.span
-                  className="text-white ml-4"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 1.2, duration: 0.6 }}
-                >
-                  Centre
                 </motion.span>
               </motion.h1>
 
@@ -128,7 +118,7 @@ const SplashScreen = ({ onComplete }) => {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 1.5, duration: 0.6 }}
               >
-                Computer Aided Design & Development
+                Career Development Centre
               </motion.p>
             </motion.div>
           )}

@@ -11,13 +11,13 @@ const AuthLayout = () => {
       </div>
 
       <div className="container max-w-md w-full space-y-6 sm:space-y-8 relative z-10">
-        {/* CADD Centre Header */}
+        {/* CDC Header */}
         <div className="text-center animate-fade-in">
           <div className="flex justify-center mb-6">
             <img
               className="cadd-logo-large"
-              src="/logos/cadd_logo.png"
-              alt="CADD Centre"
+              src="/logos/cdc_logo.png"
+              alt="CDC"
               onError={(e) => {
                 e.target.style.display = 'none'
                 e.target.nextSibling.style.display = 'block'
@@ -25,12 +25,12 @@ const AuthLayout = () => {
             />
             <div className="hidden">
               <div className="w-16 h-16 gradient-primary rounded-xl flex items-center justify-center shadow-lg">
-                <span className="text-white font-bold text-2xl">CC</span>
+                <span className="text-white font-bold text-2xl">CDC</span>
               </div>
             </div>
           </div>
           <h1 className="text-4xl font-bold gradient-primary bg-clip-text text-transparent mb-2">
-            CADD Centre
+            CDC
           </h1>
           <h2 className="text-2xl font-semibold text-gray-800 mb-2">
             Attendance Management
@@ -48,7 +48,7 @@ const AuthLayout = () => {
         {/* Footer */}
         <div className="text-center animate-fade-in">
           <p className="text-sm text-gray-500">
-            © 2025 CADD Centre. All rights reserved.
+            © 2025 CDC. All rights reserved.
           </p>
           <p className="text-xs text-gray-400 mt-1">
             Empowering careers through quality software training

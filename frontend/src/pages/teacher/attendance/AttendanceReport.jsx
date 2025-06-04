@@ -3,6 +3,16 @@ import { useParams, Link } from 'react-router-dom'
 import { batchesAPI, attendanceAPI } from '../../../services/api'
 import { toast } from 'react-toastify'
 import { format, subDays } from 'date-fns'
+import {
+  ChartBarIcon,
+  CalendarDaysIcon,
+  UserGroupIcon,
+  CheckCircleIcon,
+  XCircleIcon,
+  ClockIcon,
+  ArrowLeftIcon,
+  DocumentChartBarIcon
+} from '@heroicons/react/24/outline'
 
 const AttendanceReport = () => {
   const { id: batchId } = useParams()
@@ -59,21 +69,45 @@ const AttendanceReport = () => {
   }
 
   return (
-    <div>
-      <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold text-gray-900">Attendance Report</h1>
-          <p className="mt-1 text-sm text-gray-500">
-            {batch.name} • {batch.academicYear} • {batch.section}
-          </p>
-        </div>
-        <div className="mt-4 sm:mt-0">
-          <Link
-            to={`/batches/${batchId}/attendance`}
-            className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
-          >
-            Mark Attendance
-          </Link>
+    <div className="space-y-8">
+      {/* Enhanced Header */}
+      <div className="bg-white rounded-2xl shadow-lg p-6">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
+          <div className="flex items-center space-x-4">
+            <Link
+              to={`/batches/${batchId}/attendance`}
+              className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700"
+            >
+              <ArrowLeftIcon className="h-4 w-4 mr-1" />
+              Back to Attendance
+            </Link>
+            <div className="hidden sm:block w-px h-6 bg-gray-300"></div>
+            <div className="flex items-center space-x-3">
+              <div className="p-3 bg-gradient-to-br from-cadd-red to-cadd-pink rounded-xl shadow-lg">
+                <DocumentChartBarIcon className="h-8 w-8 text-white" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900">Attendance Report</h1>
+                <p className="mt-1 text-sm text-gray-600">
+                  {batch.name} • {batch.academicYear} • Section {batch.section}
+                </p>
+                {batch.course && (
+                  <p className="text-xs text-gray-500">
+                    {batch.course.department?.name} - {batch.course.name}
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
+            <Link
+              to={`/batches/${batchId}/attendance`}
+              className="inline-flex items-center justify-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-xl text-white bg-gradient-to-r from-cadd-red to-cadd-pink hover:from-cadd-pink hover:to-cadd-red focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cadd-red transition-all duration-300 transform hover:scale-105"
+            >
+              <CalendarDaysIcon className="h-4 w-4 mr-2" />
+              Mark Attendance
+            </Link>
+          </div>
         </div>
       </div>
 
@@ -113,32 +147,55 @@ const AttendanceReport = () => {
 
           {stats ? (
             <div>
-              <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
-                <div className="bg-green-50 rounded-lg p-4">
-                  <h3 className="text-sm font-medium text-green-800">Present</h3>
-                  <p className="mt-2 text-3xl font-semibold text-green-600">
-                    {stats.presentPercentage ? `${stats.presentPercentage.toFixed(1)}%` : 'N/A'}
-                  </p>
-                  <p className="mt-1 text-sm text-green-600">
-                    {stats.presentCount} records
-                  </p>
-                </div>
-                <div className="bg-red-50 rounded-lg p-4">
-                  <h3 className="text-sm font-medium text-red-800">Absent</h3>
-                  <p className="mt-2 text-3xl font-semibold text-red-600">
-                    {stats.absentPercentage ? `${stats.absentPercentage.toFixed(1)}%` : 'N/A'}
-                  </p>
-                  <p className="mt-1 text-sm text-red-600">
-                    {stats.absentCount} records
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-3 mb-8">
+                <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-2xl p-6 border border-green-200 shadow-lg hover:shadow-xl transition-all duration-300">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="p-3 bg-green-500 rounded-xl shadow-lg">
+                      <CheckCircleIcon className="h-6 w-6 text-white" />
+                    </div>
+                    <div className="text-right">
+                      <p className="text-3xl font-bold text-green-700">
+                        {stats.presentPercentage ? `${stats.presentPercentage.toFixed(1)}%` : 'N/A'}
+                      </p>
+                      <p className="text-sm text-green-600 font-medium">Present</p>
+                    </div>
+                  </div>
+                  <p className="text-sm text-green-600">
+                    {stats.presentCount} attendance records
                   </p>
                 </div>
-                <div className="bg-yellow-50 rounded-lg p-4">
-                  <h3 className="text-sm font-medium text-yellow-800">Late</h3>
-                  <p className="mt-2 text-3xl font-semibold text-yellow-600">
-                    {stats.latePercentage ? `${stats.latePercentage.toFixed(1)}%` : 'N/A'}
+
+                <div className="bg-gradient-to-br from-red-50 to-red-100 rounded-2xl p-6 border border-red-200 shadow-lg hover:shadow-xl transition-all duration-300">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="p-3 bg-red-500 rounded-xl shadow-lg">
+                      <XCircleIcon className="h-6 w-6 text-white" />
+                    </div>
+                    <div className="text-right">
+                      <p className="text-3xl font-bold text-red-700">
+                        {stats.absentPercentage ? `${stats.absentPercentage.toFixed(1)}%` : 'N/A'}
+                      </p>
+                      <p className="text-sm text-red-600 font-medium">Absent</p>
+                    </div>
+                  </div>
+                  <p className="text-sm text-red-600">
+                    {stats.absentCount} absence records
                   </p>
-                  <p className="mt-1 text-sm text-yellow-600">
-                    {stats.lateCount} records
+                </div>
+
+                <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-2xl p-6 border border-yellow-200 shadow-lg hover:shadow-xl transition-all duration-300">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="p-3 bg-yellow-500 rounded-xl shadow-lg">
+                      <ClockIcon className="h-6 w-6 text-white" />
+                    </div>
+                    <div className="text-right">
+                      <p className="text-3xl font-bold text-yellow-700">
+                        {stats.latePercentage ? `${stats.latePercentage.toFixed(1)}%` : 'N/A'}
+                      </p>
+                      <p className="text-sm text-yellow-600 font-medium">Late</p>
+                    </div>
+                  </div>
+                  <p className="text-sm text-yellow-600">
+                    {stats.lateCount} late arrivals
                   </p>
                 </div>
               </div>

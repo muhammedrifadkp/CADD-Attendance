@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { batchesAPI, studentsAPI } from '../../services/api'
+import { batchesAPI, studentsAPI, notificationsAPI, attendanceAPI } from '../../services/api'
 import {
   PlusIcon,
   UserGroupIcon,
@@ -8,33 +8,50 @@ import {
   AcademicCapIcon,
   ChartBarIcon,
   ComputerDesktopIcon,
-  ClockIcon
+  ClockIcon,
+  CheckCircleIcon,
+  BellIcon
 } from '@heroicons/react/24/outline'
 import { useAuth } from '../../context/AuthContext'
 import { formatDateSimple } from '../../utils/dateUtils'
 import BackButton from '../../components/BackButton'
+import NotificationCenter from '../../components/dashboard/NotificationCenter'
 
 const TeacherDashboard = () => {
   const { user } = useAuth()
   const [batches, setBatches] = useState([])
   const [stats, setStats] = useState({
     totalBatches: 0,
+    activeBatches: 0,
+    finishedBatches: 0,
     totalStudents: 0,
     todayAttendance: 0,
     activeClasses: 0,
     loading: true
   })
+  const [notifications, setNotifications] = useState({
+    unreadCount: 0,
+    recent: [],
+    loading: true,
+  })
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [batchesRes, studentsRes] = await Promise.all([
+        const [batchesRes, notificationsRes, todayAttendanceRes] = await Promise.all([
           batchesAPI.getBatches(),
-          studentsAPI.getStudents()
+          notificationsAPI.getUnreadCount().catch(err => {
+            console.error('Notifications API error:', err)
+            return { data: { unreadCount: 0 } }
+          }),
+          attendanceAPI.getTodayAttendanceSummary().catch(err => {
+            console.error('Today attendance API error:', err)
+            return { data: { totalStudents: 0, presentToday: 0, attendanceRate: 0 } }
+          })
         ])
 
         const batchesData = batchesRes.data
-        const studentsData = studentsRes.data
+        const todayAttendanceData = todayAttendanceRes.data
 
         setBatches(batchesData)
 
@@ -47,18 +64,29 @@ const TeacherDashboard = () => {
           ? Math.round((batchesData.reduce((sum, batch) => sum + (batch.attendancePercentage || 0), 0) / batchesData.length) * 10) / 10
           : 0
 
-        // Calculate today's attendance based on average percentage
-        const todayAttendance = Math.round((totalStudents * avgAttendancePercentage) / 100)
+        // Use real today's attendance data from the API
+        const todayAttendance = todayAttendanceData.presentToday || 0
 
-        // Active classes (batches with students)
-        const activeClasses = batchesData.filter(batch => (batch.studentCount || 0) > 0).length
+        // Calculate active and finished batches
+        const activeBatches = batchesData.filter(batch => !batch.isFinished && !batch.isArchived)
+        const finishedBatches = batchesData.filter(batch => batch.isFinished)
+        const activeClasses = activeBatches.length
 
         setStats({
           totalBatches,
+          activeBatches: activeBatches.length,
+          finishedBatches: finishedBatches.length,
           totalStudents,
           todayAttendance,
           activeClasses,
           loading: false
+        })
+
+        // Update notifications state
+        setNotifications({
+          unreadCount: notificationsRes.data.unreadCount || 0,
+          recent: [],
+          loading: false,
         })
       } catch (error) {
         console.error('Error fetching dashboard data:', error)
@@ -71,18 +99,26 @@ const TeacherDashboard = () => {
 
   const statsCards = [
     {
-      name: 'Total Batches',
-      count: stats.totalBatches,
+      name: 'Active Batches',
+      count: stats.activeBatches,
       icon: AcademicCapIcon,
       gradient: 'from-blue-500 to-blue-600',
       link: '/batches',
-      description: 'Your teaching groups'
+      description: 'Currently running batches'
+    },
+    {
+      name: 'Finished Batches',
+      count: stats.finishedBatches,
+      icon: CheckCircleIcon,
+      gradient: 'from-green-500 to-green-600',
+      link: '/batches',
+      description: 'Completed batches'
     },
     {
       name: 'Total Students',
       count: stats.totalStudents,
       icon: UserGroupIcon,
-      gradient: 'from-green-500 to-green-600',
+      gradient: 'from-purple-500 to-purple-600',
       link: '/batches',
       description: 'Enrolled learners'
     },
@@ -90,17 +126,17 @@ const TeacherDashboard = () => {
       name: 'Today\'s Attendance',
       count: stats.todayAttendance,
       icon: ClipboardDocumentCheckIcon,
-      gradient: 'from-purple-500 to-purple-600',
+      gradient: 'from-cadd-red to-cadd-pink',
       link: '/attendance',
       description: 'Students present today'
     },
     {
-      name: 'Active Classes',
-      count: stats.activeClasses,
-      icon: ClockIcon,
-      gradient: 'from-cadd-red to-cadd-pink',
-      link: '/batches',
-      description: 'Currently running'
+      name: 'Notifications',
+      count: notifications.unreadCount,
+      icon: BellIcon,
+      gradient: notifications.unreadCount > 0 ? 'from-red-500 to-red-600' : 'from-gray-500 to-gray-600',
+      link: '/notifications',
+      description: notifications.unreadCount > 0 ? 'Unread notifications' : 'All caught up!'
     }
   ]
 
@@ -137,8 +173,8 @@ const TeacherDashboard = () => {
             <div className="hidden lg:block">
               <img
                 className="h-20 w-auto opacity-80"
-                src="/logos/cadd_logo.png"
-                alt="CADD Centre"
+                src="/logos/cdc_logo.png"
+                alt="CDC"
                 onError={(e) => {
                   e.target.style.display = 'none'
                 }}
@@ -157,7 +193,7 @@ const TeacherDashboard = () => {
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {statsCards.map((card, index) => (
             <Link
               key={card.name}
@@ -187,8 +223,11 @@ const TeacherDashboard = () => {
         </div>
       )}
 
-      {/* Batches Section */}
-      <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+      {/* Main Content Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Batches Section - Takes 2 columns */}
+        <div className="lg:col-span-2">
+          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
         <div className="px-6 py-4 border-b border-gray-200">
           <div className="flex justify-between items-center">
             <div>
@@ -283,6 +322,16 @@ const TeacherDashboard = () => {
             </div>
           )}
         </div>
+          </div>
+        </div>
+
+        {/* Notification Center - Takes 1 column */}
+        <div className="lg:col-span-1">
+          <NotificationCenter
+            unreadCount={notifications.unreadCount}
+            onUnreadCountChange={(count) => setNotifications(prev => ({ ...prev, unreadCount: count }))}
+          />
+        </div>
       </div>
 
       {/* Quick Actions */}
@@ -314,9 +363,26 @@ const TeacherDashboard = () => {
               </div>
             </Link>
 
-
-
-
+            <Link
+              to="/batches"
+              className="group relative bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 hover:shadow-lg transition-all duration-300 transform hover:scale-105 border border-blue-100"
+            >
+              <div className="flex items-center mb-4">
+                <div className="p-3 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-lg">
+                  <AcademicCapIcon className="h-6 w-6 text-white" />
+                </div>
+                <div className="ml-4">
+                  <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-700 transition-colors">
+                    Manage Batches
+                  </h3>
+                  <p className="text-sm text-gray-600">Create and manage your teaching groups</p>
+                </div>
+              </div>
+              <div className="flex items-center text-sm text-blue-600 font-medium">
+                <span>View Batches</span>
+                <ChartBarIcon className="h-4 w-4 ml-2" />
+              </div>
+            </Link>
 
             <Link
               to="/lab-availability"

@@ -2,7 +2,7 @@
 import api, { attendanceAPI, studentsAPI, batchesAPI, teachersAPI } from './api.js'
 import { pcAPI, bookingAPI } from './labAPI.js'
 import { indexedDBService } from './indexedDB.js'
-import { toast } from 'react-toastify'
+import toast from 'react-hot-toast'
 
 class SyncService {
   constructor() {

@@ -1,171 +1,240 @@
 import api from './api'
 
-// Helper function to make API requests using the same axios instance
-const apiRequest = async (endpoint, options = {}) => {
-  const { method = 'GET', body, ...config } = options
-
-  try {
-    console.log(`📡 API Request: ${method} ${endpoint}`, { body, config })
-
-    let response
-    switch (method.toUpperCase()) {
-      case 'POST':
-        response = await api.post(endpoint, body, config)
-        break
-      case 'PUT':
-        response = await api.put(endpoint, body, config)
-        break
-      case 'DELETE':
-        // For DELETE requests with body, use data property
-        if (body) {
-          response = await api.delete(endpoint, { ...config, data: body })
-        } else {
-          response = await api.delete(endpoint, config)
-        }
-        break
-      default:
-        response = await api.get(endpoint, config)
-    }
-
-    console.log(`✅ API Response: ${method} ${endpoint}`, response.data)
-    return response.data
-  } catch (error) {
-    console.error(`❌ API Error: ${method} ${endpoint}`, {
-      status: error.response?.status,
-      statusText: error.response?.statusText,
-      data: error.response?.data,
-      message: error.message
-    })
-    throw error
-  }
-}
-
 // PC Management API
 export const pcAPI = {
-  // Get all PCs
-  getPCs: (params = {}) => {
-    const queryString = new URLSearchParams(params).toString()
-    return apiRequest(`/lab/pcs${queryString ? `?${queryString}` : ''}`)
+  // Get all PCs grouped by row
+  getPCsByRow: async () => {
+    try {
+      console.log('📡 API Request: GET /lab/pcs/by-row')
+      const response = await api.get('/lab/pcs/by-row')
+      console.log('✅ API Response: GET /lab/pcs/by-row', response.data)
+      return response.data
+    } catch (error) {
+      console.error('❌ API Error: GET /lab/pcs/by-row', error)
+      throw error
+    }
   },
 
-  // Get PC by ID
-  getPC: (id) => apiRequest(`/lab/pcs/${id}`),
+  // Get all PCs
+  getPCs: async (params = {}) => {
+    try {
+      console.log('📡 API Request: GET /lab/pcs', params)
+      const response = await api.get('/lab/pcs', { params })
+      console.log('✅ API Response: GET /lab/pcs', response.data)
+      return response.data
+    } catch (error) {
+      console.error('❌ API Error: GET /lab/pcs', error)
+      throw error
+    }
+  },
+
+  // Get single PC
+  getPC: async (id) => {
+    try {
+      console.log('📡 API Request: GET /lab/pcs/' + id)
+      const response = await api.get(`/lab/pcs/${id}`)
+      console.log('✅ API Response: GET /lab/pcs/' + id, response.data)
+      return response.data
+    } catch (error) {
+      console.error('❌ API Error: GET /lab/pcs/' + id, error)
+      throw error
+    }
+  },
 
   // Create new PC
-  createPC: (pcData) => apiRequest('/lab/pcs', {
-    method: 'POST',
-    body: pcData,
-  }),
+  createPC: async (pcData) => {
+    try {
+      console.log('📡 API Request: POST /lab/pcs', pcData)
+      const response = await api.post('/lab/pcs', pcData)
+      console.log('✅ API Response: POST /lab/pcs', response.data)
+      return response.data
+    } catch (error) {
+      console.error('❌ API Error: POST /lab/pcs', error)
+      throw error
+    }
+  },
 
   // Update PC
-  updatePC: (id, pcData) => apiRequest(`/lab/pcs/${id}`, {
-    method: 'PUT',
-    body: pcData,
-  }),
+  updatePC: async (id, pcData) => {
+    try {
+      console.log('📡 API Request: PUT /lab/pcs/' + id, pcData)
+      const response = await api.put(`/lab/pcs/${id}`, pcData)
+      console.log('✅ API Response: PUT /lab/pcs/' + id, response.data)
+      return response.data
+    } catch (error) {
+      console.error('❌ API Error: PUT /lab/pcs/' + id, error)
+      throw error
+    }
+  },
 
   // Delete PC
-  deletePC: (id) => apiRequest(`/lab/pcs/${id}`, {
-    method: 'DELETE',
-  }),
-
-  // Get PCs grouped by row
-  getPCsByRow: () => apiRequest('/lab/pcs/by-row'),
-
-  // Clear all PCs
-  clearAllPCs: () => apiRequest('/lab/pcs/clear-all', {
-    method: 'DELETE',
-  }),
+  deletePC: async (id) => {
+    try {
+      console.log('📡 API Request: DELETE /lab/pcs/' + id)
+      const response = await api.delete(`/lab/pcs/${id}`)
+      console.log('✅ API Response: DELETE /lab/pcs/' + id, response.data)
+      return response.data
+    } catch (error) {
+      console.error('❌ API Error: DELETE /lab/pcs/' + id, error)
+      throw error
+    }
+  }
 }
 
 // Booking Management API
 export const bookingAPI = {
-  // Get all bookings
-  getBookings: (params = {}) => {
-    // Ensure date is in proper format if provided
-    if (params.date) {
-      const date = new Date(params.date)
-      if (isNaN(date.getTime())) {
-        console.error('❌ Invalid date provided to getBookings:', params.date)
-        throw new Error('Invalid date format')
-      }
-      // Format as YYYY-MM-DD
-      params.date = date.toISOString().split('T')[0]
+  // Get bookings for a specific date
+  getBookings: async (params = {}) => {
+    try {
+      console.log('📡 API Request: GET /lab/bookings', params)
+      const response = await api.get('/lab/bookings', { params })
+      console.log('✅ API Response: GET /lab/bookings', response.data)
+      return response.data
+    } catch (error) {
+      console.error('❌ API Error: GET /lab/bookings', error)
+      throw error
     }
-
-    console.log('📡 getBookings called with params:', params)
-    const queryString = new URLSearchParams(params).toString()
-    return apiRequest(`/lab/bookings${queryString ? `?${queryString}` : ''}`)
   },
 
-  // Get booking by ID
-  getBooking: (id) => apiRequest(`/lab/bookings/${id}`),
+  // Get bookings with attendance status
+  getBookingsWithAttendance: async (params = {}) => {
+    try {
+      console.log('📡 getBookingsWithAttendance called with params:', params)
+      console.log('📡 API Request: GET /lab/bookings/with-attendance', params)
+      const response = await api.get('/lab/bookings/with-attendance', { params })
+      console.log('✅ API Response: GET /lab/bookings/with-attendance', response.data)
+      return response.data
+    } catch (error) {
+      console.error('❌ API Error: GET /lab/bookings/with-attendance', error)
+      throw error
+    }
+  },
 
   // Create new booking
-  createBooking: (bookingData) => apiRequest('/lab/bookings', {
-    method: 'POST',
-    body: bookingData,
-  }),
-
-  // Update booking
-  updateBooking: (id, bookingData) => apiRequest(`/lab/bookings/${id}`, {
-    method: 'PUT',
-    body: bookingData,
-  }),
-
-  // Delete booking
-  deleteBooking: (id) => apiRequest(`/lab/bookings/${id}`, {
-    method: 'DELETE',
-  }),
-
-  // Get lab availability for a specific date
-  getAvailability: (date) => apiRequest(`/lab/availability/${date}`),
-
-  // Get previous day's bookings
-  getPreviousBookings: (params = {}) => {
-    const queryString = new URLSearchParams(params).toString()
-    return apiRequest(`/lab/bookings/previous${queryString ? `?${queryString}` : ''}`)
+  createBooking: async (bookingData) => {
+    try {
+      console.log('📡 API Request: POST /lab/bookings', bookingData)
+      const response = await api.post('/lab/bookings', bookingData)
+      console.log('✅ API Response: POST /lab/bookings', response.data)
+      return response.data
+    } catch (error) {
+      console.error('❌ API Error: POST /lab/bookings', error)
+      throw error
+    }
   },
 
-  // Apply previous day's bookings to current date
-  applyPreviousBookings: (data) => apiRequest('/lab/bookings/apply-previous', {
-    method: 'POST',
-    body: data,
-  }),
+  // Update booking
+  updateBooking: async (bookingId, bookingData) => {
+    try {
+      console.log('📡 API Request: PUT /lab/bookings/' + bookingId, bookingData)
+      const response = await api.put(`/lab/bookings/${bookingId}`, bookingData)
+      console.log('✅ API Response: PUT /lab/bookings/' + bookingId, response.data)
+      return response.data
+    } catch (error) {
+      console.error('❌ API Error: PUT /lab/bookings/' + bookingId, error)
+      throw error
+    }
+  },
+
+  // Delete booking
+  deleteBooking: async (bookingId) => {
+    try {
+      console.log('📡 API Request: DELETE /lab/bookings/' + bookingId)
+      const response = await api.delete(`/lab/bookings/${bookingId}`)
+      console.log('✅ API Response: DELETE /lab/bookings/' + bookingId, response.data)
+      return response.data
+    } catch (error) {
+      console.error('❌ API Error: DELETE /lab/bookings/' + bookingId, error)
+      throw error
+    }
+  },
+
+  // Get previous bookings for a specific date
+  getPreviousBookings: async (params = {}) => {
+    try {
+      console.log('📡 API Request: GET /lab/bookings/previous', params)
+      const response = await api.get('/lab/bookings/previous', { params })
+      console.log('✅ API Response: GET /lab/bookings/previous', response.data)
+      return response.data
+    } catch (error) {
+      console.error('❌ API Error: GET /lab/bookings/previous', error)
+      throw error
+    }
+  },
+
+  // Apply previous bookings to target date
+  applyPreviousBookings: async (data) => {
+    try {
+      console.log('📡 API Request: POST /lab/bookings/apply-previous', data)
+      const response = await api.post('/lab/bookings/apply-previous', data)
+      console.log('✅ API Response: POST /lab/bookings/apply-previous', response.data)
+      return response.data
+    } catch (error) {
+      console.error('❌ API Error: POST /lab/bookings/apply-previous', error)
+      throw error
+    }
+  },
 
   // Clear booked slots in bulk
-  clearBookedSlotsBulk: (data) => apiRequest('/lab/bookings/clear-bulk', {
-    method: 'DELETE',
-    body: data,
-  }),
+  clearBookedSlotsBulk: async (data) => {
+    try {
+      console.log('📡 API Request: DELETE /lab/bookings/clear-bulk', data)
+      const response = await api.delete('/lab/bookings/clear-bulk', { data })
+      console.log('✅ API Response: DELETE /lab/bookings/clear-bulk', response.data)
+      return response.data
+    } catch (error) {
+      console.error('❌ API Error: DELETE /lab/bookings/clear-bulk', error)
+      throw error
+    }
+  }
 }
 
 // Lab Information API
-export const labInfoAPI = {
-  // Get lab/institute information
-  getLabInfo: () => apiRequest('/lab/info'),
+export const labAPI = {
+  pcs: pcAPI,
+  info: {
+    getLabInfo: async () => {
+      try {
+        const response = await api.get('/lab/info')
+        return response.data
+      } catch (error) {
+        console.error('Error fetching lab info:', error)
+        throw error
+      }
+    }
+  }
 }
 
 // Lab Statistics API
 export const labStatsAPI = {
-  // Get lab overview statistics
-  getOverviewStats: () => apiRequest('/lab/stats/overview'),
-
-  // Get utilization statistics
-  getUtilizationStats: (params = {}) => {
-    const queryString = new URLSearchParams(params).toString()
-    return apiRequest(`/lab/stats/utilization${queryString ? `?${queryString}` : ''}`)
-  },
-
-  // Get recent activity
-  getRecentActivity: (limit = 10) => apiRequest(`/lab/stats/activity?limit=${limit}`),
+  getStats: async (params = {}) => {
+    try {
+      const response = await api.get('/lab/stats', { params })
+      return response.data
+    } catch (error) {
+      console.error('Error fetching lab stats:', error)
+      throw error
+    }
+  }
 }
 
-// Combined lab API object
-export const labAPI = {
-  pcs: pcAPI,
-  bookings: bookingAPI,
-  info: labInfoAPI,
-  stats: labStatsAPI,
+// Lab Information API (alternative export)
+export const labInfoAPI = {
+  getLabInfo: async () => {
+    try {
+      const response = await api.get('/lab/info')
+      return response.data
+    } catch (error) {
+      console.error('Error fetching lab info:', error)
+      throw error
+    }
+  }
 }
 
-export default labAPI
+export default {
+  pcAPI,
+  bookingAPI,
+  labAPI,
+  labStatsAPI,
+  labInfoAPI
+}

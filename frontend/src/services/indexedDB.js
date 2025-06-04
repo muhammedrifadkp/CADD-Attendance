@@ -179,32 +179,69 @@ class IndexedDBService {
   // Bulk insert/update data
   async bulkPut(storeName, dataArray) {
     await this.init()
+
+    // Validate input
+    if (!dataArray || !Array.isArray(dataArray)) {
+      console.warn('bulkPut received non-array data:', dataArray)
+      return Promise.resolve([])
+    }
+
+    // Filter out invalid items (without _id or null/undefined)
+    const validData = dataArray.filter(item => {
+      if (!item || typeof item !== 'object') {
+        return false
+      }
+      // Check if item has the required key path (_id)
+      if (!item._id) {
+        console.warn('bulkPut: Skipping item without _id:', item)
+        return false
+      }
+      return true
+    })
+
+    if (validData.length === 0) {
+      console.log('bulkPut: No valid data to store')
+      return Promise.resolve([])
+    }
+
     return new Promise((resolve, reject) => {
       const transaction = this.db.transaction([storeName], 'readwrite')
       const store = transaction.objectStore(storeName)
       let completed = 0
-      const total = dataArray.length
+      const total = validData.length
+      const results = []
 
-      if (total === 0) {
-        resolve([])
-        return
+      transaction.onerror = () => {
+        reject(transaction.error)
       }
 
-      const results = []
-      
-      dataArray.forEach((data, index) => {
-        const request = store.put(data)
-        
-        request.onsuccess = () => {
-          results[index] = request.result
+      validData.forEach((data, index) => {
+        try {
+          const request = store.put(data)
+
+          request.onsuccess = () => {
+            results[index] = request.result
+            completed++
+            if (completed === total) {
+              resolve(results)
+            }
+          }
+
+          request.onerror = (event) => {
+            console.error('Error in bulkPut for item:', data, event.target.error)
+            // Don't reject immediately, continue with other items
+            completed++
+            if (completed === total) {
+              resolve(results)
+            }
+          }
+        } catch (error) {
+          console.error('Error processing item in bulkPut:', error)
+          // Don't reject immediately, continue with other items
           completed++
           if (completed === total) {
             resolve(results)
           }
-        }
-        
-        request.onerror = () => {
-          reject(request.error)
         }
       })
     })

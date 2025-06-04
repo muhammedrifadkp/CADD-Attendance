@@ -8,23 +8,21 @@ import {
   ArrowTrendingDownIcon,
   ClockIcon,
   CheckCircleIcon,
-  XCircleIcon,
   ExclamationTriangleIcon,
   ArrowDownTrayIcon,
-  FunnelIcon,
-  MagnifyingGlassIcon,
   SparklesIcon,
   AcademicCapIcon,
-  EyeIcon
+  EyeIcon,
+  ArrowLeftIcon
 } from '@heroicons/react/24/outline'
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, ArcElement, BarElement } from 'chart.js'
-import { Line, Pie, Bar, Doughnut } from 'react-chartjs-2'
+import { Line, Bar, Doughnut } from 'react-chartjs-2'
 import { batchesAPI, attendanceAPI, studentsAPI, teachersAPI } from '../../../services/api'
 import { toast } from 'react-toastify'
 import { formatDateSimple, formatDateLong } from '../../../utils/dateUtils'
 import BackButton from '../../../components/BackButton'
-import { format, subDays, startOfMonth, endOfMonth } from 'date-fns'
-import * as XLSX from 'xlsx'
+import { format, subDays } from 'date-fns'
+import ExcelJS from 'exceljs'
 
 // Register Chart.js components
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, ArcElement, BarElement)
@@ -59,7 +57,6 @@ const AdminAttendanceReport = () => {
     late: 0
   })
   const [topPerformingBatches, setTopPerformingBatches] = useState([])
-  const [attendanceHeatmap, setAttendanceHeatmap] = useState([])
   const [showExportMenu, setShowExportMenu] = useState(false)
 
   useEffect(() => {
@@ -84,204 +81,149 @@ const AdminAttendanceReport = () => {
     try {
       setLoading(true)
 
-      // Fetch basic data
-      const [batchesRes, teachersRes, studentsRes] = await Promise.all([
+      // Fetch basic data and analytics in parallel
+      const [batchesRes, teachersRes, studentsRes, todaySummaryRes, trendsRes, overallAnalyticsRes] = await Promise.all([
         batchesAPI.getBatches(),
         teachersAPI.getTeachers(),
-        studentsAPI.getStudents()
+        studentsAPI.getStudents(),
+        attendanceAPI.getTodayAttendanceSummary(),
+        attendanceAPI.getAttendanceTrends({
+          startDate: dateRange.startDate,
+          endDate: dateRange.endDate,
+          batchId: selectedBatch !== 'all' ? selectedBatch : undefined
+        }),
+        attendanceAPI.getOverallAnalytics({
+          startDate: dateRange.startDate,
+          endDate: dateRange.endDate,
+          batchId: selectedBatch !== 'all' ? selectedBatch : undefined
+        })
       ])
 
-      setBatches(batchesRes.data)
-      setTeachers(teachersRes.data)
+      // Handle different response structures safely
+      const batchesData = Array.isArray(batchesRes.data) ? batchesRes.data : []
+      const teachersData = Array.isArray(teachersRes.data) ? teachersRes.data : []
+      const studentsData = Array.isArray(studentsRes.data) ? studentsRes.data : []
 
-      // Calculate overall statistics
-      await calculateOverallStats(batchesRes.data, studentsRes.data)
+      setBatches(batchesData)
+      setTeachers(teachersData)
 
-      // Fetch attendance trends
-      await fetchAttendanceTrends(batchesRes.data)
+      // Process today's summary
+      const todayData = todaySummaryRes.data || {}
 
-      // Calculate batch comparison
-      await calculateBatchComparison(batchesRes.data)
+      // Process trends data
+      const trendsData = Array.isArray(trendsRes.data) ? trendsRes.data : []
+      setAttendanceTrends(trendsData)
+
+      // Process overall analytics
+      const analyticsData = overallAnalyticsRes.data || {}
+
+      // Calculate overall statistics using API data
+      const overallStatsData = {
+        totalStudents: studentsData.length,
+        totalBatches: batchesData.length,
+        averageAttendance: analyticsData.presentPercentage || 0,
+        presentToday: todayData.presentToday || 0,
+        absentToday: todayData.absentToday || 0,
+        lateToday: todayData.lateToday || 0,
+        trend: analyticsData.trend || 0
+      }
+      setOverallStats(overallStatsData)
 
       // Calculate attendance distribution
-      await calculateAttendanceDistribution(batchesRes.data)
+      setAttendanceDistribution({
+        present: analyticsData.presentCount || 0,
+        absent: analyticsData.absentCount || 0,
+        late: analyticsData.lateCount || 0
+      })
 
-      // Get top performing batches
-      await getTopPerformingBatches(batchesRes.data)
+      // Calculate batch comparison and top performing batches
+      await calculateBatchComparison(batchesData)
 
     } catch (error) {
       console.error('Error fetching attendance data:', error)
       toast.error('Failed to fetch attendance data')
+
+      // Set fallback data to prevent crashes
+      setOverallStats({
+        totalStudents: 0,
+        totalBatches: 0,
+        averageAttendance: 0,
+        presentToday: 0,
+        absentToday: 0,
+        lateToday: 0,
+        trend: 0
+      })
+      setAttendanceDistribution({ present: 0, absent: 0, late: 0 })
+      setAttendanceTrends([])
+      setBatchComparison([])
+      setTopPerformingBatches([])
     } finally {
       setLoading(false)
     }
   }
 
-  const calculateOverallStats = async (batchesData, studentsData) => {
-    try {
-      const totalStudents = studentsData.length
-      const totalBatches = batchesData.length
 
-      // Calculate today's attendance
-      const today = format(new Date(), 'yyyy-MM-dd')
-      let presentToday = 0, absentToday = 0, lateToday = 0
-      let totalAttendancePercentage = 0
-      let batchesWithData = 0
-
-      for (const batch of batchesData) {
-        try {
-          const todayAttendance = await attendanceAPI.getBatchAttendance(batch._id, today)
-          const attendanceRecords = todayAttendance.data || []
-
-          presentToday += attendanceRecords.filter(r => r.attendance?.status === 'present').length
-          absentToday += attendanceRecords.filter(r => r.attendance?.status === 'absent').length
-          lateToday += attendanceRecords.filter(r => r.attendance?.status === 'late').length
-
-          // Get batch stats for average calculation
-          const batchStats = await attendanceAPI.getBatchAttendanceStats(batch._id, dateRange)
-          if (batchStats.data && batchStats.data.averageAttendance) {
-            totalAttendancePercentage += batchStats.data.averageAttendance
-            batchesWithData++
-          }
-        } catch (error) {
-          console.error(`Error fetching data for batch ${batch._id}:`, error)
-        }
-      }
-
-      const averageAttendance = batchesWithData > 0 ? totalAttendancePercentage / batchesWithData : 0
-
-      // Calculate trend (simplified - comparing with previous period)
-      const trend = Math.random() * 10 - 5 // Mock trend calculation
-
-      setOverallStats({
-        totalStudents,
-        totalBatches,
-        averageAttendance: Math.round(averageAttendance * 10) / 10,
-        presentToday,
-        absentToday,
-        lateToday,
-        trend: Math.round(trend * 10) / 10
-      })
-
-    } catch (error) {
-      console.error('Error calculating overall stats:', error)
-    }
-  }
-
-  const fetchAttendanceTrends = async (batchesData) => {
-    try {
-      const trends = []
-      const days = 14 // Last 14 days
-
-      for (let i = days - 1; i >= 0; i--) {
-        const date = format(subDays(new Date(), i), 'yyyy-MM-dd')
-        let totalPresent = 0
-        let totalStudents = 0
-
-        for (const batch of batchesData) {
-          try {
-            const dayAttendance = await attendanceAPI.getBatchAttendance(batch._id, date)
-            const records = dayAttendance.data || []
-            totalPresent += records.filter(r => r.attendance?.status === 'present').length
-            totalStudents += records.length
-          } catch (error) {
-            // Skip if no data for this day
-          }
-        }
-
-        const percentage = totalStudents > 0 ? (totalPresent / totalStudents) * 100 : 0
-        trends.push({
-          date,
-          percentage: Math.round(percentage * 10) / 10,
-          present: totalPresent,
-          total: totalStudents
-        })
-      }
-
-      setAttendanceTrends(trends)
-    } catch (error) {
-      console.error('Error fetching attendance trends:', error)
-    }
-  }
 
   const calculateBatchComparison = async (batchesData) => {
     try {
       const comparison = []
+      const performance = []
 
-      for (const batch of batchesData) {
+      // Fetch batch stats in parallel for better performance
+      const batchStatsPromises = batchesData.map(async (batch) => {
         try {
-          const batchStats = await attendanceAPI.getBatchAttendanceStats(batch._id, dateRange)
+          const batchStats = await attendanceAPI.getBatchAttendanceStats(batch._id, {
+            startDate: dateRange.startDate,
+            endDate: dateRange.endDate
+          })
+
           if (batchStats.data) {
-            comparison.push({
+            const batchData = {
               batchName: batch.name,
               attendance: batchStats.data.averageAttendance || 0,
               present: batchStats.data.presentCount || 0,
               absent: batchStats.data.absentCount || 0,
               late: batchStats.data.lateCount || 0,
               studentCount: batchStats.data.studentCount || 0
-            })
+            }
+
+            comparison.push(batchData)
+
+            // Also prepare for top performing batches
+            if (batchStats.data.averageAttendance > 0) {
+              performance.push({
+                ...batch,
+                attendance: batchStats.data.averageAttendance,
+                studentCount: batchStats.data.studentCount || 0,
+                presentCount: batchStats.data.presentCount || 0
+              })
+            }
           }
         } catch (error) {
           console.error(`Error fetching stats for batch ${batch._id}:`, error)
+          // Add fallback data to prevent empty results
+          comparison.push({
+            batchName: batch.name,
+            attendance: 0,
+            present: 0,
+            absent: 0,
+            late: 0,
+            studentCount: 0
+          })
         }
-      }
+      })
 
+      await Promise.all(batchStatsPromises)
+
+      // Sort and set data
       setBatchComparison(comparison.sort((a, b) => b.attendance - a.attendance))
+      setTopPerformingBatches(performance.sort((a, b) => b.attendance - a.attendance).slice(0, 5))
+
     } catch (error) {
       console.error('Error calculating batch comparison:', error)
-    }
-  }
-
-  const calculateAttendanceDistribution = async (batchesData) => {
-    try {
-      let totalPresent = 0, totalAbsent = 0, totalLate = 0
-
-      for (const batch of batchesData) {
-        try {
-          const batchStats = await attendanceAPI.getBatchAttendanceStats(batch._id, dateRange)
-          if (batchStats.data) {
-            totalPresent += batchStats.data.presentCount || 0
-            totalAbsent += batchStats.data.absentCount || 0
-            totalLate += batchStats.data.lateCount || 0
-          }
-        } catch (error) {
-          console.error(`Error fetching stats for batch ${batch._id}:`, error)
-        }
-      }
-
-      setAttendanceDistribution({
-        present: totalPresent,
-        absent: totalAbsent,
-        late: totalLate
-      })
-    } catch (error) {
-      console.error('Error calculating attendance distribution:', error)
-    }
-  }
-
-  const getTopPerformingBatches = async (batchesData) => {
-    try {
-      const performance = []
-
-      for (const batch of batchesData) {
-        try {
-          const batchStats = await attendanceAPI.getBatchAttendanceStats(batch._id, dateRange)
-          if (batchStats.data && batchStats.data.averageAttendance) {
-            performance.push({
-              ...batch,
-              attendance: batchStats.data.averageAttendance,
-              studentCount: batchStats.data.studentCount || 0,
-              presentCount: batchStats.data.presentCount || 0
-            })
-          }
-        } catch (error) {
-          console.error(`Error fetching stats for batch ${batch._id}:`, error)
-        }
-      }
-
-      setTopPerformingBatches(performance.sort((a, b) => b.attendance - a.attendance).slice(0, 5))
-    } catch (error) {
-      console.error('Error getting top performing batches:', error)
+      // Set fallback data
+      setBatchComparison([])
+      setTopPerformingBatches([])
     }
   }
 
@@ -340,13 +282,14 @@ const AdminAttendanceReport = () => {
   }
 
   // Excel Export Function
-  const exportToExcel = () => {
+  const exportToExcel = async () => {
     try {
       // Create a new workbook
-      const workbook = XLSX.utils.book_new()
-
+      const workbook = new ExcelJS.Workbook();
+      
       // Sheet 1: Overall Statistics
-      const overallStatsData = [
+      const overallStatsSheet = workbook.addWorksheet('Overall Statistics');
+      overallStatsSheet.addRows([
         ['CADD Centre - Attendance Report'],
         ['Generated on:', formatDateLong(new Date())],
         ['Period:', `${formatDateSimple(dateRange.startDate)} to ${formatDateSimple(dateRange.endDate)}`],
@@ -359,83 +302,99 @@ const AdminAttendanceReport = () => {
         ['Absent Today', overallStats.absentToday],
         ['Late Today', overallStats.lateToday],
         ['Trend', `${overallStats.trend >= 0 ? '+' : ''}${overallStats.trend}%`]
-      ]
-      const overallStatsSheet = XLSX.utils.aoa_to_sheet(overallStatsData)
-      XLSX.utils.book_append_sheet(workbook, overallStatsSheet, 'Overall Statistics')
+      ]);
 
       // Sheet 2: Batch Comparison
-      const batchComparisonData = [
+      const batchComparisonSheet = workbook.addWorksheet('Batch Comparison');
+      batchComparisonSheet.addRows([
         ['Batch Performance Comparison'],
         [''],
         ['Batch Name', 'Attendance %', 'Present Count', 'Absent Count', 'Late Count', 'Total Students']
-      ]
+      ]);
       batchComparison.forEach(batch => {
-        batchComparisonData.push([
+        batchComparisonSheet.addRow([
           batch.batchName,
           `${batch.attendance.toFixed(1)}%`,
           batch.present,
           batch.absent,
           batch.late,
           batch.studentCount
-        ])
-      })
-      const batchComparisonSheet = XLSX.utils.aoa_to_sheet(batchComparisonData)
-      XLSX.utils.book_append_sheet(workbook, batchComparisonSheet, 'Batch Comparison')
+        ]);
+      });
 
       // Sheet 3: Attendance Trends
-      const trendsData = [
+      const trendsSheet = workbook.addWorksheet('Attendance Trends');
+      trendsSheet.addRows([
         ['Attendance Trends (Last 14 Days)'],
         [''],
         ['Date', 'Attendance %', 'Present', 'Absent', 'Late', 'Total']
-      ]
+      ]);
       attendanceTrends.forEach(trend => {
-        trendsData.push([
+        trendsSheet.addRow([
           formatDateSimple(trend.date),
           `${trend.percentage}%`,
           trend.present,
           trend.absent || 0,
           trend.late || 0,
           trend.total
-        ])
-      })
-      const trendsSheet = XLSX.utils.aoa_to_sheet(trendsData)
-      XLSX.utils.book_append_sheet(workbook, trendsSheet, 'Attendance Trends')
+        ]);
+      });
 
       // Sheet 4: Top Performing Batches
-      const topPerformingData = [
+      const topPerformingSheet = workbook.addWorksheet('Top Performing');
+      topPerformingSheet.addRows([
         ['Top Performing Batches'],
         [''],
         ['Rank', 'Batch Name', 'Attendance %', 'Present Count', 'Total Students']
-      ]
+      ]);
       topPerformingBatches.forEach((batch, index) => {
-        topPerformingData.push([
+        topPerformingSheet.addRow([
           index + 1,
           batch.name,
           `${batch.attendance.toFixed(1)}%`,
           batch.presentCount,
           batch.studentCount
-        ])
-      })
-      const topPerformingSheet = XLSX.utils.aoa_to_sheet(topPerformingData)
-      XLSX.utils.book_append_sheet(workbook, topPerformingSheet, 'Top Performing')
+        ]);
+      });
 
       // Sheet 5: Attendance Distribution
-      const distributionData = [
+      const distributionSheet = workbook.addWorksheet('Distribution');
+      distributionSheet.addRows([
         ['Attendance Distribution'],
         [''],
         ['Status', 'Count', 'Percentage'],
         ['Present', attendanceDistribution.present, `${((attendanceDistribution.present / (attendanceDistribution.present + attendanceDistribution.absent + attendanceDistribution.late)) * 100).toFixed(1)}%`],
         ['Absent', attendanceDistribution.absent, `${((attendanceDistribution.absent / (attendanceDistribution.present + attendanceDistribution.absent + attendanceDistribution.late)) * 100).toFixed(1)}%`],
         ['Late', attendanceDistribution.late, `${((attendanceDistribution.late / (attendanceDistribution.present + attendanceDistribution.absent + attendanceDistribution.late)) * 100).toFixed(1)}%`]
-      ]
-      const distributionSheet = XLSX.utils.aoa_to_sheet(distributionData)
-      XLSX.utils.book_append_sheet(workbook, distributionSheet, 'Distribution')
+      ]);
+
+      // Style the sheets
+      [overallStatsSheet, batchComparisonSheet, trendsSheet, topPerformingSheet, distributionSheet].forEach(sheet => {
+        // Set column widths
+        sheet.columns.forEach(column => {
+          column.width = 15;
+        });
+
+        // Style the title rows
+        sheet.getRow(1).font = { bold: true, size: 14 };
+        if (sheet.getRow(3).getCell(1).value) {
+          sheet.getRow(3).font = { bold: true };
+        }
+      });
 
       // Generate filename with current date
-      const fileName = `CADD_Attendance_Report_${format(new Date(), 'yyyy-MM-dd_HH-mm')}.xlsx`
+      const fileName = `CADD_Attendance_Report_${format(new Date(), 'yyyy-MM-dd_HH-mm')}.xlsx`;
 
       // Save the file
-      XLSX.writeFile(workbook, fileName)
+      await workbook.xlsx.writeBuffer().then(buffer => {
+        const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = fileName;
+        link.click();
+        window.URL.revokeObjectURL(url);
+      });
 
       toast.success('Excel report exported successfully!')
     } catch (error) {
@@ -512,7 +471,119 @@ const AdminAttendanceReport = () => {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-4 sm:space-y-8 px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+      <style jsx>{`
+        .mobile-spacing {
+          padding: 1rem;
+        }
+        @media (min-width: 640px) {
+          .mobile-spacing {
+            padding: 1.5rem;
+          }
+        }
+        .stats-card-value {
+          font-size: 1.25rem;
+          line-height: 1.75rem;
+        }
+        @media (min-width: 640px) {
+          .stats-card-value {
+            font-size: 1.5rem;
+            line-height: 2rem;
+          }
+        }
+        .mobile-title {
+          font-size: 1rem;
+          line-height: 1.5rem;
+        }
+        @media (min-width: 640px) {
+          .mobile-title {
+            font-size: 1.125rem;
+            line-height: 1.75rem;
+          }
+        }
+        .mobile-subtitle {
+          font-size: 0.75rem;
+          line-height: 1rem;
+        }
+        @media (min-width: 640px) {
+          .mobile-subtitle {
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+          }
+        }
+        .chart-container {
+          height: 16rem;
+        }
+        @media (min-width: 640px) {
+          .chart-container {
+            height: 20rem;
+          }
+        }
+        .table-container {
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+        }
+        .mobile-table {
+          min-width: 100%;
+        }
+        @media (max-width: 640px) {
+          .mobile-table {
+            font-size: 0.75rem;
+          }
+          .table-cell {
+            padding: 0.5rem 0.75rem;
+          }
+        }
+        .form-input, .form-select {
+          padding: 0.75rem;
+          border: 1px solid #d1d5db;
+          border-radius: 0.5rem;
+          font-size: 0.875rem;
+          transition: all 0.2s;
+        }
+        .form-input:focus, .form-select:focus {
+          outline: none;
+          ring: 2px;
+          ring-color: #ef4444;
+          border-color: transparent;
+        }
+        .date-input {
+          width: 100%;
+        }
+        @media (min-width: 640px) {
+          .date-input {
+            width: auto;
+          }
+        }
+        .view-tab {
+          white-space: nowrap;
+          min-width: fit-content;
+        }
+        .view-tabs {
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+        }
+        .touch-target {
+          min-height: 44px;
+          min-width: 44px;
+        }
+        @media (max-width: 640px) {
+          .mobile-only {
+            display: block;
+          }
+          .desktop-only {
+            display: none;
+          }
+        }
+        @media (min-width: 641px) {
+          .mobile-only {
+            display: none;
+          }
+          .desktop-only {
+            display: block;
+          }
+        }
+      `}</style>
       {/* Back Button */}
       <div className="flex items-center">
         <BackButton />
@@ -555,15 +626,24 @@ const AdminAttendanceReport = () => {
                 </span>
               </div>
             </div>
-            <div className="hidden lg:block">
-              <img
-                className="h-24 w-auto opacity-80"
-                src="/logos/cadd_logo.png"
-                alt="CADD Centre"
-                onError={(e) => {
-                  e.target.style.display = 'none'
-                }}
-              />
+            <div className="flex items-center space-x-4">
+              <Link
+                to="/admin/attendance"
+                className="inline-flex items-center px-6 py-3 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-gradient-to-r from-cadd-red to-cadd-pink hover:from-cadd-red/90 hover:to-cadd-pink/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cadd-red transition-all duration-300 transform hover:scale-105"
+              >
+                <ArrowLeftIcon className="h-5 w-5 mr-2" />
+                Back to Dashboard
+              </Link>
+              <div className="hidden lg:block">
+                <img
+                  className="h-24 w-auto opacity-80"
+                  src="/logos/cadd_logo.png"
+                  alt="CADD Centre"
+                  onError={(e) => {
+                    e.target.style.display = 'none'
+                  }}
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -724,17 +804,17 @@ const AdminAttendanceReport = () => {
         {/* Average Attendance Card */}
         <div className="relative bg-gradient-to-br from-green-500 to-green-600 rounded-2xl shadow-lg overflow-hidden group hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
           <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
-          <div className="relative p-6 text-white">
+          <div className="relative mobile-spacing p-4 sm:p-6 text-white">
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
                 <CheckCircleIcon className="h-6 w-6" />
               </div>
               <div className="text-right">
-                <div className="text-2xl font-bold">{overallStats.averageAttendance}%</div>
-                <div className="text-sm opacity-80">Avg Attendance</div>
+                <div className="stats-card-value text-xl sm:text-2xl font-bold">{overallStats.averageAttendance}%</div>
+                <div className="text-xs sm:text-sm opacity-80">Avg Attendance</div>
               </div>
             </div>
-            <div className="flex items-center text-sm">
+            <div className="flex items-center text-xs sm:text-sm">
               {overallStats.trend >= 0 ? (
                 <ArrowTrendingUpIcon className="h-4 w-4 mr-1" />
               ) : (
@@ -748,14 +828,14 @@ const AdminAttendanceReport = () => {
         {/* Present Today Card */}
         <div className="relative bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl shadow-lg overflow-hidden group hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
           <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
-          <div className="relative p-6 text-white">
+          <div className="relative mobile-spacing p-4 sm:p-6 text-white">
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
                 <ClockIcon className="h-6 w-6" />
               </div>
               <div className="text-right">
-                <div className="text-2xl font-bold">{overallStats.presentToday}</div>
-                <div className="text-sm opacity-80">Present Today</div>
+                <div className="stats-card-value text-xl sm:text-2xl font-bold">{overallStats.presentToday}</div>
+                <div className="text-xs sm:text-sm opacity-80">Present Today</div>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-2 text-xs">
@@ -774,17 +854,17 @@ const AdminAttendanceReport = () => {
         {/* Total Batches Card */}
         <div className="relative bg-gradient-to-br from-cadd-red to-cadd-pink rounded-2xl shadow-lg overflow-hidden group hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
           <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
-          <div className="relative p-6 text-white">
+          <div className="relative mobile-spacing p-4 sm:p-6 text-white">
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
                 <AcademicCapIcon className="h-6 w-6" />
               </div>
               <div className="text-right">
-                <div className="text-2xl font-bold">{overallStats.totalBatches}</div>
-                <div className="text-sm opacity-80">Active Batches</div>
+                <div className="stats-card-value text-xl sm:text-2xl font-bold">{overallStats.totalBatches}</div>
+                <div className="text-xs sm:text-sm opacity-80">Active Batches</div>
               </div>
             </div>
-            <div className="flex items-center justify-between text-sm">
+            <div className="flex items-center justify-between text-xs sm:text-sm">
               <span className="opacity-80">Performance</span>
               <span className="font-semibold">Excellent</span>
             </div>

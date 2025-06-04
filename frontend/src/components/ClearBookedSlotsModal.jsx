@@ -28,11 +28,11 @@ const ClearBookedSlotsModal = ({
 
   const timeSlots = [
     { value: 'all', label: 'All Time Slots' },
-    { value: '09:00-10:30', label: '09:00 AM - 10:30 AM' },
-    { value: '10:30-12:00', label: '10:30 AM - 12:00 PM' },
-    { value: '12:00-13:30', label: '12:00 PM - 01:30 PM' },
-    { value: '14:00-15:30', label: '02:00 PM - 03:30 PM' },
-    { value: '15:30-17:00', label: '03:30 PM - 05:00 PM' }
+    { value: '09:00 AM - 10:30 AM', label: '09:00 AM - 10:30 AM' },
+    { value: '10:30 AM - 12:00 PM', label: '10:30 AM - 12:00 PM' },
+    { value: '12:00 PM - 01:30 PM', label: '12:00 PM - 01:30 PM' },
+    { value: '02:00 PM - 03:30 PM', label: '02:00 PM - 03:30 PM' },
+    { value: '03:30 PM - 05:00 PM', label: '03:30 PM - 05:00 PM' }
   ]
 
   const handleConfirm = () => {

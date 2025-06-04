@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { batchesAPI, attendanceAPI } from '../../../services/api'
+import api from '../../../services/api'
 import { toast } from 'react-toastify'
 import { useAuth } from '../../../context/AuthContext'
 import {
@@ -20,7 +21,10 @@ import {
   ChevronRightIcon,
   CalendarDaysIcon,
   ArrowLeftIcon,
-  ChartBarIcon
+  ChartBarIcon,
+  FunnelIcon,
+  BuildingOfficeIcon,
+  AcademicCapIcon
 } from '@heroicons/react/24/outline'
 
 const AttendanceCalendar = () => {
@@ -28,7 +32,10 @@ const AttendanceCalendar = () => {
   const location = useLocation()
   const [currentDate, setCurrentDate] = useState(new Date())
   const [batches, setBatches] = useState([])
+  const [filteredBatches, setFilteredBatches] = useState([])
+  const [departments, setDepartments] = useState([])
   const [selectedBatch, setSelectedBatch] = useState('')
+  const [selectedDepartment, setSelectedDepartment] = useState('all')
   const [attendanceData, setAttendanceData] = useState({})
   const [loading, setLoading] = useState(true)
 
@@ -50,12 +57,43 @@ const AttendanceCalendar = () => {
     }
   }, [selectedBatch, currentDate])
 
+  // Filter batches based on department
+  useEffect(() => {
+    let filtered = batches
+
+    if (selectedDepartment !== 'all') {
+      filtered = filtered.filter(batch => {
+        const batchDept = batch.course?.department?._id || batch.course?.department
+        return batchDept === selectedDepartment
+      })
+    }
+
+    setFilteredBatches(filtered)
+
+    // Reset selected batch if it's not in filtered results
+    if (selectedBatch && !filtered.find(b => b._id === selectedBatch)) {
+      setSelectedBatch(filtered.length > 0 ? filtered[0]._id : '')
+    }
+  }, [batches, selectedDepartment, selectedBatch])
+
   const fetchBatches = async () => {
     try {
-      const res = await batchesAPI.getBatches()
-      setBatches(res.data)
-      if (res.data.length > 0) {
-        setSelectedBatch(res.data[0]._id)
+      const [batchesRes, departmentsRes] = await Promise.all([
+        batchesAPI.getBatches(),
+        api.get('/departments?active=true')
+      ])
+
+      setBatches(batchesRes.data)
+
+      // Filter departments to only include the 4 required ones
+      const allDepartments = departmentsRes.data || []
+      const requiredDepartments = allDepartments.filter(dept =>
+        ['CADD', 'LIVEWIRE', 'DREAMZONE', 'SYNERGY'].includes(dept.name)
+      )
+      setDepartments(requiredDepartments)
+
+      if (batchesRes.data.length > 0) {
+        setSelectedBatch(batchesRes.data[0]._id)
       }
     } catch (error) {
       toast.error('Failed to fetch batches')
@@ -177,16 +215,32 @@ const AttendanceCalendar = () => {
               <h1 className="text-2xl font-bold text-gray-900">Attendance Calendar</h1>
             </div>
           </div>
-          <div className="mt-4 sm:mt-0">
+          <div className="mt-4 sm:mt-0 flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
+            <select
+              value={selectedDepartment}
+              onChange={(e) => setSelectedDepartment(e.target.value)}
+              className="form-input min-w-[200px] bg-gradient-to-r from-gray-50 to-white border-2 border-gray-200 focus:border-cadd-red focus:ring-cadd-red"
+            >
+              <option value="all">All Departments</option>
+              {departments.map((dept) => (
+                <option key={dept._id} value={dept._id}>
+                  {dept.name}
+                </option>
+              ))}
+            </select>
+
             <select
               value={selectedBatch}
               onChange={(e) => setSelectedBatch(e.target.value)}
               className="form-input min-w-[250px] bg-gradient-to-r from-gray-50 to-white border-2 border-gray-200 focus:border-cadd-red focus:ring-cadd-red"
             >
-              <option value="">Select a batch to view calendar</option>
-              {batches.map((batch) => (
+              <option value="">
+                {filteredBatches.length === 0 ? 'No batches available' : 'Select a batch to view calendar'}
+              </option>
+              {filteredBatches.map((batch) => (
                 <option key={batch._id} value={batch._id}>
                   {batch.name} - {batch.academicYear} {batch.section}
+                  {batch.course?.department && ` (${batch.course.department.name})`}
                 </option>
               ))}
             </select>

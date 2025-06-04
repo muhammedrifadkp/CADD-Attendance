@@ -133,13 +133,13 @@
 }
 
 :root {
-  /* CADD Centre Brand Colors */
+  /* CDC Brand Colors */
   --cadd-red: #ff0000;
   --cadd-purple: #490b3d;
   --cadd-pink: #bd1e51;
   --cadd-yellow: #f1b814;
 
-  /* Primary color scheme based on CADD Purple */
+  /* Primary color scheme based on CDC Purple */
   --primary-50: #fdf2f8;
   --primary-100: #fce7f3;
   --primary-200: #fbcfe8;
@@ -151,7 +151,7 @@
   --primary-800: #2d0625;
   --primary-900: #1e041a;
 
-  /* Secondary color scheme based on CADD Yellow */
+  /* Secondary color scheme based on CDC Yellow */
   --secondary-50: #fffbeb;
   --secondary-100: #fef3c7;
   --secondary-200: #fde68a;
@@ -178,7 +178,7 @@
 
 @layer components {
 
-  /* CADD Centre Button Styles */
+  /* CDC Button Styles */
   .btn {
     @apply px-6 py-3 rounded-lg font-semibold transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 transform hover:scale-105 shadow-lg;
   }
@@ -217,7 +217,7 @@
     @apply border-2 border-primary-600 text-primary-600 bg-transparent hover:bg-primary-600 hover:text-white;
   }
 
-  /* CADD Centre Form Styles */
+  /* CDC Form Styles */
   .form-input {
     @apply block w-full rounded-lg border-2 border-gray-200 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm transition-all duration-300 px-4 py-3;
   }
@@ -230,7 +230,7 @@
     @apply block text-sm font-semibold text-gray-700 mb-2;
   }
 
-  /* CADD Centre Card Styles */
+  /* CDC Card Styles */
   .card {
     @apply bg-white rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl border border-gray-100;
   }
@@ -265,7 +265,7 @@
     @apply bg-primary-100 text-primary-800 border border-primary-200;
   }
 
-  /* CADD Centre Navigation */
+  /* CDC Navigation */
   .nav-link {
     @apply flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-300;
   }
@@ -279,7 +279,7 @@
     @apply text-gray-600 hover:bg-primary-50 hover:text-primary-700;
   }
 
-  /* CADD Centre Gradients */
+  /* CDC Gradients */
   .gradient-primary {
     background: linear-gradient(135deg, #bd1e51 0%, #490b3d 100%);
   }
@@ -296,7 +296,7 @@
     background: linear-gradient(135deg, rgba(189, 30, 81, 0.02) 0%, rgba(73, 11, 61, 0.02) 100%);
   }
 
-  /* CADD Centre Animations */
+  /* CDC Animations */
   .animate-fade-in {
     animation: fadeIn 0.5s ease-in-out;
   }
@@ -353,7 +353,7 @@
   }
 }
 
-/* CADD Centre Global Styles */
+/* CDC Global Styles */
 body {
   @apply gradient-bg;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;

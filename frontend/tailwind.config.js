@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        // CADD Centre Brand Colors
+        // CDC Brand Colors
         cadd: {
           red: '#ff0000',
           purple: '#490b3d',

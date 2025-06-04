@@ -180,25 +180,63 @@ class OfflineService {
   // Data management methods
   async saveDataLocally(type, data) {
     try {
+      const ensureValidArray = (d) => {
+        if (!d) return [];
+        if (Array.isArray(d)) {
+          // Filter out items without _id field
+          return d.filter(item => item && typeof item === 'object' && item._id);
+        }
+        // For single objects, check if it has _id
+        if (typeof d === 'object' && d._id) {
+          return [d];
+        }
+        // For empty objects or objects without _id, return empty array
+        return [];
+      };
+
+      const ensureValidData = (d) => {
+        if (!d) return [];
+        if (Array.isArray(d)) {
+          return d.filter(item => item && typeof item === 'object' && item._id);
+        }
+        if (typeof d === 'object' && d._id) {
+          return d;
+        }
+        return [];
+      };
+
       switch (type) {
         case 'students':
-          return await indexedDBService.saveStudents(data)
+          return await indexedDBService.saveStudents(ensureValidArray(data));
         case 'batches':
-          return await indexedDBService.saveBatches(data)
+          return await indexedDBService.saveBatches(ensureValidArray(data));
         case 'teachers':
-          return await indexedDBService.saveTeachers(data)
+          return await indexedDBService.saveTeachers(ensureValidArray(data));
         case 'attendance':
-          return await indexedDBService.saveAttendance(data)
+          const validAttendance = ensureValidData(data);
+          if (Array.isArray(validAttendance) && validAttendance.length === 0) {
+            return Promise.resolve([]);
+          }
+          return await indexedDBService.saveAttendance(validAttendance);
         case 'labBookings':
-          return await indexedDBService.saveLabBookings(data)
+          const validBookings = ensureValidData(data);
+          if (Array.isArray(validBookings) && validBookings.length === 0) {
+            return Promise.resolve([]);
+          }
+          return await indexedDBService.saveLabBookings(validBookings);
         case 'pcs':
-          return await indexedDBService.savePCs(data)
+          return await indexedDBService.savePCs(ensureValidArray(data));
         default:
-          throw new Error(`Unknown data type: ${type}`)
+          throw new Error(`Unknown data type: ${type}`);
       }
     } catch (error) {
-      console.error('OfflineService: Failed to save data locally:', error)
-      throw error
+      console.error('OfflineService: Failed to save data locally:', error);
+      // Don't throw error for empty data, just log it
+      if (error.message && error.message.includes('key path')) {
+        console.warn('OfflineService: Skipping invalid data without required key path');
+        return Promise.resolve([]);
+      }
+      throw error;
     }
   }
 

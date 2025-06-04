@@ -1,40 +1,49 @@
 {
-  "name": "attendance-management-system",
+  "name": "cdc-attendance",
   "version": "1.0.0",
-  "description": "A full-stack attendance management system for educational institutions",
+  "description": "CDC Attendance Management System - Full Stack Application",
   "main": "index.js",
   "scripts": {
-    "start": "node backend/server.js",
-    "server": "nodemon backend/server.js",
-    "client": "cd frontend && npm run dev",
+    "install-all": "npm install && cd backend && npm install && cd ../frontend && npm install",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "install-client": "cd frontend && npm install",
-    "build-client": "cd frontend && npm run build",
-    "heroku-postbuild": "npm run install-client && npm run build-client"
+    "server": "cd backend && npm run dev",
+    "client": "cd frontend && npm run dev",
+    "start": "concurrently \"npm run server:prod\" \"npm run client:preview\"",
+    "server:prod": "cd backend && npm start",
+    "client:preview": "cd frontend && npm run preview",
+    "build": "cd frontend && npm run build",
+    "build:backend": "cd backend && npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "cd frontend && npm run lint",
+    "clean": "rm -rf node_modules backend/node_modules frontend/node_modules",
+    "reset": "npm run clean && npm run install-all"
   },
   "keywords": [
     "attendance",
     "management",
+    "cadd",
+    "centre",
     "education",
-    "mern"
+    "react",
+    "nodejs",
+    "mongodb",
+    "express"
   ],
-  "author": "",
+  "author": "CADD Centre",
   "license": "MIT",
-  "dependencies": {
-    "axios": "^1.9.0",
-    "bcryptjs": "^2.4.3",
-    "cookie-parser": "^1.4.6",
-    "cors": "^2.8.5",
-    "dotenv": "^16.3.1",
-    "express": "^4.18.2",
-    "express-rate-limit": "^7.1.5",
-    "joi": "^17.11.0",
-    "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.0.3",
-    "multer": "^1.4.5-lts.1"
-  },
   "devDependencies": {
-    "concurrently": "^8.2.2",
-    "nodemon": "^3.0.2"
-  }
+    "concurrently": "^7.6.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/your-username/cadd-attendance.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/cadd-attendance/issues"
+  },
+  "homepage": "https://github.com/your-username/cadd-attendance#readme"
 }

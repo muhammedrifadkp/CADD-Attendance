@@ -1,216 +1,12 @@
 const Attendance = require('../models/attendanceModel');
 const Student = require('../models/studentModel');
 const Batch = require('../models/batchModel');
-const LabBooking = require('../models/labBookingModel');
-const labUpdateBroadcaster = require('../utils/labUpdateBroadcaster');
-
-// Helper function to restore lab bookings when student is marked present/late after being absent
-const restoreLabBookingsForStudent = async (studentId, attendanceDate, batchTiming) => {
-  try {
-    console.log('🔄 restoreLabBookingsForStudent called:', {
-      studentId,
-      attendanceDate,
-      batchTiming
-    });
-
-    // Get student details
-    const student = await Student.findById(studentId);
-    if (!student) {
-      console.log('❌ Student not found:', studentId);
-      return { updated: 0, message: 'Student not found' };
-    }
-
-    console.log('👤 Found student for restore:', student.name);
-
-    // Find completed lab bookings for this student on this date with the batch timing
-    const targetDate = new Date(attendanceDate);
-    targetDate.setHours(0, 0, 0, 0);
-    const endDate = new Date(targetDate);
-    endDate.setHours(23, 59, 59, 999);
-
-    console.log('🔍 Searching for completed bookings to restore:', {
-      studentName: student.name,
-      dateRange: { from: targetDate, to: endDate },
-      timeSlot: batchTiming,
-      status: 'completed'
-    });
-
-    const completedBookings = await LabBooking.find({
-      studentName: student.name,
-      date: {
-        $gte: targetDate,
-        $lte: endDate
-      },
-      timeSlot: batchTiming,
-      status: 'completed'
-    }).populate('pc', 'pcNumber rowNumber');
-
-    console.log('📋 Found completed bookings to restore:', completedBookings.length, completedBookings.map(b => ({
-      id: b._id,
-      pc: b.pc?.pcNumber,
-      timeSlot: b.timeSlot,
-      status: b.status
-    })));
-
-    let restoredCount = 0;
-    const restoredBookings = [];
-
-    // Restore each completed booking back to confirmed
-    for (const booking of completedBookings) {
-      console.log('🔄 Checking booking for restore:', booking._id, 'PC:', booking.pc?.pcNumber);
-
-      // Check if the slot is still available (no new confirmed booking)
-      const conflictBooking = await LabBooking.findOne({
-        pc: booking.pc._id,
-        date: {
-          $gte: targetDate,
-          $lte: endDate
-        },
-        timeSlot: booking.timeSlot,
-        status: 'confirmed',
-        _id: { $ne: booking._id }
-      });
-
-      if (!conflictBooking) {
-        console.log('✅ No conflict found, restoring booking:', booking._id);
-
-        booking.status = 'confirmed';
-        booking.notes = booking.notes ?
-          `${booking.notes} - Booking restored (student marked present/late) at ${new Date().toLocaleTimeString()}` :
-          `Booking restored (student marked present/late) at ${new Date().toLocaleTimeString()}`;
-
-        await booking.save();
-        restoredCount++;
-        restoredBookings.push({
-          pcNumber: booking.pc?.pcNumber,
-          timeSlot: booking.timeSlot,
-          studentName: booking.studentName
-        });
-
-        console.log('✅ Restored booking successfully:', booking._id);
-      } else {
-        console.log('⚠️ Conflict found, cannot restore booking:', booking._id, 'Conflict with:', conflictBooking._id);
-      }
-    }
-
-    console.log('📊 Lab booking restore summary:', {
-      restoredCount,
-      restoredBookings
-    });
-
-    return {
-      updated: restoredCount,
-      message: restoredCount > 0 ?
-        `Restored ${restoredCount} lab booking(s) for ${student.name}` :
-        'No bookings to restore or slots already taken',
-      bookings: restoredBookings
-    };
-  } catch (error) {
-    console.error('Error restoring lab bookings:', error);
-    return { updated: 0, message: 'Error restoring lab bookings', error: error.message };
-  }
-};
-
-// Helper function to update lab bookings based on attendance
-const updateLabBookingsBasedOnAttendance = async (studentId, attendanceStatus, attendanceDate, batchTiming) => {
-  try {
-    console.log('🔄 updateLabBookingsBasedOnAttendance called:', {
-      studentId,
-      attendanceStatus,
-      attendanceDate,
-      batchTiming
-    });
-
-    // Only process if student is marked as absent (late students might still come)
-    if (attendanceStatus !== 'absent') {
-      console.log('⏭️ Skipping lab booking update - student not absent');
-      return { updated: 0, message: 'No lab booking updates needed for present/late students' };
-    }
-
-    // Get student details
-    const student = await Student.findById(studentId);
-    if (!student) {
-      console.log('❌ Student not found:', studentId);
-      return { updated: 0, message: 'Student not found' };
-    }
-
-    console.log('👤 Found student:', student.name);
-
-    // Find lab bookings for this student on this date with the batch timing
-    const targetDate = new Date(attendanceDate);
-    targetDate.setHours(0, 0, 0, 0);
-    const endDate = new Date(targetDate);
-    endDate.setHours(23, 59, 59, 999);
-
-    console.log('🔍 Searching for lab bookings with criteria:', {
-      studentName: student.name,
-      dateRange: { from: targetDate, to: endDate },
-      timeSlot: batchTiming,
-      status: 'confirmed'
-    });
-
-    const labBookings = await LabBooking.find({
-      studentName: student.name,
-      date: {
-        $gte: targetDate,
-        $lte: endDate
-      },
-      timeSlot: batchTiming,
-      status: 'confirmed'
-    }).populate('pc', 'pcNumber rowNumber');
-
-    console.log('📋 Found lab bookings:', labBookings.length, labBookings.map(b => ({
-      id: b._id,
-      pc: b.pc?.pcNumber,
-      timeSlot: b.timeSlot,
-      status: b.status
-    })));
-
-    let updatedCount = 0;
-    const updatedBookings = [];
-
-    // Update each matching booking
-    for (const booking of labBookings) {
-      console.log('🔄 Updating booking:', booking._id, 'from', booking.status, 'to completed');
-
-      booking.status = 'completed';
-      booking.notes = booking.notes ?
-        `${booking.notes} - Student marked absent in attendance at ${new Date().toLocaleTimeString()}` :
-        `Student marked absent in attendance at ${new Date().toLocaleTimeString()}`;
-
-      await booking.save();
-      updatedCount++;
-      updatedBookings.push({
-        pcNumber: booking.pc?.pcNumber,
-        timeSlot: booking.timeSlot,
-        studentName: booking.studentName
-      });
-
-      console.log('✅ Updated booking successfully:', booking._id);
-    }
-
-    console.log('📊 Lab booking update summary:', {
-      updatedCount,
-      updatedBookings
-    });
-
-    return {
-      updated: updatedCount,
-      message: updatedCount > 0 ?
-        `Updated ${updatedCount} lab booking(s) for ${student.name} (marked absent)` :
-        'No matching lab bookings found',
-      bookings: updatedBookings
-    };
-  } catch (error) {
-    console.error('Error updating lab bookings based on attendance:', error);
-    return { updated: 0, message: 'Error updating lab bookings', error: error.message };
-  }
-};
+const asyncHandler = require('express-async-handler');
 
 // @desc    Mark attendance for a student
 // @route   POST /api/attendance
 // @access  Private/Teacher
-const markAttendance = async (req, res) => {
+const markAttendance = asyncHandler(async (req, res) => {
   const { studentId, batchId, date, status, remarks } = req.body;
 
   // Check if student exists
@@ -272,60 +68,16 @@ const markAttendance = async (req, res) => {
     });
   }
 
-  // Update lab bookings based on attendance status
-  let labBookingUpdate = null;
-  console.log('🎯 Processing lab booking updates for attendance status:', status);
-
-  if (status === 'absent') {
-    console.log('❌ Student marked absent - completing lab bookings');
-    // Complete bookings for absent students
-    labBookingUpdate = await updateLabBookingsBasedOnAttendance(
-      studentId,
-      status,
-      attendanceDate,
-      batch.timing
-    );
-  } else if (status === 'present' || status === 'late') {
-    console.log('✅ Student marked present/late - restoring lab bookings');
-    // Restore bookings for present/late students (in case they were previously marked absent)
-    labBookingUpdate = await restoreLabBookingsForStudent(
-      studentId,
-      attendanceDate,
-      batch.timing
-    );
-  }
-
-  console.log('📋 Lab booking update result:', labBookingUpdate);
-
-  // Broadcast lab availability update if bookings were changed
-  if (labBookingUpdate && labBookingUpdate.updated > 0) {
-    const updateData = {
-      type: 'attendance_update',
-      date: attendanceDate.toISOString().split('T')[0],
-      timeSlot: batch.timing,
-      studentName: student.name,
-      attendanceStatus: status,
-      labBookingUpdates: labBookingUpdate.bookings || [],
-      timestamp: new Date().toISOString()
-    };
-
-    console.log('📡 Broadcasting lab availability update:', updateData);
-    labUpdateBroadcaster.broadcastLabUpdate(updateData);
-  }
-
-  // Prepare response
-  const response = {
+  res.status(existingAttendance ? 200 : 201).json({
     attendance: attendanceRecord,
-    labBookingUpdate: labBookingUpdate
-  };
-
-  res.status(existingAttendance ? 200 : 201).json(response);
-};
+    message: 'Attendance marked successfully'
+  });
+});
 
 // @desc    Mark attendance for multiple students
 // @route   POST /api/attendance/bulk
 // @access  Private/Teacher
-const markBulkAttendance = async (req, res) => {
+const markBulkAttendance = asyncHandler(async (req, res) => {
   const { attendanceRecords, batchId, date } = req.body;
 
   if (!attendanceRecords || !Array.isArray(attendanceRecords) || attendanceRecords.length === 0) {
@@ -386,71 +138,23 @@ const markBulkAttendance = async (req, res) => {
   try {
     const results = await Promise.all(operations);
 
-    // After attendance is marked, update lab bookings based on status
-    const labBookingUpdates = [];
-    for (const record of attendanceRecords) {
-      if (record.status === 'absent') {
-        // Complete bookings for absent students
-        const labUpdate = await updateLabBookingsBasedOnAttendance(
-          record.studentId,
-          record.status,
-          attendanceDate,
-          batch.timing
-        );
-        if (labUpdate.updated > 0) {
-          labBookingUpdates.push(labUpdate);
-        }
-      } else if (record.status === 'present' || record.status === 'late') {
-        // Restore bookings for present/late students (in case they were previously marked absent)
-        const labRestore = await restoreLabBookingsForStudent(
-          record.studentId,
-          attendanceDate,
-          batch.timing
-        );
-        if (labRestore.updated > 0) {
-          labBookingUpdates.push(labRestore);
-        }
-      }
-    }
-
-    // Broadcast lab availability update if any bookings were changed
-    const totalUpdates = labBookingUpdates.reduce((sum, update) => sum + update.updated, 0);
-    if (totalUpdates > 0) {
-      const updateData = {
-        type: 'bulk_attendance_update',
-        date: attendanceDate.toISOString().split('T')[0],
-        timeSlot: batch.timing,
-        totalStudentsUpdated: attendanceRecords.length,
-        totalBookingsUpdated: totalUpdates,
-        labBookingUpdates: labBookingUpdates.flatMap(update => update.bookings || []),
-        timestamp: new Date().toISOString()
-      };
-
-      console.log('📡 Broadcasting bulk lab availability update:', updateData);
-      labUpdateBroadcaster.broadcastLabUpdate(updateData);
-    }
-
-    // Prepare response with lab booking updates
-    const response = {
+    res.status(201).json({
       attendanceResults: results,
-      labBookingUpdates: labBookingUpdates,
       summary: {
-        attendanceRecordsProcessed: results.length,
-        labBookingsUpdated: totalUpdates
-      }
-    };
-
-    res.status(201).json(response);
+        attendanceRecordsProcessed: results.length
+      },
+      message: 'Bulk attendance marked successfully'
+    });
   } catch (error) {
     res.status(500);
     throw new Error(`Error marking bulk attendance: ${error.message}`);
   }
-};
+});
 
 // @desc    Get attendance for a batch on a specific date
 // @route   GET /api/attendance/batch/:batchId
 // @access  Private/Teacher
-const getBatchAttendance = async (req, res) => {
+const getBatchAttendance = asyncHandler(async (req, res) => {
   const { batchId } = req.params;
   const { date } = req.query;
 
@@ -510,12 +214,12 @@ const getBatchAttendance = async (req, res) => {
   });
 
   res.json(response);
-};
+});
 
 // @desc    Get attendance for a student
 // @route   GET /api/attendance/student/:studentId
 // @access  Private/Teacher
-const getStudentAttendance = async (req, res) => {
+const getStudentAttendance = asyncHandler(async (req, res) => {
   const { studentId } = req.params;
   const { startDate, endDate } = req.query;
 
@@ -559,12 +263,12 @@ const getStudentAttendance = async (req, res) => {
     .populate('markedBy', 'name');
 
   res.json(attendanceRecords);
-};
+});
 
 // @desc    Get attendance statistics for a batch
 // @route   GET /api/attendance/stats/batch/:batchId
 // @access  Private/Teacher
-const getBatchAttendanceStats = async (req, res) => {
+const getBatchAttendanceStats = asyncHandler(async (req, res) => {
   const { batchId } = req.params;
   const { startDate, endDate } = req.query;
 
@@ -632,12 +336,12 @@ const getBatchAttendanceStats = async (req, res) => {
     expectedTotalRecords,
     averageAttendance: expectedTotalRecords > 0 ? (presentCount / expectedTotalRecords) * 100 : 0,
   });
-};
+});
 
 // @desc    Get overall attendance analytics for admin
 // @route   GET /api/attendance/analytics/overall
 // @access  Private/Admin
-const getOverallAttendanceAnalytics = async (req, res) => {
+const getOverallAttendanceAnalytics = asyncHandler(async (req, res) => {
   const { startDate, endDate } = req.query;
 
   // Build date filter
@@ -708,12 +412,12 @@ const getOverallAttendanceAnalytics = async (req, res) => {
       improvement: trend
     }
   });
-};
+});
 
 // @desc    Get attendance trends over time
 // @route   GET /api/attendance/analytics/trends
 // @access  Private/Admin
-const getAttendanceTrends = async (req, res) => {
+const getAttendanceTrends = asyncHandler(async (req, res) => {
   const { days = 14 } = req.query;
   const trends = [];
 
@@ -747,7 +451,75 @@ const getAttendanceTrends = async (req, res) => {
   }
 
   res.json(trends);
-};
+});
+
+// @desc    Get today's attendance summary for teacher dashboard
+// @route   GET /api/attendance/today/summary
+// @access  Private/Teacher
+const getTodayAttendanceSummary = asyncHandler(async (req, res) => {
+  try {
+    // Get today's date
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    // For teachers, get only their batches
+    const filter = req.user.role === 'admin' ? {} : { createdBy: req.user._id };
+    const batches = await Batch.find(filter);
+    const batchIds = batches.map(batch => batch._id);
+
+    if (batchIds.length === 0) {
+      return res.json({
+        totalStudents: 0,
+        presentToday: 0,
+        absentToday: 0,
+        lateToday: 0,
+        attendanceRate: 0,
+        batchesWithAttendance: 0,
+        totalBatches: 0
+      });
+    }
+
+    // Get today's attendance records for teacher's batches
+    const todayAttendance = await Attendance.find({
+      batch: { $in: batchIds },
+      date: {
+        $gte: today,
+        $lt: tomorrow
+      }
+    });
+
+    // Get total students in teacher's batches
+    const totalStudents = await Student.countDocuments({
+      batch: { $in: batchIds }
+    });
+
+    // Calculate statistics
+    const presentToday = todayAttendance.filter(record => record.status === 'present').length;
+    const absentToday = todayAttendance.filter(record => record.status === 'absent').length;
+    const lateToday = todayAttendance.filter(record => record.status === 'late').length;
+
+    // Get unique batches that have attendance marked today
+    const batchesWithAttendanceToday = [...new Set(todayAttendance.map(record => record.batch.toString()))];
+
+    const attendanceRate = totalStudents > 0 ? (presentToday / totalStudents) * 100 : 0;
+
+    res.json({
+      totalStudents,
+      presentToday,
+      absentToday,
+      lateToday,
+      attendanceRate: Math.round(attendanceRate * 10) / 10,
+      batchesWithAttendance: batchesWithAttendanceToday.length,
+      totalBatches: batches.length,
+      date: today.toISOString().split('T')[0]
+    });
+  } catch (error) {
+    console.error('Error fetching today\'s attendance summary:', error);
+    res.status(500).json({ message: 'Server error while fetching attendance summary' });
+  }
+});
 
 module.exports = {
   markAttendance,
@@ -757,4 +529,5 @@ module.exports = {
   getBatchAttendanceStats,
   getOverallAttendanceAnalytics,
   getAttendanceTrends,
+  getTodayAttendanceSummary,
 };

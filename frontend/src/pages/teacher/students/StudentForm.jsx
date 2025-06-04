@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { studentsAPI } from '../../../services/api'
+import { studentsAPI, batchesAPI, coursesAPI } from '../../../services/api'
+import api from '../../../services/api'
 import { toast } from 'react-toastify'
 
 const StudentForm = () => {
@@ -11,6 +12,12 @@ const StudentForm = () => {
   const [formData, setFormData] = useState({
     name: '',
     rollNo: '',
+    email: '',
+    phone: '',
+    address: '',
+    department: '',
+    course: '',
+    batch: batchId || '',
     contactInfo: {
       email: '',
       phone: '',
@@ -20,39 +27,81 @@ const StudentForm = () => {
   })
   const [loading, setLoading] = useState(false)
   const [fetchLoading, setFetchLoading] = useState(isEditMode)
+  const [batch, setBatch] = useState(null)
+  const [courses, setCourses] = useState([])
+  const [departments, setDepartments] = useState([])
 
   useEffect(() => {
-    const fetchStudent = async () => {
-      if (isEditMode) {
-        try {
-          setFetchLoading(true)
-          const res = await studentsAPI.getStudent(studentId)
-          const { name, rollNo, contactInfo, isActive } = res.data
-          setFormData({
-            name,
-            rollNo,
-            contactInfo: {
-              email: contactInfo?.email || '',
-              phone: contactInfo?.phone || '',
-              address: contactInfo?.address || '',
-            },
-            isActive,
-          })
-        } catch (error) {
-          toast.error('Failed to fetch student details')
-          navigate(`/batches/${batchId}/students`)
-        } finally {
-          setFetchLoading(false)
+    const fetchData = async () => {
+      try {
+        setFetchLoading(true)
+
+        // Fetch batch, departments, and courses
+        const [batchRes, departmentsRes, coursesRes] = await Promise.all([
+          batchId ? batchesAPI.getBatch(batchId) : Promise.resolve(null),
+          api.get('/departments?active=true'),
+          api.get('/courses?active=true')
+        ])
+
+        if (batchRes) {
+          setBatch(batchRes.data)
         }
+
+        // Filter departments to only include the 4 required ones
+        const allDepartments = departmentsRes.data || []
+        const requiredDepartments = allDepartments.filter(dept =>
+          ['CADD', 'LIVEWIRE', 'DREAMZONE', 'SYNERGY'].includes(dept.name)
+        )
+        setDepartments(requiredDepartments)
+        setCourses(coursesRes.data.courses || coursesRes.data || [])
+
+        // If editing, fetch student data
+        if (isEditMode) {
+          const studentRes = await studentsAPI.getStudent(studentId)
+          const student = studentRes.data
+
+          setFormData({
+            name: student.name || '',
+            rollNo: student.rollNo || '',
+            email: student.email || student.contactInfo?.email || '',
+            phone: student.phone || student.contactInfo?.phone || '',
+            address: student.address || student.contactInfo?.address || '',
+            department: student.department?._id || student.department || '',
+            course: student.course?._id || student.course || '',
+            batch: student.batch?._id || student.batch || batchId || '',
+            contactInfo: {
+              email: student.contactInfo?.email || student.email || '',
+              phone: student.contactInfo?.phone || student.phone || '',
+              address: student.contactInfo?.address || student.address || '',
+            },
+            isActive: student.isActive !== undefined ? student.isActive : true,
+          })
+        } else if (batchRes) {
+          // For new students, pre-fill department and course from batch
+          setFormData(prev => ({
+            ...prev,
+            department: batchRes.data.course?.department?._id || batchRes.data.course?.department || '',
+            course: batchRes.data.course?._id || batchRes.data.course || '',
+            batch: batchId
+          }))
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error)
+        toast.error('Failed to fetch data')
+        if (isEditMode) {
+          navigate(`/batches/${batchId}/students`)
+        }
+      } finally {
+        setFetchLoading(false)
       }
     }
 
-    fetchStudent()
+    fetchData()
   }, [batchId, studentId, isEditMode, navigate])
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target
-    
+
     if (name.startsWith('contactInfo.')) {
       const contactField = name.split('.')[1]
       setFormData({
@@ -61,12 +110,26 @@ const StudentForm = () => {
           ...formData.contactInfo,
           [contactField]: value,
         },
+        // Also update the main field for backend compatibility
+        [contactField]: value,
       })
     } else {
       setFormData({
         ...formData,
         [name]: type === 'checkbox' ? checked : value,
       })
+
+      // Update contactInfo for backward compatibility
+      if (['email', 'phone', 'address'].includes(name)) {
+        setFormData(prev => ({
+          ...prev,
+          [name]: value,
+          contactInfo: {
+            ...prev.contactInfo,
+            [name]: value,
+          }
+        }))
+      }
     }
   }
 
@@ -75,18 +138,35 @@ const StudentForm = () => {
     setLoading(true)
 
     try {
+      // Prepare data for submission
+      const submitData = {
+        name: formData.name,
+        rollNo: formData.rollNo,
+        email: formData.email,
+        phone: formData.phone,
+        address: formData.address,
+        department: formData.department,
+        course: formData.course,
+        batch: formData.batch || batchId,
+        isActive: formData.isActive,
+        // Keep contactInfo for backward compatibility
+        contactInfo: {
+          email: formData.email,
+          phone: formData.phone,
+          address: formData.address,
+        }
+      }
+
       if (isEditMode) {
-        await studentsAPI.updateStudent(studentId, formData)
+        await studentsAPI.updateStudent(studentId, submitData)
         toast.success('Student updated successfully')
       } else {
-        await studentsAPI.createStudent({
-          ...formData,
-          batchId,
-        })
+        await studentsAPI.createStudent(submitData)
         toast.success('Student created successfully')
       }
       navigate(`/batches/${batchId}/students`)
     } catch (error) {
+      console.error('Error submitting student:', error)
       toast.error(isEditMode ? 'Failed to update student' : 'Failed to create student')
     } finally {
       setLoading(false)
@@ -124,6 +204,7 @@ const StudentForm = () => {
                 className="form-input"
                 value={formData.name}
                 onChange={handleChange}
+                placeholder="Enter student's full name"
               />
             </div>
 
@@ -139,48 +220,115 @@ const StudentForm = () => {
                 className="form-input"
                 value={formData.rollNo}
                 onChange={handleChange}
+                placeholder="Enter roll number"
               />
             </div>
 
             <div>
-              <label htmlFor="contactInfo.email" className="form-label">
+              <label htmlFor="department" className="form-label">
+                Department
+              </label>
+              <select
+                name="department"
+                id="department"
+                required
+                className="form-input"
+                value={formData.department}
+                onChange={handleChange}
+                disabled={!isEditMode && batch} // Disable if creating and batch is pre-selected
+              >
+                <option value="">Select Department</option>
+                {departments.map(dept => (
+                  <option key={dept._id} value={dept._id}>
+                    {dept.name}
+                  </option>
+                ))}
+              </select>
+              {!isEditMode && batch && (
+                <p className="mt-1 text-sm text-gray-500">
+                  Department is pre-selected based on the batch
+                </p>
+              )}
+            </div>
+
+            <div>
+              <label htmlFor="course" className="form-label">
+                Course
+              </label>
+              <select
+                name="course"
+                id="course"
+                required
+                className="form-input"
+                value={formData.course}
+                onChange={handleChange}
+                disabled={!isEditMode && batch} // Disable if creating and batch is pre-selected
+              >
+                <option value="">Select Course</option>
+                {courses
+                  .filter(course => {
+                    if (!formData.department) return false
+                    const courseDept = course.department?._id || course.department
+                    return courseDept === formData.department
+                  })
+                  .map(course => (
+                    <option key={course._id} value={course._id}>
+                      {course.name} ({course.code})
+                    </option>
+                  ))
+                }
+              </select>
+              {!isEditMode && batch && (
+                <p className="mt-1 text-sm text-gray-500">
+                  Course is pre-selected based on the batch
+                </p>
+              )}
+            </div>
+
+            <div>
+              <label htmlFor="email" className="form-label">
                 Email Address
               </label>
               <input
                 type="email"
-                name="contactInfo.email"
-                id="contactInfo.email"
+                name="email"
+                id="email"
+                required
                 className="form-input"
-                value={formData.contactInfo.email}
+                value={formData.email}
                 onChange={handleChange}
+                placeholder="student@example.com"
               />
             </div>
 
             <div>
-              <label htmlFor="contactInfo.phone" className="form-label">
+              <label htmlFor="phone" className="form-label">
                 Phone Number
               </label>
               <input
                 type="text"
-                name="contactInfo.phone"
-                id="contactInfo.phone"
+                name="phone"
+                id="phone"
+                required
                 className="form-input"
-                value={formData.contactInfo.phone}
+                value={formData.phone}
                 onChange={handleChange}
+                placeholder="+91 9876543210"
               />
             </div>
 
             <div className="sm:col-span-2">
-              <label htmlFor="contactInfo.address" className="form-label">
+              <label htmlFor="address" className="form-label">
                 Address
               </label>
               <textarea
-                name="contactInfo.address"
-                id="contactInfo.address"
+                name="address"
+                id="address"
                 rows="3"
                 className="form-input"
-                value={formData.contactInfo.address}
+                value={formData.address}
                 onChange={handleChange}
+                placeholder="Enter complete address"
               ></textarea>
             </div>
 

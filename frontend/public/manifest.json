@@ -1,7 +1,7 @@
 {
-  "name": "CADD Attendance Management System",
-  "short_name": "CADD Attendance",
-  "description": "Comprehensive attendance management system for CADD Centre - manage student attendance, batches, and lab bookings efficiently. Works offline with automatic sync when online.",
+  "name": "CDC Attendance Management System",
+  "short_name": "CDC Attendance",
+  "description": "Comprehensive attendance management system for CDC - manage student attendance, batches, and lab bookings efficiently. Works offline with automatic sync when online.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#322536",
@@ -126,7 +126,7 @@
       "sizes": "1280x720",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "CADD Attendance Dashboard"
+      "label": "CDC Attendance Dashboard"
     },
     {
       "src": "/screenshots/mobile-attendance.png",
