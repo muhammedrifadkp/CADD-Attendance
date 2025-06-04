@@ -1,5 +1,6 @@
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
+import { splitVendorChunkPlugin } from 'vite'
 import { resolve } from 'path'
 
 // https://vitejs.dev/config/
@@ -33,7 +34,8 @@ export default defineConfig(({ command, mode }) => {
             // Only use plugins that don't require additional dependencies
           ]
         } : undefined
-      })
+      }),
+      splitVendorChunkPlugin()
     ],
     server: {
       port: 5173,
@@ -107,41 +109,12 @@ export default defineConfig(({ command, mode }) => {
         },
         output: {
           // Advanced chunking strategy
-          manualChunks: (id) => {
-            // Vendor chunks
-            if (id.includes('node_modules')) {
-              if (id.includes('react') || id.includes('react-dom')) {
-                return 'react-vendor'
-              }
-              if (id.includes('react-router')) {
-                return 'router-vendor'
-              }
-              if (id.includes('@headlessui') || id.includes('@heroicons')) {
-                return 'ui-vendor'
-              }
-              if (id.includes('axios') || id.includes('react-hot-toast')) {
-                return 'utils-vendor'
-              }
-              // Other vendor libraries
-              return 'vendor'
-            }
-
-            // Feature-based chunks
-            if (id.includes('/pages/admin/')) {
-              return 'admin-pages'
-            }
-            if (id.includes('/pages/teacher/')) {
-              return 'teacher-pages'
-            }
-            if (id.includes('/pages/lab-teacher/')) {
-              return 'lab-teacher-pages'
-            }
-            if (id.includes('/components/dashboard/')) {
-              return 'dashboard-components'
-            }
-            if (id.includes('/components/lab/')) {
-              return 'lab-components'
-            }
+          manualChunks: {
+            'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+            'ui-vendor': ['@headlessui/react', '@heroicons/react'],
+            'form-vendor': ['formik', 'yup'],
+            'utils-vendor': ['axios', 'date-fns', 'lodash'],
+            'chart-vendor': ['chart.js', 'react-chartjs-2'],
           },
 
           // File naming strategy
@@ -188,7 +161,8 @@ export default defineConfig(({ command, mode }) => {
       __API_URL__: JSON.stringify(backendUrl + '/api'),
       __DEV__: isDev,
       __PROD__: isProd,
-      __BUILD_TIME__: JSON.stringify(new Date().toISOString())
+      __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production')
     },
 
     // CSS configuration
