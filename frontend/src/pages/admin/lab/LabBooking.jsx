@@ -188,7 +188,7 @@ const LabBooking = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-cadd-red"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand-red"></div>
       </div>
     )
   }
@@ -203,7 +203,7 @@ const LabBooking = () => {
       </div>
 
       {/* Header */}
-      <div className="bg-gradient-to-r from-cadd-purple to-cadd-pink rounded-2xl shadow-2xl overflow-hidden">
+      <div className="bg-gradient-to-r from-brand-purple to-brand-pink rounded-2xl shadow-2xl overflow-hidden">
         <div className="px-8 py-12">
           <div className="flex items-center justify-between">
             <div>
@@ -241,7 +241,7 @@ const LabBooking = () => {
                   type="date"
                   value={selectedDate}
                   onChange={(e) => setSelectedDate(e.target.value)}
-                  className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cadd-red focus:border-cadd-red"
+                  className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red focus:border-brand-red"
                 />
                 <button
                   onClick={() => navigateDate(1)}
@@ -310,13 +310,13 @@ const LabBooking = () => {
                 className={`
                   relative p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 hover:shadow-md
                   ${isSelected
-                    ? 'border-cadd-red bg-cadd-red/5 shadow-lg'
+                    ? 'border-brand-red bg-brand-red/5 shadow-lg'
                     : 'border-gray-200 hover:border-gray-300'
                   }
                 `}
               >
                 <div className="flex items-center justify-between mb-3">
-                  <ClockIcon className={`h-5 w-5 ${isSelected ? 'text-cadd-red' : 'text-gray-400'}`} />
+                  <ClockIcon className={`h-5 w-5 ${isSelected ? 'text-brand-red' : 'text-gray-400'}`} />
                   {occupiedCount > 0 && (
                     <button
                       onClick={(e) => {
@@ -331,15 +331,15 @@ const LabBooking = () => {
                   )}
                 </div>
 
-                <div className={`font-semibold mb-2 ${isSelected ? 'text-cadd-red' : 'text-gray-900'}`}>
+                <div className={`font-semibold mb-2 ${isSelected ? 'text-brand-red' : 'text-gray-900'}`}>
                   {timeSlot.label}
                 </div>
 
                 <div className="flex items-center justify-between text-sm">
-                  <span className={`${isSelected ? 'text-cadd-red' : 'text-gray-600'}`}>
+                  <span className={`${isSelected ? 'text-brand-red' : 'text-gray-600'}`}>
                     {occupiedCount} occupied
                   </span>
-                  <span className={`text-xs ${isSelected ? 'text-cadd-red' : 'text-gray-500'}`}>
+                  <span className={`text-xs ${isSelected ? 'text-brand-red' : 'text-gray-500'}`}>
                     {totalPCs > 0 ? `${occupancyRate.toFixed(0)}%` : '0%'}
                   </span>
                 </div>
@@ -413,7 +413,7 @@ const LabBooking = () => {
               </p>
               <Link
                 to="/admin/lab/pcs/new"
-                className="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-cadd-red hover:bg-cadd-red/90"
+                className="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-brand-red hover:bg-brand-red/90"
               >
                 Add PC
               </Link>

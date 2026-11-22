@@ -120,7 +120,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
   // Check if input is email format or employee ID format
   const isEmail = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(normalizedInput);
-  const isEmployeeId = /^(CADD|LW|DZ|SY)-\d{3}$/i.test(normalizedInput);
+  const isEmployeeId = /^[a-z0-9]{1,10}-\d{3,}$/i.test(normalizedInput);
 
   let searchQuery;
   if (isEmail) {

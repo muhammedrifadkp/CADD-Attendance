@@ -99,7 +99,7 @@ const PCForm = () => {
       <div className="flex items-center justify-center min-h-64">
         <div className="relative">
           <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-200"></div>
-          <div className="animate-spin rounded-full h-16 w-16 border-4 border-cadd-red border-t-transparent absolute top-0 left-0"></div>
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-brand-red border-t-transparent absolute top-0 left-0"></div>
         </div>
       </div>
     )
@@ -113,7 +113,7 @@ const PCForm = () => {
       </div>
 
       {/* Header */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-cadd-purple to-cadd-pink rounded-2xl shadow-2xl">
+      <div className="relative overflow-hidden bg-gradient-to-r from-brand-purple to-brand-pink rounded-2xl shadow-2xl">
         <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent"></div>
         <div className="relative px-8 py-12">
           <div className="flex items-center justify-between">
@@ -164,7 +164,7 @@ const PCForm = () => {
                 onChange={handleInputChange}
                 placeholder="e.g., CS-01, SS-05, MS-67"
                 title="PC number format: XX-XX (e.g., CS-01, SS-05, MS-67)"
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cadd-red focus:border-cadd-red transition-colors duration-300"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-red focus:border-brand-red transition-colors duration-300"
                 required
               />
               <p className="mt-1 text-xs text-gray-500">Format: XX-XX (e.g., CS-01, SS-05, MS-67)</p>
@@ -179,7 +179,7 @@ const PCForm = () => {
                 name="row"
                 value={formData.row}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cadd-red focus:border-cadd-red transition-colors duration-300"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-red focus:border-brand-red transition-colors duration-300"
                 required
               >
                 <option value="1">Row 1</option>
@@ -202,7 +202,7 @@ const PCForm = () => {
                 min="1"
                 max="20"
                 placeholder="Position in row (1-20)"
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cadd-red focus:border-cadd-red transition-colors duration-300"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-red focus:border-brand-red transition-colors duration-300"
                 required
               />
               <p className="mt-1 text-xs text-gray-500">Position of PC in the row (1-20)</p>
@@ -217,7 +217,7 @@ const PCForm = () => {
                 name="status"
                 value={formData.status}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cadd-red focus:border-cadd-red transition-colors duration-300"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-red focus:border-brand-red transition-colors duration-300"
               >
                 <option value="active">Active</option>
                 <option value="maintenance">Maintenance</option>
@@ -249,7 +249,7 @@ const PCForm = () => {
                     }
                   }))}
                   placeholder="e.g., Intel Core i5-10400"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cadd-red focus:border-cadd-red transition-colors duration-300"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-red focus:border-brand-red transition-colors duration-300"
                 />
               </div>
 
@@ -270,7 +270,7 @@ const PCForm = () => {
                     }
                   }))}
                   placeholder="e.g., 8GB DDR4"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cadd-red focus:border-cadd-red transition-colors duration-300"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-red focus:border-brand-red transition-colors duration-300"
                 />
               </div>
 
@@ -291,7 +291,7 @@ const PCForm = () => {
                     }
                   }))}
                   placeholder="e.g., 256GB SSD"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cadd-red focus:border-cadd-red transition-colors duration-300"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-red focus:border-brand-red transition-colors duration-300"
                 />
               </div>
 
@@ -312,7 +312,7 @@ const PCForm = () => {
                     }
                   }))}
                   placeholder="e.g., NVIDIA GTX 1650"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cadd-red focus:border-cadd-red transition-colors duration-300"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-red focus:border-brand-red transition-colors duration-300"
                 />
               </div>
 
@@ -333,7 +333,7 @@ const PCForm = () => {
                     }
                   }))}
                   placeholder="e.g., 24-inch Full HD"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cadd-red focus:border-cadd-red transition-colors duration-300"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-red focus:border-brand-red transition-colors duration-300"
                 />
               </div>
             </div>
@@ -351,7 +351,7 @@ const PCForm = () => {
               onChange={handleInputChange}
               rows={4}
               placeholder="Additional notes about this PC..."
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cadd-red focus:border-cadd-red transition-colors duration-300"
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-red focus:border-brand-red transition-colors duration-300"
             />
           </div>
 
@@ -367,7 +367,7 @@ const PCForm = () => {
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 px-6 py-3 bg-gradient-to-r from-cadd-red to-cadd-pink text-white rounded-xl hover:from-cadd-pink hover:to-cadd-red disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 font-semibold"
+              className="flex-1 px-6 py-3 bg-gradient-to-r from-brand-red to-brand-pink text-white rounded-xl hover:from-brand-pink hover:to-brand-red disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 font-semibold"
             >
               {loading ? 'Saving...' : isEdit ? 'Update PC' : 'Create PC'}
             </button>

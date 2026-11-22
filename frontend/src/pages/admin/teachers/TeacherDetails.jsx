@@ -118,7 +118,7 @@ const TeacherDetails = () => {
       <div className="flex items-center justify-center min-h-64">
         <div className="relative">
           <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-200"></div>
-          <div className="animate-spin rounded-full h-16 w-16 border-4 border-cadd-red border-t-transparent absolute top-0 left-0"></div>
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-brand-red border-t-transparent absolute top-0 left-0"></div>
         </div>
       </div>
     )
@@ -131,7 +131,7 @@ const TeacherDetails = () => {
         <p className="mt-2 text-sm text-gray-500">The teacher you're looking for doesn't exist.</p>
         <Link
           to="/admin/teachers"
-          className="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-xl text-white bg-gradient-to-r from-cadd-red to-cadd-pink hover:from-cadd-pink hover:to-cadd-red transition-all duration-300"
+          className="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-xl text-white bg-gradient-to-r from-brand-red to-brand-pink hover:from-brand-pink hover:to-brand-red transition-all duration-300"
         >
           <ArrowLeftIcon className="h-4 w-4 mr-2" />
           Back to Teachers
@@ -162,7 +162,7 @@ const TeacherDetails = () => {
     <div className="space-y-8">
       {/* Enhanced Header */}
       <div className="relative overflow-hidden bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 rounded-2xl shadow-2xl">
-        <div className="absolute inset-0 bg-gradient-to-r from-cadd-red/10 to-cadd-pink/10"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-brand-red/10 to-brand-pink/10"></div>
         <div className="relative px-8 py-12">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-6">
@@ -289,7 +289,7 @@ const TeacherDetails = () => {
         <div className="bg-white overflow-hidden shadow-xl rounded-2xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 group sm:col-span-2 lg:col-span-1">
           <div className="p-6">
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 rounded-xl bg-gradient-to-br from-cadd-red to-cadd-pink shadow-lg group-hover:shadow-xl transition-shadow duration-300">
+              <div className="p-3 rounded-xl bg-gradient-to-br from-brand-red to-brand-pink shadow-lg group-hover:shadow-xl transition-shadow duration-300">
                 <UserIcon className="h-8 w-8 text-white" />
               </div>
               <div className="text-right">
@@ -326,16 +326,16 @@ const TeacherDetails = () => {
               <Link
                 key={batch._id}
                 to={`/admin/batches/${batch._id}`}
-                className="group bg-gradient-to-br from-gray-50 to-white border border-gray-200 rounded-xl p-4 hover:shadow-lg hover:border-cadd-red/30 transition-all duration-300 transform hover:scale-105"
+                className="group bg-gradient-to-br from-gray-50 to-white border border-gray-200 rounded-xl p-4 hover:shadow-lg hover:border-brand-red/30 transition-all duration-300 transform hover:scale-105"
               >
                 <div className="flex items-center mb-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-cadd-red to-cadd-pink rounded-lg flex items-center justify-center mr-3 group-hover:shadow-lg transition-shadow duration-300">
+                  <div className="w-10 h-10 bg-gradient-to-br from-brand-red to-brand-pink rounded-lg flex items-center justify-center mr-3 group-hover:shadow-lg transition-shadow duration-300">
                     <span className="text-white font-bold text-sm">
                       {batch.name.substring(0, 2).toUpperCase()}
                     </span>
                   </div>
                   <div className="flex-1">
-                    <h4 className="font-semibold text-gray-900 group-hover:text-cadd-red transition-colors duration-300">
+                    <h4 className="font-semibold text-gray-900 group-hover:text-brand-red transition-colors duration-300">
                       {batch.name}
                     </h4>
                     <p className="text-sm text-gray-500">
@@ -394,7 +394,7 @@ const TeacherDetails = () => {
           </Link>
           <button
             onClick={handleResetPassword}
-            className="inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-sm font-semibold rounded-xl text-gray-700 bg-white hover:bg-gray-50 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cadd-red shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+            className="inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-sm font-semibold rounded-xl text-gray-700 bg-white hover:bg-gray-50 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-red shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
           >
             <ArrowPathIcon className="h-5 w-5 mr-2" />
             Reset Password
@@ -408,7 +408,7 @@ const TeacherDetails = () => {
           </Link>
           <Link
             to="/admin/students"
-            className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-sm font-semibold rounded-xl text-white bg-gradient-to-r from-cadd-red to-cadd-pink hover:from-cadd-pink hover:to-cadd-red focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cadd-red shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+            className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-sm font-semibold rounded-xl text-white bg-gradient-to-r from-brand-red to-brand-pink hover:from-brand-pink hover:to-brand-red focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-red shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
           >
             <UserGroupIcon className="h-5 w-5 mr-2" />
             View All Students

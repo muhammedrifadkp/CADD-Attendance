@@ -268,7 +268,7 @@ const AdminAttendanceDashboard = () => {
 
         {/* Header */}
         <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 rounded-2xl shadow-2xl overflow-hidden relative mb-8">
-          <div className="absolute inset-0 bg-gradient-to-r from-cadd-red/10 to-cadd-pink/10 pointer-events-none"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-brand-red/10 to-brand-pink/10 pointer-events-none"></div>
           <div className="relative px-8 py-12 z-10">
             <div className="flex items-center justify-between">
               <div>
@@ -296,7 +296,7 @@ const AdminAttendanceDashboard = () => {
                   </Link>
                   <Link
                     to="/admin/attendance/mark"
-                    className="inline-flex items-center px-6 py-3 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-gradient-to-r from-cadd-red to-cadd-pink hover:from-cadd-red/90 hover:to-cadd-pink/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cadd-red transition-all duration-300 transform hover:scale-105"
+                    className="inline-flex items-center px-6 py-3 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-gradient-to-r from-brand-red to-brand-pink hover:from-brand-red/90 hover:to-brand-pink/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-red transition-all duration-300 transform hover:scale-105"
                   >
                     <PlusIcon className="h-5 w-5 mr-2" />
                     Mark Attendance
@@ -381,7 +381,7 @@ const AdminAttendanceDashboard = () => {
                   id="search"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cadd-red focus:border-transparent transition-colors"
+                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-red focus:border-transparent transition-colors"
                   placeholder="Search by batch name, course..."
                 />
               </div>
@@ -401,7 +401,7 @@ const AdminAttendanceDashboard = () => {
                   id="date"
                   value={selectedDate}
                   onChange={(e) => handleDateChange(e.target.value)}
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cadd-red focus:border-transparent transition-colors"
+                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-red focus:border-transparent transition-colors"
                 />
               </div>
 
@@ -416,7 +416,7 @@ const AdminAttendanceDashboard = () => {
                 id="department"
                 value={departmentFilter}
                 onChange={(e) => setDepartmentFilter(e.target.value)}
-                className="block w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cadd-red focus:border-transparent transition-colors"
+                className="block w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-red focus:border-transparent transition-colors"
               >
                 <option value="all">All Departments</option>
                 {departments && departments.map(dept => (
@@ -434,7 +434,7 @@ const AdminAttendanceDashboard = () => {
                 id="status"
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="block w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cadd-red focus:border-transparent transition-colors"
+                className="block w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-red focus:border-transparent transition-colors"
               >
                 <option value="all">All Status</option>
                 <option value="marked">Attendance Marked</option>
@@ -459,7 +459,7 @@ const AdminAttendanceDashboard = () => {
                 </Link>
                 <button
                   onClick={() => setRefreshKey(prev => prev + 1)}
-                  className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cadd-red transition-colors"
+                  className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-red transition-colors"
                 >
                   <CursorArrowRaysIcon className="h-4 w-4" />
                 </button>
@@ -479,7 +479,7 @@ const AdminAttendanceDashboard = () => {
                   setDepartmentFilter('all')
                   setStatusFilter('all')
                 }}
-                className="text-cadd-red hover:text-cadd-pink font-medium"
+                className="text-brand-red hover:text-brand-pink font-medium"
               >
                 Clear filters
               </button>
@@ -490,7 +490,7 @@ const AdminAttendanceDashboard = () => {
         {/* Batch Attendance Grid */}
         {loading ? (
           <div className="flex justify-center items-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cadd-red"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-red"></div>
           </div>
         ) : filteredBatches.length === 0 ? (
           <div className="bg-white rounded-2xl shadow-lg p-12 text-center">
@@ -507,7 +507,7 @@ const AdminAttendanceDashboard = () => {
             {filteredBatches.map((batch) => (
               <div key={batch._id} className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-gray-100">
                 {/* Batch Header */}
-                <div className="bg-gradient-to-r from-cadd-red to-cadd-pink px-6 py-4">
+                <div className="bg-gradient-to-r from-brand-red to-brand-pink px-6 py-4">
                   <div className="flex items-center justify-between">
                     <h3 className="text-lg font-bold text-white truncate">{batch.name}</h3>
                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
@@ -574,7 +574,7 @@ const AdminAttendanceDashboard = () => {
                     <div className="flex space-x-2">
                       <Link
                         to={`/admin/attendance/batch/${batch._id}`}
-                        className="inline-flex items-center p-2 border border-transparent rounded-lg text-sm font-medium text-gray-600 bg-white hover:bg-gray-100 hover:text-cadd-red focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cadd-red transition-colors"
+                        className="inline-flex items-center p-2 border border-transparent rounded-lg text-sm font-medium text-gray-600 bg-white hover:bg-gray-100 hover:text-brand-red focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-red transition-colors"
                         title="View Details"
                       >
                         <EyeIcon className="h-4 w-4" />

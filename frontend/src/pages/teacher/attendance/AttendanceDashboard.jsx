@@ -109,10 +109,10 @@ const AttendanceDashboard = () => {
 
       setBatches(batchesRes.data)
 
-      // Filter departments to only include the 4 required ones
+      // Show the institute's active departments
       const allDepartments = departmentsRes.data || []
       const requiredDepartments = allDepartments.filter(dept =>
-        ['CADD', 'LIVEWIRE', 'DREAMZONE', 'SYNERGY'].includes(dept.name)
+        dept.isActive !== false
       )
       setDepartments(requiredDepartments)
       setCourses(coursesRes.data?.courses || coursesRes.data || [])
@@ -201,7 +201,7 @@ const AttendanceDashboard = () => {
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
           <div>
             <div className="flex items-center space-x-3">
-              <div className="p-3 bg-gradient-to-br from-cadd-red to-cadd-pink rounded-xl shadow-lg">
+              <div className="p-3 bg-gradient-to-br from-brand-red to-brand-pink rounded-xl shadow-lg">
                 <ClipboardDocumentCheckIcon className="h-8 w-8 text-white" />
               </div>
               <div>
@@ -225,7 +225,7 @@ const AttendanceDashboard = () => {
             </div>
             <Link
               to={getCalendarRoute()}
-              className="inline-flex items-center justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-xl text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cadd-red transition-all duration-300"
+              className="inline-flex items-center justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-xl text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-red transition-all duration-300"
             >
               <CalendarDaysIcon className="h-4 w-4 mr-2" />
               Calendar View
@@ -233,7 +233,7 @@ const AttendanceDashboard = () => {
             {location.pathname.startsWith('/admin') && (
               <Link
                 to="/admin/attendance/report"
-                className="inline-flex items-center justify-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-xl text-white bg-gradient-to-r from-cadd-red to-cadd-pink hover:from-cadd-pink hover:to-cadd-red focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cadd-red transition-all duration-300 transform hover:scale-105"
+                className="inline-flex items-center justify-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-xl text-white bg-gradient-to-r from-brand-red to-brand-pink hover:from-brand-pink hover:to-brand-red focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-red transition-all duration-300 transform hover:scale-105"
               >
                 <ChartBarIcon className="h-4 w-4 mr-2" />
                 Advanced Report
@@ -254,7 +254,7 @@ const AttendanceDashboard = () => {
             <input
               type="text"
               placeholder="Search batches by name, academic year, section, course, or department..."
-              className="block w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl leading-5 bg-gray-50 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-cadd-red focus:border-cadd-red focus:bg-white transition-all duration-300 text-sm"
+              className="block w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl leading-5 bg-gray-50 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-brand-red focus:border-brand-red focus:bg-white transition-all duration-300 text-sm"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -269,7 +269,7 @@ const AttendanceDashboard = () => {
                   setSelectedDepartment(e.target.value)
                   setSelectedCourse('all') // Reset course when department changes
                 }}
-                className="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cadd-red focus:border-cadd-red transition-all duration-200 text-sm bg-white"
+                className="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-red focus:border-brand-red transition-all duration-200 text-sm bg-white"
               >
                 <option value="all">All Departments</option>
                 {departments.map(dept => (
@@ -282,7 +282,7 @@ const AttendanceDashboard = () => {
               <select
                 value={selectedCourse}
                 onChange={(e) => setSelectedCourse(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cadd-red focus:border-cadd-red transition-all duration-200 text-sm bg-white"
+                className="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-red focus:border-brand-red transition-all duration-200 text-sm bg-white"
                 disabled={selectedDepartment === 'all'}
               >
                 <option value="all">
@@ -304,7 +304,7 @@ const AttendanceDashboard = () => {
               <select
                 value={selectedStatus}
                 onChange={(e) => setSelectedStatus(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cadd-red focus:border-cadd-red transition-all duration-200 text-sm bg-white"
+                className="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-red focus:border-brand-red transition-all duration-200 text-sm bg-white"
               >
                 <option value="all">All Status</option>
                 <option value="active">Active Batches</option>
@@ -319,7 +319,7 @@ const AttendanceDashboard = () => {
               </span>
               <button
                 onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
-                className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-xl text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cadd-red transition-all duration-200"
+                className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-xl text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-red transition-all duration-200"
               >
                 <FunnelIcon className="h-4 w-4 mr-2" />
                 {viewMode === 'grid' ? 'List View' : 'Grid View'}
@@ -378,7 +378,7 @@ const AttendanceDashboard = () => {
           <div className="p-6">
             <div className="flex items-center">
               <div className="flex-shrink-0">
-                <div className="p-3 bg-gradient-to-br from-cadd-red to-cadd-pink rounded-xl shadow-lg">
+                <div className="p-3 bg-gradient-to-br from-brand-red to-brand-pink rounded-xl shadow-lg">
                   <ClipboardDocumentCheckIcon className="h-6 w-6 text-white" />
                 </div>
               </div>
@@ -438,7 +438,7 @@ const AttendanceDashboard = () => {
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex-1">
                     <div className="flex items-center space-x-3 mb-2">
-                      <div className="p-2 bg-gradient-to-br from-cadd-red to-cadd-pink rounded-lg shadow-md">
+                      <div className="p-2 bg-gradient-to-br from-brand-red to-brand-pink rounded-lg shadow-md">
                         <AcademicCapIcon className="h-5 w-5 text-white" />
                       </div>
                       <div>
@@ -521,21 +521,21 @@ const AttendanceDashboard = () => {
                 <div className="mt-6 flex flex-wrap gap-3">
                   <Link
                     to={`/batches/${batch._id}/attendance`}
-                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-xl text-white bg-gradient-to-r from-cadd-red to-cadd-pink hover:from-cadd-pink hover:to-cadd-red focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cadd-red transition-all duration-300 transform hover:scale-105 shadow-lg"
+                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-xl text-white bg-gradient-to-r from-brand-red to-brand-pink hover:from-brand-pink hover:to-brand-red focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-red transition-all duration-300 transform hover:scale-105 shadow-lg"
                   >
                     <ClipboardDocumentCheckIcon className="h-4 w-4 mr-2" />
                     Mark Attendance
                   </Link>
                   <Link
                     to={`/batches/${batch._id}/attendance/report`}
-                    className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-xl text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cadd-red transition-all duration-300 shadow-md hover:shadow-lg"
+                    className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-xl text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-red transition-all duration-300 shadow-md hover:shadow-lg"
                   >
                     <ChartBarIcon className="h-4 w-4 mr-2" />
                     View Report
                   </Link>
                   <Link
                     to={`/batches/${batch._id}/students`}
-                    className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-xl text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cadd-red transition-all duration-300 shadow-md hover:shadow-lg"
+                    className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-xl text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-red transition-all duration-300 shadow-md hover:shadow-lg"
                   >
                     <UserGroupIcon className="h-4 w-4 mr-2" />
                     Students
@@ -563,7 +563,7 @@ const AttendanceDashboard = () => {
                 setSelectedCourse('all')
                 setSelectedStatus('all')
               }}
-              className="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-xl text-white bg-gradient-to-r from-cadd-red to-cadd-pink hover:from-cadd-pink hover:to-cadd-red focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cadd-red transition-all duration-300 transform hover:scale-105 shadow-lg"
+              className="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-xl text-white bg-gradient-to-r from-brand-red to-brand-pink hover:from-brand-pink hover:to-brand-red focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-red transition-all duration-300 transform hover:scale-105 shadow-lg"
             >
               Clear All Filters
             </button>
@@ -581,7 +581,7 @@ const AttendanceDashboard = () => {
             </p>
             <Link
               to="/batches/new"
-              className="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-xl text-white bg-gradient-to-r from-cadd-red to-cadd-pink hover:from-cadd-pink hover:to-cadd-red focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cadd-red transition-all duration-300 transform hover:scale-105 shadow-lg"
+              className="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-xl text-white bg-gradient-to-r from-brand-red to-brand-pink hover:from-brand-pink hover:to-brand-red focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-red transition-all duration-300 transform hover:scale-105 shadow-lg"
             >
               <AcademicCapIcon className="h-5 w-5 mr-2" />
               Create Your First Batch

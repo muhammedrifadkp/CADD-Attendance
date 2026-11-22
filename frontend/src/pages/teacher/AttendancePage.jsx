@@ -17,6 +17,7 @@ import { toast } from 'react-toastify'
 import { formatDateSimple } from '../../utils/dateUtils'
 import { validateApiResponse } from '../../utils/apiValidator'
 import BackButton from '../../components/BackButton'
+import { BRAND } from '../../config/branding'
 
 const AttendancePage = () => {
   const { user } = useAuth()
@@ -164,7 +165,7 @@ const AttendancePage = () => {
       <div className="flex items-center justify-center min-h-64">
         <div className="relative">
           <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-200"></div>
-          <div className="animate-spin rounded-full h-16 w-16 border-4 border-cadd-red border-t-transparent absolute top-0 left-0"></div>
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-brand-red border-t-transparent absolute top-0 left-0"></div>
         </div>
       </div>
     )
@@ -205,8 +206,8 @@ const AttendancePage = () => {
             <div className="hidden lg:block">
               <img
                 className="h-20 w-auto opacity-80"
-                src="/logos/cdc_logo.png"
-                alt="CDC"
+                src={BRAND.logoUrl}
+                alt={BRAND.shortName}
                 onError={(e) => {
                   e.target.style.display = 'none'
                 }}
@@ -229,7 +230,7 @@ const AttendancePage = () => {
           const batch = batches.find(b => b._id === e.target.value)
           setSelectedBatch(batch)
         }}
-        className="form-select block w-full h-12 border border-gray-300 bg-white rounded-xl shadow-sm focus:ring-2 focus:ring-cadd-red focus:border-cadd-red transition duration-300 ease-in-out px-4 py-3"
+        className="form-select block w-full h-12 border border-gray-300 bg-white rounded-xl shadow-sm focus:ring-2 focus:ring-brand-red focus:border-brand-red transition duration-300 ease-in-out px-4 py-3"
       >
         {batches.map(batch => (
           <option key={batch._id} value={batch._id}>
@@ -246,7 +247,7 @@ const AttendancePage = () => {
         type="date"
         value={selectedDate}
         onChange={(e) => setSelectedDate(e.target.value)}
-        className="form-input block w-full h-12 border border-gray-300 bg-white rounded-xl shadow-sm focus:ring-2 focus:ring-cadd-red focus:border-cadd-red transition duration-300 ease-in-out px-4 py-3"
+        className="form-input block w-full h-12 border border-gray-300 bg-white rounded-xl shadow-sm focus:ring-2 focus:ring-brand-red focus:border-brand-red transition duration-300 ease-in-out px-4 py-3"
       />
     </div>
     <div className="form-group">
@@ -260,7 +261,7 @@ const AttendancePage = () => {
           placeholder="Search by name or roll number..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="search-input pl-10 block w-full h-12 border border-gray-300 bg-white rounded-xl shadow-sm focus:ring-2 focus:ring-cadd-red focus:border-cadd-red transition duration-300 ease-in-out px-4 py-3"
+          className="search-input pl-10 block w-full h-12 border border-gray-300 bg-white rounded-xl shadow-sm focus:ring-2 focus:ring-brand-red focus:border-brand-red transition duration-300 ease-in-out px-4 py-3"
         />
       </div>
     </div>

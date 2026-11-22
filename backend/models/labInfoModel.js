@@ -4,7 +4,7 @@ const labInfoSchema = mongoose.Schema({
   instituteName: {
     type: String,
     required: true,
-    default: 'CADD Centre'
+    default: 'Your Institute'
   },
   labName: {
     type: String,

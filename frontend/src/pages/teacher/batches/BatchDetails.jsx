@@ -98,7 +98,7 @@ const BatchDetails = () => {
   return (
     <div className="space-y-8">
       {/* Enhanced Header */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-cadd-purple to-cadd-pink rounded-2xl shadow-2xl">
+      <div className="relative overflow-hidden bg-gradient-to-r from-brand-purple to-brand-pink rounded-2xl shadow-2xl">
         <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent"></div>
         <div className="relative px-8 py-12">
           <div className="flex items-center justify-between">
@@ -145,7 +145,7 @@ const BatchDetails = () => {
                 {batch.timing && (
                   <div className="mt-3 flex items-center text-white/90">
                     <ClockIcon className="h-5 w-5 mr-2" />
-                    <span className="font-semibold text-cadd-yellow">
+                    <span className="font-semibold text-brand-yellow">
                       {formatTiming(batch.timing)}
                     </span>
                   </div>
@@ -154,7 +154,7 @@ const BatchDetails = () => {
                   <div className="mt-3 text-sm text-white/80">
                     Created by: {' '}
                     {user && batch.createdBy._id === user._id ? (
-                      <span className="text-cadd-yellow font-semibold">You</span>
+                      <span className="text-brand-yellow font-semibold">You</span>
                     ) : (
                       <span className="text-white font-medium">
                         {batch.createdBy.name}
@@ -250,7 +250,7 @@ const BatchDetails = () => {
         <div className="bg-white overflow-hidden shadow-xl rounded-2xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 group sm:col-span-2 lg:col-span-1">
           <div className="p-6">
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 rounded-xl bg-gradient-to-br from-cadd-red to-cadd-pink shadow-lg group-hover:shadow-xl transition-shadow duration-300">
+              <div className="p-3 rounded-xl bg-gradient-to-br from-brand-red to-brand-pink shadow-lg group-hover:shadow-xl transition-shadow duration-300">
                 <ChartBarIcon className="h-8 w-8 text-white" />
               </div>
               <div className="text-right">
@@ -264,10 +264,10 @@ const BatchDetails = () => {
               </div>
             </div>
           </div>
-          <div className="bg-gradient-to-r from-cadd-red/10 to-cadd-pink/10 px-6 py-4 border-t border-cadd-red/20">
+          <div className="bg-gradient-to-r from-brand-red/10 to-brand-pink/10 px-6 py-4 border-t border-brand-red/20">
             <Link
               to={`${baseRoute}/${id}/attendance/report`}
-              className="inline-flex items-center text-sm font-semibold text-cadd-red hover:text-cadd-pink transition-colors duration-300"
+              className="inline-flex items-center text-sm font-semibold text-brand-red hover:text-brand-pink transition-colors duration-300"
             >
               View reports
               <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -324,7 +324,7 @@ const BatchDetails = () => {
           </Link>
           <Link
             to={`${baseRoute}/${id}/attendance/report`}
-            className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-sm font-semibold rounded-xl text-white bg-gradient-to-r from-cadd-red to-cadd-pink hover:from-cadd-pink hover:to-cadd-red focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cadd-red shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+            className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-sm font-semibold rounded-xl text-white bg-gradient-to-r from-brand-red to-brand-pink hover:from-brand-pink hover:to-brand-red focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-red shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
           >
             <ChartBarIcon className="h-5 w-5 mr-2" />
             View Reports
@@ -350,7 +350,7 @@ const BatchDetails = () => {
           </button>
           <Link
             to={`${baseRoute}/${id}/edit`}
-            className="inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-sm font-semibold rounded-xl text-gray-700 bg-white hover:bg-gray-50 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cadd-red shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+            className="inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-sm font-semibold rounded-xl text-gray-700 bg-white hover:bg-gray-50 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-red shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
           >
             <svg className="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />

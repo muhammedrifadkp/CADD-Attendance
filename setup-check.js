@@ -3,7 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 
-console.log('🔍 CDC Attendance Setup Verification\n');
+console.log('🔍 Lab Attendance Setup Verification\n');
 
 const checks = [
   {

@@ -1,140 +1,119 @@
-# CDC Attendance Management System
+<p align="center">
+  <img src="frontend/public/icons/icon.svg" width="88" alt="Lab Attendance logo" />
+</p>
 
-A full-stack web application for managing attendance at CDC.
+<h1 align="center">Lab Attendance</h1>
 
-## Prerequisites
+<p align="center">
+  Free, open-source attendance and computer-lab booking for training institutes and colleges.<br/>
+  React + Express + MongoDB · works offline as an installable app · MIT licensed
+</p>
 
-- Node.js (v14 or higher)
-- MongoDB
-- Redis (for rate limiting)
-- npm or yarn
+---
 
-## Quick Start
+Many small training institutes still take attendance on paper and juggle lab PCs on a whiteboard.
+Lab Attendance gives admins and teachers one place for students, batches, daily attendance and lab
+bookings, and it keeps working when the internet drops.
 
-### Option 1: Automated Setup (Windows)
+It started as the attendance system for a computer training centre in Kerala, India, and is now
+generic: your institute's name, logo and departments are all settings.
+
+## Features
+
+**Attendance**
+- Mark a batch present / absent / late in a few taps, including for a past date
+- Calendar view and per-batch and per-student reports
+- Export reports to Excel and CSV
+
+**Lab and PCs**
+- Lay out your lab's PCs by row and position, with status (active / maintenance / inactive)
+- Book PCs for batches by time slot, copy the previous day's bookings, clear slots
+- Live availability view for teachers and a maintenance page for admins
+
+**Institute set-up**
+- Departments, courses, batches and students, with your own names and codes
+- Two roles: **admin** (everything) and **teacher** (their own batches and students)
+- Teachers get an Employee ID from their department code (e.g. `CS-001`) and can sign in with it
+- Optional welcome email with login details for new teachers (Gmail or any SMTP)
+- Dashboard with attendance trends and analytics
+
+**Offline and security**
+- Installable PWA; attendance marked offline is saved in the browser and synced later
+- JWT access + refresh tokens in httpOnly cookies, bcrypt passwords, account lock after failed sign-ins
+- Rate limiting (Redis optional) and Helmet security headers
+
+## Quick start (try it locally)
+
+You need **Node.js 18+** and **MongoDB** running locally (or use a free MongoDB Atlas cluster).
+
 ```bash
-# Double-click start.bat or run:
-start.bat
-```
-
-### Option 2: Manual Setup
-
-1. Clone the repository:
-```bash
-git clone <repository-url>
-cd cdc-attendance
-```
-
-2. Verify setup and configuration (optional):
-```bash
-node setup-check.js
-node config-check.js
-```
-
-3. Install all dependencies:
-```bash
+git clone https://github.com/muhammedrifadkp/CADD-Attendance.git lab-attendance
+cd lab-attendance
 npm run install-all
-```
 
-4. Start the application:
-```bash
+cp backend/.env.example backend/.env      # then set JWT_SECRET and JWT_REFRESH_SECRET
+npm run seed:demo                         # made-up demo data, local MongoDB only
 npm run dev
 ```
 
-The application will be available at:
-- Frontend: http://localhost:5170
-- Backend API: http://localhost:5000
+Open http://localhost:5173. The seed prints the demo sign-ins (`admin@example.com` and
+`teacher@example.com`). The demo seed refuses to run against anything but a local, empty database.
 
-## Environment Configuration
+## Set it up for your institute
 
-The `.env` files are already configured with consistent values:
+1. **Database**: put your MongoDB connection string in `backend/.env` as `MONGO_URI`.
+2. **Secrets**: set long random values for `JWT_SECRET` and `JWT_REFRESH_SECRET`.
+3. **First admin**:
+   ```bash
+   cd backend
+   node scripts/create-admin.js "Your Name" you@yourinstitute.com
+   ```
+4. **Branding**: copy `frontend/.env.example` to `frontend/.env.local` (or set these in your host):
 
-### Backend (.env already exists)
-- **Port**: 5000 (standardized)
-- **MongoDB URI**: Cloud database configured
-- **JWT secrets**: Secure defaults provided
-- **CORS Origins**: Configured for frontend port 5170
-- **Optional**: Redis, email configuration
+   | Variable | Example |
+   |---|---|
+   | `VITE_INSTITUTE_NAME` | `Sunrise Computer Academy` |
+   | `VITE_INSTITUTE_SHORT_NAME` | `SCA` (headers and splash screen) |
+   | `VITE_LOGO_URL` | `/logos/my-logo.png` (put the file in `frontend/public/logos/`) |
+   | `VITE_APP_NAME` | `SCA Attendance` |
 
-### Frontend (.env already exists)
-- **Development API**: http://localhost:5000/api
-- **Production API**: https://cdc-attendance.onrender.com/api
-- **Local Override**: http://localhost:5000/api (highest priority)
-- **PWA settings**: Enabled
-- **Debug settings**: Configured
+   On the backend, `APP_NAME` and `INSTITUTE_NAME` are used in emails.
+5. **Departments**: sign in as admin and add your departments. The department **code** becomes the
+   prefix of its teachers' Employee IDs.
+6. **Email (optional)**: see [docs/dev-notes/EMAIL_SETUP_GUIDE.md](docs/dev-notes/EMAIL_SETUP_GUIDE.md).
 
-### Port Configuration (Fixed)
-- **Frontend**: http://localhost:5170
-- **Backend**: http://localhost:5000
-- **API Endpoint**: http://localhost:5000/api
+## Deploy
 
-## Prerequisites
+The repo is set up for the frontend on **Vercel** and the backend on **Render** (both have free
+plans), with **MongoDB Atlas** for the database.
 
-**Required:**
-- Node.js (v18 or higher)
-- MongoDB (local or cloud)
+- **Frontend (Vercel)**: root `frontend`, build `npm run build`, output `dist`. Set `VITE_API_URL`
+  to your backend URL plus `/api`, and the branding variables above.
+- **Backend (Render)**: root `backend`, start `npm start`. Set the variables from
+  `backend/.env.example`, and set `FRONTEND_URL` to your frontend's address (or `CORS_ORIGINS`,
+  comma-separated) so the browser may call the API.
 
-**Optional:**
-- Redis (for advanced rate limiting)
-- SMTP server (for email notifications)
+More detail: [docs/dev-notes/BUILD_CONFIGURATION.md](docs/dev-notes/BUILD_CONFIGURATION.md).
 
-## Default Admin Credentials
-
-After the first run, an admin user will be automatically created with these credentials:
-- Email: admin@caddcentre.com
-- Password: Admin*******
-
-**Important**: Change the default admin password immediately after first login.
-
-## Development Scripts
-
-- `npm run dev`: Start both frontend and backend in development mode
-- `npm run server`: Start only the backend server
-- `npm run client`: Start only the frontend server
-- `npm run build`: Build the frontend for production
-
-## Security Features
-
-The application includes several security features:
-- JWT-based authentication
-- Rate limiting
-- IP intelligence
-- Device fingerprinting
-- Security monitoring
-- Audit logging
-
-## Directory Structure
+## Project structure
 
 ```
-cdc-attendance/
-├── backend/           # Backend server
-│   ├── config/       # Configuration files
-│   ├── controllers/  # Route controllers
-│   ├── middleware/   # Custom middleware
-│   ├── models/       # Database models
-│   ├── routes/       # API routes
-│   └── server.js     # Server entry point
-├── frontend/         # Frontend application
-│   ├── src/         # Source files
-│   └── public/      # Static files
-└── package.json     # Root package.json
+backend/    Express API: models, controllers, routes, middleware, scripts/
+frontend/   React 18 + Vite + Tailwind PWA (src/config/branding.js holds the branding)
+docs/       Development notes
 ```
 
-## Troubleshooting
+## Contributing
 
-1. If MongoDB fails to start:
-   - Check if MongoDB service is running
-   - Verify MongoDB connection string in .env
+Issues and pull requests are welcome. Good first areas:
 
-2. If Redis fails to start:
-   - Check if Redis service is running
-   - Verify Redis connection settings
+- Screenshots and a hosted demo for this README
+- Automated tests for the API
+- Translations (Malayalam, Hindi, Arabic, ...)
+- Configurable batch timings and lab rows (currently fixed in the models)
 
-3. If the application fails to start:
-   - Check if all dependencies are installed
-   - Verify all environment variables are set
-   - Check console for specific error messages
+Please open an issue before a large change so we can agree on the approach.
 
-## Support
+## License
 
-For support, please contact the system administrator or raise an issue in the repository.
+[MIT](LICENSE) © Muhammed Rifad KP

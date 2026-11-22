@@ -1,7 +1,7 @@
 {
-  "name": "CDC Attendance Management System",
-  "short_name": "CDC Attendance",
-  "description": "Comprehensive attendance management system for CDC - manage student attendance, batches, and lab bookings efficiently. Works offline with automatic sync when online.",
+  "name": "Lab Attendance",
+  "short_name": "Lab Attendance",
+  "description": "Free, open-source attendance system for training institutes - manage student attendance, batches, and lab bookings efficiently. Works offline with automatic sync when online.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#322536",
@@ -126,7 +126,7 @@
       "sizes": "1280x720",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "CDC Attendance Dashboard"
+      "label": "Lab Attendance Dashboard"
     },
     {
       "src": "/screenshots/mobile-attendance.png",

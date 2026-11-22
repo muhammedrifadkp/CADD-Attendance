@@ -12,6 +12,7 @@ import {
 import { useOffline, useOfflineData } from '../hooks/useOffline'
 import { studentsAPI, attendanceAPI } from '../services/api'
 import { toast } from 'react-toastify'
+import { BRAND } from '../config/branding'
 
 const OfflineTestPage = () => {
   const {
@@ -140,7 +141,7 @@ const OfflineTestPage = () => {
             Offline Functionality Test Page
           </h1>
           <p className="text-gray-600">
-            This page demonstrates the offline capabilities of the CADD Attendance Management System.
+            This page demonstrates the offline capabilities of {BRAND.appName}.
             Test various scenarios to see how the app behaves when offline.
           </p>
         </div>

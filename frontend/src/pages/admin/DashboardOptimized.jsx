@@ -21,6 +21,7 @@ import BackButton from '../../components/BackButton'
 import AnalyticsCards from '../../components/dashboard/AnalyticsCards'
 import TrendsChart from '../../components/dashboard/TrendsChart'
 import NotificationCenter from '../../components/dashboard/NotificationCenter'
+import { BRAND } from '../../config/branding'
 
 const AdminDashboardOptimized = () => {
   const { user } = useAuth()
@@ -242,7 +243,7 @@ const AdminDashboardOptimized = () => {
                 Welcome back, <span className="text-yellow-400">{user?.name}</span>
               </h1>
               <p className="text-xl text-gray-300 mb-4">
-                CDC Administration Dashboard
+                {BRAND.shortName} Administration Dashboard
               </p>
               <div className="flex items-center space-x-4 text-sm text-gray-400">
                 <span className="flex items-center">

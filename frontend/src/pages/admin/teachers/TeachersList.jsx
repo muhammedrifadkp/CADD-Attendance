@@ -127,7 +127,7 @@ const TeachersList = () => {
 
         {/* Header */}
         <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 rounded-2xl shadow-2xl overflow-hidden relative mb-8">
-          <div className="absolute inset-0 bg-gradient-to-r from-cadd-red/10 to-cadd-pink/10 pointer-events-none"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-brand-red/10 to-brand-pink/10 pointer-events-none"></div>
           <div className="relative px-8 py-12 z-10">
             <div className="flex items-center justify-between">
               <div>
@@ -141,7 +141,7 @@ const TeachersList = () => {
                 </div>
                 <Link
                   to="/admin/teachers/new"
-                  className="inline-flex items-center px-6 py-3 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-gradient-to-r from-cadd-red to-cadd-pink hover:from-cadd-red/90 hover:to-cadd-pink/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cadd-red transition-all duration-300 transform hover:scale-105"
+                  className="inline-flex items-center px-6 py-3 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-gradient-to-r from-brand-red to-brand-pink hover:from-brand-red/90 hover:to-brand-pink/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-red transition-all duration-300 transform hover:scale-105"
                 >
                   <PlusIcon className="h-5 w-5 mr-2" />
                   Add Teacher
@@ -207,7 +207,7 @@ const TeachersList = () => {
                   id="search"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cadd-red focus:border-transparent transition-colors"
+                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-red focus:border-transparent transition-colors"
                   placeholder="Search by name, email, employee ID, or department..."
                 />
               </div>
@@ -226,7 +226,7 @@ const TeachersList = () => {
                   id="status"
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cadd-red focus:border-transparent transition-colors"
+                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-red focus:border-transparent transition-colors"
                 >
                   <option value="all">All Teachers</option>
                   <option value="active">Active Only</option>
@@ -248,7 +248,7 @@ const TeachersList = () => {
                   setStatusFilter('all')
                   setDepartmentFilter('all')
                 }}
-                className="text-cadd-red hover:text-cadd-pink font-medium"
+                className="text-brand-red hover:text-brand-pink font-medium"
               >
                 Clear filters
               </button>
@@ -259,7 +259,7 @@ const TeachersList = () => {
         {/* Teachers List */}
         {loading ? (
           <div className="flex justify-center items-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cadd-red"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-red"></div>
           </div>
         ) : filteredTeachers.length === 0 ? (
           <div className="bg-white rounded-2xl shadow-lg p-12 text-center">
@@ -274,7 +274,7 @@ const TeachersList = () => {
               <div className="mt-6">
                 <Link
                   to="/admin/teachers/new"
-                  className="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-cadd-red hover:bg-cadd-pink focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cadd-red transition-colors"
+                  className="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-brand-red hover:bg-brand-pink focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-red transition-colors"
                 >
                   <PlusIcon className="h-4 w-4 mr-2" />
                   Add Teacher
@@ -290,13 +290,13 @@ const TeachersList = () => {
               <Link to={`/admin/teachers/${teacher._id}`} className="block">
                 <div className="px-6 py-6 bg-gradient-to-br from-gray-50 to-white hover:from-gray-100 hover:to-gray-50 transition-all duration-300">
                   <div className="flex items-center">
-                    <div className="flex-shrink-0 h-16 w-16 rounded-full bg-gradient-to-br from-cadd-red to-cadd-pink flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow duration-300">
+                    <div className="flex-shrink-0 h-16 w-16 rounded-full bg-gradient-to-br from-brand-red to-brand-pink flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow duration-300">
                       <span className="text-white font-bold text-xl">
                         {teacher.name.charAt(0).toUpperCase()}
                       </span>
                     </div>
                     <div className="ml-5 flex-1">
-                      <h3 className="text-xl font-bold text-gray-900 group-hover:text-cadd-red transition-colors duration-300">
+                      <h3 className="text-xl font-bold text-gray-900 group-hover:text-brand-red transition-colors duration-300">
                         {teacher.name}
                       </h3>
                       <p className="text-sm text-gray-600 font-medium">{teacher.email}</p>
@@ -322,7 +322,7 @@ const TeachersList = () => {
                     <div className="text-xs text-gray-500 font-medium">
                       Last login: {teacher.lastLogin ? formatDateSimple(teacher.lastLogin) : 'Never'}
                     </div>
-                    <div className="flex items-center text-cadd-red opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="flex items-center text-brand-red opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       <span className="text-xs font-medium mr-1">View Details</span>
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -365,7 +365,7 @@ const TeachersList = () => {
                   <div className="flex space-x-2">
                     <Link
                       to={`/admin/teachers/${teacher._id}`}
-                      className="inline-flex items-center p-2 border border-transparent rounded-lg text-sm font-medium text-gray-600 bg-white hover:bg-gray-100 hover:text-cadd-red focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cadd-red transition-colors"
+                      className="inline-flex items-center p-2 border border-transparent rounded-lg text-sm font-medium text-gray-600 bg-white hover:bg-gray-100 hover:text-brand-red focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-red transition-colors"
                       title="View Details"
                     >
                       <EyeIcon className="h-4 w-4" />

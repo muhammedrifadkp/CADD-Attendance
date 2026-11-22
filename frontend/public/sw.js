@@ -1,9 +1,9 @@
-// Service Worker for CDC Attendance Management System
+// Service Worker for Lab Attendance
 // Provides offline functionality and caching strategies
 
-const CACHE_NAME = 'cdc-attendance-v1'
-const STATIC_CACHE = 'cdc-static-v1'
-const API_CACHE = 'cdc-api-v1'
+const CACHE_NAME = 'lab-attendance-v1'
+const STATIC_CACHE = 'lab-static-v1'
+const API_CACHE = 'lab-api-v1'
 
 // Static assets to cache
 const STATIC_ASSETS = [
@@ -12,7 +12,7 @@ const STATIC_ASSETS = [
   '/manifest.json',
   '/icons/icon-192x192.png',
   '/icons/icon-512x512.png',
-  '/logos/cdc_logo.png'
+  '/logos/logo.svg'
 ]
 
 // API endpoints to cache

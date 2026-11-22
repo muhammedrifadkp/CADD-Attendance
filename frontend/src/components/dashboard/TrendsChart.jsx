@@ -87,7 +87,7 @@ const TrendsChart = ({ trends, loading }) => {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center space-x-3">
-          <div className="p-2 bg-gradient-to-br from-cadd-red to-cadd-pink rounded-lg">
+          <div className="p-2 bg-gradient-to-br from-brand-red to-brand-pink rounded-lg">
             <ChartBarIcon className="h-5 w-5 text-white" />
           </div>
           <div>

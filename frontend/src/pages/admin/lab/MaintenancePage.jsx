@@ -84,7 +84,7 @@ const MaintenancePage = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-cadd-red"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand-red"></div>
       </div>
     )
   }
@@ -117,7 +117,7 @@ const MaintenancePage = () => {
           </Link>
           <Link
             to="/admin/lab/pcs/new"
-            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-cadd-red hover:bg-cadd-red/90"
+            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-brand-red hover:bg-brand-red/90"
           >
             <ComputerDesktopIcon className="h-4 w-4 mr-2" />
             Add PC
@@ -202,7 +202,7 @@ const MaintenancePage = () => {
                 placeholder="Search by PC number..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 block w-full border-gray-300 rounded-md shadow-sm focus:ring-cadd-red focus:border-cadd-red sm:text-sm"
+                className="pl-10 block w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-red focus:border-brand-red sm:text-sm"
               />
             </div>
           </div>
@@ -213,7 +213,7 @@ const MaintenancePage = () => {
             <select
               value={rowFilter}
               onChange={(e) => setRowFilter(e.target.value)}
-              className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-cadd-red focus:border-cadd-red sm:text-sm"
+              className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-red focus:border-brand-red sm:text-sm"
             >
               <option value="">All Rows</option>
               <option value="1">Row 1</option>
@@ -256,7 +256,7 @@ const MaintenancePage = () => {
                 <div className="mt-6">
                   <Link
                     to="/admin/lab/pcs"
-                    className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-cadd-red hover:bg-cadd-red/90"
+                    className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-brand-red hover:bg-brand-red/90"
                   >
                     <ComputerDesktopIcon className="h-4 w-4 mr-2" />
                     View All PCs

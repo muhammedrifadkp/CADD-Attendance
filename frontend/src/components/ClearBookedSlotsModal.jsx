@@ -111,7 +111,7 @@ const ClearBookedSlotsModal = ({
                   </div>
                   <button
                     type="button"
-                    className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-cadd-red focus:ring-offset-2"
+                    className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-red focus:ring-offset-2"
                     onClick={onClose}
                     disabled={loading}
                   >
@@ -145,7 +145,7 @@ const ClearBookedSlotsModal = ({
                       type="date"
                       value={clearOptions.date}
                       onChange={(e) => setClearOptions(prev => ({ ...prev, date: e.target.value }))}
-                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-cadd-red focus:ring-cadd-red sm:text-sm"
+                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-red focus:ring-brand-red sm:text-sm"
                       disabled={loading}
                     />
                     <p className="text-xs text-gray-500 mt-1">
@@ -162,7 +162,7 @@ const ClearBookedSlotsModal = ({
                     <select
                       value={clearOptions.timeSlot}
                       onChange={(e) => setClearOptions(prev => ({ ...prev, timeSlot: e.target.value }))}
-                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-cadd-red focus:ring-cadd-red sm:text-sm"
+                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-red focus:ring-brand-red sm:text-sm"
                       disabled={loading}
                     >
                       {timeSlots.map(slot => (
@@ -187,7 +187,7 @@ const ClearBookedSlotsModal = ({
                           type="checkbox"
                           checked={allPCsSelected}
                           onChange={(e) => handleSelectAllPCs(e.target.checked)}
-                          className="rounded border-gray-300 text-cadd-red focus:ring-cadd-red"
+                          className="rounded border-gray-300 text-brand-red focus:ring-brand-red"
                           disabled={loading}
                         />
                         <span className="ml-2 text-sm text-gray-700">
@@ -208,7 +208,7 @@ const ClearBookedSlotsModal = ({
                                   type="checkbox"
                                   checked={clearOptions.pcIds.includes(pc._id)}
                                   onChange={(e) => handlePCSelection(pc._id, e.target.checked)}
-                                  className="rounded border-gray-300 text-cadd-red focus:ring-cadd-red"
+                                  className="rounded border-gray-300 text-brand-red focus:ring-brand-red"
                                   disabled={loading}
                                 />
                                 <span className="ml-1 text-xs text-gray-700">{pc.pcNumber}</span>

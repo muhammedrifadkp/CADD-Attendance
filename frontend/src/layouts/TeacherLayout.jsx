@@ -11,6 +11,7 @@ import {
   ComputerDesktopIcon,
   UserIcon,
 } from '@heroicons/react/24/outline'
+import { BRAND } from '../config/branding'
 
 const TeacherLayout = () => {
   const { user, logout } = useAuth()
@@ -93,20 +94,20 @@ const TeacherLayout = () => {
           </div>
 
           <div className="flex-1 h-0 pt-6 pb-4 overflow-y-auto">
-            {/* Mobile Header with CDC Branding */}
+            {/* Mobile Header with Branding */}
             <div className="px-4 mb-8">
               <div className="flex items-center justify-center mb-4">
                 <div className="relative">
                   <img
                     className="h-10 w-auto"
-                    src="/logos/cdc_logo.png"
-                    alt="CDC"
+                    src={BRAND.logoUrl}
+                    alt={BRAND.shortName}
                     onError={(e) => {
                       e.target.style.display = 'none'
                       e.target.nextSibling.style.display = 'block'
                     }}
                   />
-                  <div className="hidden text-white text-lg font-bold">CDC</div>
+                  <div className="hidden text-white text-lg font-bold">{BRAND.shortName}</div>
                 </div>
               </div>
               <div className="text-center">
@@ -120,7 +121,7 @@ const TeacherLayout = () => {
                   key={item.name}
                   to={item.href}
                   className={`group flex items-center px-3 py-3 text-base font-medium rounded-xl transition-all duration-200 ${item.current
-                    ? 'bg-gradient-to-r from-cadd-red to-cadd-pink text-white shadow-lg'
+                    ? 'bg-gradient-to-r from-brand-red to-brand-pink text-white shadow-lg'
                     : 'text-gray-300 hover:bg-gray-800 hover:text-white'
                     }`}
                   onClick={() => setSidebarOpen(false)}
@@ -132,7 +133,7 @@ const TeacherLayout = () => {
                   />
                   <span className="font-medium">{item.name}</span>
                   {item.current && (
-                    <div className="ml-auto w-2 h-2 bg-cadd-yellow rounded-full"></div>
+                    <div className="ml-auto w-2 h-2 bg-brand-yellow rounded-full"></div>
                   )}
                 </Link>
               ))}
@@ -142,7 +143,7 @@ const TeacherLayout = () => {
           <div className="flex-shrink-0 border-t border-gray-800 p-4">
             <div className="flex items-center">
               <div className="flex-shrink-0">
-                <div className="h-10 w-10 rounded-full bg-gradient-to-br from-cadd-red to-cadd-pink flex items-center justify-center shadow-lg">
+                <div className="h-10 w-10 rounded-full bg-gradient-to-br from-brand-red to-brand-pink flex items-center justify-center shadow-lg">
                   <span className="text-sm font-bold text-white">
                     {user?.name?.charAt(0) || 'T'}
                   </span>
@@ -175,20 +176,20 @@ const TeacherLayout = () => {
             background: 'linear-gradient(180deg, #1f2937 0%, #111827 50%, #0f172a 100%)'
           }}>
           <div className="flex-1 flex flex-col pt-6 pb-4 overflow-y-auto">
-            {/* Teacher Header with CDC Branding */}
+            {/* Teacher Header with Branding */}
             <div className="px-4 mb-8">
               <div className="flex items-center justify-center mb-4">
                 <div className="relative">
                   <img
                     className="h-12 w-auto"
-                    src="/logos/cdc_logo.png"
-                    alt="CDC"
+                    src={BRAND.logoUrl}
+                    alt={BRAND.shortName}
                     onError={(e) => {
                       e.target.style.display = 'none'
                       e.target.nextSibling.style.display = 'block'
                     }}
                   />
-                  <div className="hidden text-white text-xl font-bold">CDC</div>
+                  <div className="hidden text-white text-xl font-bold">{BRAND.shortName}</div>
                 </div>
               </div>
               <div className="text-center">
@@ -202,7 +203,7 @@ const TeacherLayout = () => {
                   key={item.name}
                   to={item.href}
                   className={`group flex items-center px-3 py-3 text-sm font-medium rounded-xl transition-all duration-200 ${item.current
-                    ? 'bg-gradient-to-r from-cadd-red to-cadd-pink text-white shadow-lg transform scale-105'
+                    ? 'bg-gradient-to-r from-brand-red to-brand-pink text-white shadow-lg transform scale-105'
                     : 'text-gray-300 hover:bg-gray-800 hover:text-white hover:scale-105'
                     }`}
                 >
@@ -213,7 +214,7 @@ const TeacherLayout = () => {
                   />
                   <span className="font-medium">{item.name}</span>
                   {item.current && (
-                    <div className="ml-auto w-2 h-2 bg-cadd-yellow rounded-full"></div>
+                    <div className="ml-auto w-2 h-2 bg-brand-yellow rounded-full"></div>
                   )}
                 </Link>
               ))}
@@ -223,7 +224,7 @@ const TeacherLayout = () => {
           <div className="flex-shrink-0 border-t border-gray-800 p-4">
             <div className="flex items-center">
               <div className="flex-shrink-0">
-                <div className="h-10 w-10 rounded-full bg-gradient-to-br from-cadd-red to-cadd-pink flex items-center justify-center shadow-lg">
+                <div className="h-10 w-10 rounded-full bg-gradient-to-br from-brand-red to-brand-pink flex items-center justify-center shadow-lg">
                   <span className="text-sm font-bold text-white">
                     {user?.name?.charAt(0) || 'T'}
                   </span>
@@ -256,7 +257,7 @@ const TeacherLayout = () => {
           <div className="flex items-center justify-between px-4 py-3">
             <button
               type="button"
-              className="btn-icon-mobile h-10 w-10 inline-flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:text-gray-900 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-cadd-red transition-all duration-300 touch-target"
+              className="btn-icon-mobile h-10 w-10 inline-flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:text-gray-900 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-red transition-all duration-300 touch-target"
               onClick={() => setSidebarOpen(true)}
             >
               <span className="sr-only">Open sidebar</span>
@@ -265,18 +266,18 @@ const TeacherLayout = () => {
             <div className="flex items-center">
               <img
                 className="h-8 w-auto mr-2"
-                src="/logos/cdc_logo.png"
-                alt="CDC"
+                src={BRAND.logoUrl}
+                alt={BRAND.shortName}
                 onError={(e) => {
                   e.target.style.display = 'none'
                   e.target.nextSibling.style.display = 'block'
                 }}
               />
-              <div className="hidden w-8 h-8 bg-gradient-to-br from-cadd-red to-cadd-pink rounded-lg flex items-center justify-center mr-2">
-                <span className="text-white font-bold text-sm">CDC</span>
+              <div className="hidden w-8 h-8 bg-gradient-to-br from-brand-red to-brand-pink rounded-lg flex items-center justify-center mr-2">
+                <span className="text-white font-bold text-sm">{BRAND.shortName}</span>
               </div>
               <div className="text-center">
-                <h1 className="text-lg font-bold bg-gradient-to-r from-cadd-red to-cadd-pink bg-clip-text text-transparent">CDC</h1>
+                <h1 className="text-lg font-bold bg-gradient-to-r from-brand-red to-brand-pink bg-clip-text text-transparent">{BRAND.shortName}</h1>
                 <p className="text-xs text-gray-500 font-medium">Teacher Portal</p>
               </div>
             </div>

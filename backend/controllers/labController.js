@@ -601,7 +601,7 @@ const getLabInfo = asyncHandler(async (req, res) => {
   if (!labInfo) {
     // Create default lab info if none exists
     labInfo = await LabInfo.create({
-      instituteName: 'CADD Centre',
+      instituteName: process.env.INSTITUTE_NAME || 'Your Institute',
       labName: 'Computer Lab',
       address: {
         city: 'Your City',
@@ -610,7 +610,7 @@ const getLabInfo = asyncHandler(async (req, res) => {
       },
       contact: {
         phone: '+91-XXXXXXXXXX',
-        email: 'info@caddcentre.com'
+        email: 'info@example.com'
       },
       capacity: {
         totalPCs: 0,

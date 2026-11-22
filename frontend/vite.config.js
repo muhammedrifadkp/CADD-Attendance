@@ -112,8 +112,7 @@ export default defineConfig(({ command, mode }) => {
           manualChunks: {
             'react-vendor': ['react', 'react-dom', 'react-router-dom'],
             'ui-vendor': ['@headlessui/react', '@heroicons/react'],
-            'form-vendor': ['formik', 'yup'],
-            'utils-vendor': ['axios', 'date-fns', 'lodash'],
+            'utils-vendor': ['axios', 'date-fns'],
             'chart-vendor': ['chart.js', 'react-chartjs-2'],
           },
 

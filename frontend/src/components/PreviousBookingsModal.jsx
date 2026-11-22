@@ -81,14 +81,14 @@ const PreviousBookingsModal = ({ isOpen, onClose, previousBookings, previousDate
                     <p className="mt-2 text-sm text-gray-600">
                       <CalendarDaysIcon className="inline h-4 w-4 mr-1" />
                       {previousDate ? formatDateLong(new Date(previousDate)) : 'Yesterday'}
-                      <span className="ml-4 text-cadd-red font-medium">
+                      <span className="ml-4 text-brand-red font-medium">
                         Total Bookings: {previousBookings.length}
                       </span>
                     </p>
                   </div>
                   <button
                     type="button"
-                    className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-cadd-red focus:ring-offset-2"
+                    className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-red focus:ring-offset-2"
                     onClick={onClose}
                   >
                     <span className="sr-only">Close</span>
@@ -114,11 +114,11 @@ const PreviousBookingsModal = ({ isOpen, onClose, previousBookings, previousDate
                         return (
                           <div key={timeSlot} className="bg-gray-50 rounded-xl p-4">
                             <div className="flex items-center mb-4">
-                              <ClockIcon className="h-5 w-5 text-cadd-red mr-2" />
+                              <ClockIcon className="h-5 w-5 text-brand-red mr-2" />
                               <h4 className="text-lg font-semibold text-gray-900">
                                 {getTimeSlotLabel(timeSlot)}
                               </h4>
-                              <span className="ml-auto bg-cadd-red text-white px-3 py-1 rounded-full text-sm font-medium">
+                              <span className="ml-auto bg-brand-red text-white px-3 py-1 rounded-full text-sm font-medium">
                                 {slotBookings.length} booking{slotBookings.length !== 1 ? 's' : ''}
                               </span>
                             </div>
@@ -135,7 +135,7 @@ const PreviousBookingsModal = ({ isOpen, onClose, previousBookings, previousDate
                                     {/* PC Info */}
                                     <div className="flex items-center justify-between mb-3">
                                       <div className="flex items-center">
-                                        <ComputerDesktopIcon className="h-5 w-5 text-cadd-purple mr-2" />
+                                        <ComputerDesktopIcon className="h-5 w-5 text-brand-purple mr-2" />
                                         <span className="font-semibold text-gray-900">
                                           {booking.pc?.pcNumber || 'Unknown PC'}
                                         </span>
@@ -195,7 +195,7 @@ const PreviousBookingsModal = ({ isOpen, onClose, previousBookings, previousDate
                 <div className="mt-6 flex justify-end">
                   <button
                     type="button"
-                    className="inline-flex justify-center rounded-md border border-transparent bg-cadd-red px-4 py-2 text-sm font-medium text-white hover:bg-cadd-pink focus:outline-none focus-visible:ring-2 focus-visible:ring-cadd-red focus-visible:ring-offset-2 transition-colors"
+                    className="inline-flex justify-center rounded-md border border-transparent bg-brand-red px-4 py-2 text-sm font-medium text-white hover:bg-brand-pink focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-red focus-visible:ring-offset-2 transition-colors"
                     onClick={onClose}
                   >
                     Close

@@ -19,6 +19,7 @@ import { pcAPI, bookingAPI, labAPI } from '../../services/labAPI'
 import api from '../../services/api'
 import { useAuth } from '../../context/AuthContext'
 import { toast } from 'react-toastify'
+import { BRAND } from '../../config/branding'
 
 const LabAvailability = () => {
   const { user } = useAuth()
@@ -117,10 +118,10 @@ const LabAvailability = () => {
       setPcsByRow(pcsData)
       setBookings(Array.isArray(bookingsData) ? bookingsData : [])
 
-      // Filter departments to only include the 4 required ones
+      // Show the institute's active departments
       const allDepartments = departmentsRes.data || []
       const requiredDepartments = allDepartments.filter(dept =>
-        ['CADD', 'LIVEWIRE', 'DREAMZONE', 'SYNERGY'].includes(dept.name)
+        dept.isActive !== false
       )
       setDepartments(requiredDepartments)
 
@@ -280,13 +281,13 @@ const LabAvailability = () => {
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
           <div>
             <div className="flex items-center space-x-3">
-              <div className="p-3 bg-gradient-to-br from-cadd-red to-cadd-pink rounded-xl shadow-lg">
+              <div className="p-3 bg-gradient-to-br from-brand-red to-brand-pink rounded-xl shadow-lg">
                 <ComputerDesktopIcon className="h-8 w-8 text-white" />
               </div>
               <div>
                 <h1 className="text-3xl font-bold text-gray-900">Lab Availability</h1>
                 <p className="mt-1 text-sm text-gray-600">
-                  {labInfo ? labInfo.instituteName : 'CDC'} - Computer Lab Management System
+                  {labInfo ? labInfo.instituteName : BRAND.instituteName} - Computer Lab Management System
                 </p>
               </div>
             </div>
@@ -315,7 +316,7 @@ const LabAvailability = () => {
             <input
               type="text"
               placeholder="Search by student name, teacher, purpose, or batch..."
-              className="block w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl leading-5 bg-gray-50 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-cadd-red focus:border-cadd-red focus:bg-white transition-all duration-300 text-sm"
+              className="block w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl leading-5 bg-gray-50 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-brand-red focus:border-brand-red focus:bg-white transition-all duration-300 text-sm"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -330,7 +331,7 @@ const LabAvailability = () => {
                   setSelectedDepartment(e.target.value)
                   setSelectedBatch('all') // Reset batch when department changes
                 }}
-                className="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cadd-red focus:border-cadd-red transition-all duration-200 text-sm bg-white"
+                className="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-red focus:border-brand-red transition-all duration-200 text-sm bg-white"
               >
                 <option value="all">All Departments</option>
                 {departments.map(dept => (
@@ -343,7 +344,7 @@ const LabAvailability = () => {
               <select
                 value={selectedBatch}
                 onChange={(e) => setSelectedBatch(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cadd-red focus:border-cadd-red transition-all duration-200 text-sm bg-white"
+                className="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-red focus:border-brand-red transition-all duration-200 text-sm bg-white"
                 disabled={selectedDepartment === 'all'}
               >
                 <option value="all">
@@ -365,7 +366,7 @@ const LabAvailability = () => {
               <select
                 value={selectedStatus}
                 onChange={(e) => setSelectedStatus(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cadd-red focus:border-cadd-red transition-all duration-200 text-sm bg-white"
+                className="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-red focus:border-brand-red transition-all duration-200 text-sm bg-white"
               >
                 <option value="all">All Status</option>
                 <option value="available">Available PCs</option>
@@ -380,7 +381,7 @@ const LabAvailability = () => {
               </span>
               <button
                 onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
-                className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-xl text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cadd-red transition-all duration-200"
+                className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-xl text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-red transition-all duration-200"
               >
                 <FunnelIcon className="h-4 w-4 mr-2" />
                 {viewMode === 'grid' ? 'List View' : 'Grid View'}
@@ -567,7 +568,7 @@ const LabAvailability = () => {
                 key={slot.id}
                 onClick={() => setSelectedTimeSlot(slot.id)}
                 className={`text-center p-4 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-lg ${isSelected
-                  ? 'bg-gradient-to-r from-cadd-red to-cadd-pink text-white shadow-lg ring-2 ring-cadd-red ring-opacity-50'
+                  ? 'bg-gradient-to-r from-brand-red to-brand-pink text-white shadow-lg ring-2 ring-brand-red ring-opacity-50'
                   : 'bg-gray-50 hover:bg-gray-100 text-gray-900 border-2 border-transparent hover:border-gray-200'
                   }`}
               >
@@ -878,18 +879,18 @@ const LabAvailability = () => {
                       <div
                         key={slot.id}
                         className={`p-3 rounded-lg border ${isCurrentSlot
-                          ? 'border-cadd-red bg-red-50'
+                          ? 'border-brand-red bg-red-50'
                           : 'border-gray-200 bg-gray-50'
                           }`}
                       >
                         <div className="flex items-center justify-between">
                           <div className="flex items-center">
                             <ClockIcon className="h-4 w-4 mr-2 text-gray-400" />
-                            <span className={`font-medium ${isCurrentSlot ? 'text-cadd-red' : 'text-gray-900'}`}>
+                            <span className={`font-medium ${isCurrentSlot ? 'text-brand-red' : 'text-gray-900'}`}>
                               {slot.label}
                             </span>
                             {isCurrentSlot && (
-                              <span className="ml-2 px-2 py-1 bg-cadd-red text-white text-xs rounded-full">
+                              <span className="ml-2 px-2 py-1 bg-brand-red text-white text-xs rounded-full">
                                 Current
                               </span>
                             )}
@@ -915,7 +916,7 @@ const LabAvailability = () => {
               <div className="flex justify-end">
                 <button
                   onClick={() => setShowPCDetailsModal(false)}
-                  className="px-6 py-2 bg-gradient-to-r from-cadd-red to-cadd-pink text-white rounded-lg hover:from-cadd-pink hover:to-cadd-red transition-all duration-300 transform hover:scale-105 shadow-lg"
+                  className="px-6 py-2 bg-gradient-to-r from-brand-red to-brand-pink text-white rounded-lg hover:from-brand-pink hover:to-brand-red transition-all duration-300 transform hover:scale-105 shadow-lg"
                 >
                   Close
                 </button>

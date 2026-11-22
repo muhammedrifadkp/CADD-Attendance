@@ -114,7 +114,8 @@ class EmailService {
   generateTeacherWelcomeEmail(teacherData) {
     const { name, email, employeeId, password, department } = teacherData;
     
-    const subject = 'Welcome to CDC Attendance System - Your Login Credentials';
+    const appName = process.env.APP_NAME || 'Lab Attendance';
+    const subject = `Welcome to ${appName} - Your Login Credentials`;
     
     const htmlContent = `
     <!DOCTYPE html>
@@ -122,7 +123,7 @@ class EmailService {
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Welcome to CDC</title>
+        <title>Welcome to ${appName}</title>
         <style>
             body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
             .container { max-width: 600px; margin: 0 auto; padding: 20px; }
@@ -140,14 +141,14 @@ class EmailService {
     <body>
         <div class="container">
             <div class="header">
-                <h1>Welcome to CDC Attendance System</h1>
+                <h1>Welcome to ${appName}</h1>
                 <p>Your teacher account has been created successfully!</p>
             </div>
             
             <div class="content">
                 <h2>Hello ${name},</h2>
                 
-                <p>Welcome to the CDC (CADD Centre) Attendance Management System! Your teacher account has been created and you can now access the system using the credentials below.</p>
+                <p>Welcome to ${appName}! Your teacher account has been created and you can now access the system using the credentials below.</p>
                 
                 <div class="credentials-box">
                     <h3>Your Login Credentials</h3>
@@ -189,7 +190,7 @@ class EmailService {
                 
                 <h3>How to Login:</h3>
                 <ol>
-                    <li>Visit the CDC Attendance System login page</li>
+                    <li>Visit the ${appName} login page</li>
                     <li>Select "Teacher Login"</li>
                     <li>Enter either your <strong>Email</strong> (${email}) or <strong>Employee ID</strong> (${employeeId})</li>
                     <li>Enter your temporary password: <code>${password}</code></li>
@@ -199,7 +200,7 @@ class EmailService {
                 
                 <div class="footer">
                     <p>If you have any questions or need assistance, please contact the system administrator.</p>
-                    <p><strong>CDC Attendance Management System</strong><br>
+                    <p><strong>${appName}</strong><br>
                     This is an automated message. Please do not reply to this email.</p>
                 </div>
             </div>
@@ -209,7 +210,7 @@ class EmailService {
     `;
 
     const textContent = `
-Welcome to CDC Attendance System
+Welcome to ${appName}
 
 Hello ${name},
 
@@ -225,7 +226,7 @@ Login Credentials:
 IMPORTANT: This is a temporary password. Please change it immediately after your first login.
 
 How to Login:
-1. Visit the CDC Attendance System login page
+1. Visit the ${appName} login page
 2. Select "Teacher Login"
 3. Enter either your Email (${email}) or Employee ID (${employeeId})
 4. Enter your temporary password: ${password}
@@ -236,7 +237,7 @@ You can login using either your email address or Employee ID.
 
 If you have any questions, please contact the system administrator.
 
-CDC Attendance Management System
+${appName}
 This is an automated message. Please do not reply to this email.
     `;
 
@@ -260,7 +261,7 @@ This is an automated message. Please do not reply to this email.
       const emailTemplate = this.generateTeacherWelcomeEmail(teacherData);
       
       const mailOptions = {
-        from: `"CDC Attendance System" <${process.env.EMAIL_USER}>`,
+        from: `"${process.env.APP_NAME || 'Lab Attendance'}" <${process.env.EMAIL_USER}>`,
         to: teacherData.email,
         subject: emailTemplate.subject,
         text: emailTemplate.text,

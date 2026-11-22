@@ -22,6 +22,7 @@ import BackButton from '../../components/BackButton'
 import AnalyticsCards from '../../components/dashboard/AnalyticsCards'
 import TrendsChart from '../../components/dashboard/TrendsChart'
 import NotificationCenter from '../../components/dashboard/NotificationCenter'
+import { BRAND } from '../../config/branding'
 
 const AdminDashboard = () => {
   const { user } = useAuth()
@@ -237,7 +238,7 @@ const AdminDashboard = () => {
       name: 'Lab Computers',
       count: stats.labPCs,
       icon: ComputerDesktopIcon,
-      gradient: 'from-cadd-red to-cadd-pink',
+      gradient: 'from-brand-red to-brand-pink',
       link: '/admin/lab/pcs',
       description: 'Computer lab systems'
     },
@@ -245,7 +246,7 @@ const AdminDashboard = () => {
       name: 'Active Bookings',
       count: stats.activeBookings,
       icon: CalendarDaysIcon,
-      gradient: 'from-cadd-yellow to-yellow-500',
+      gradient: 'from-brand-yellow to-yellow-500',
       link: '/admin/lab/management',
       description: 'Current lab sessions'
     },
@@ -308,15 +309,15 @@ const AdminDashboard = () => {
 
       {/* Welcome Header */}
       <div className="relative overflow-hidden bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 rounded-2xl shadow-2xl">
-        <div className="absolute inset-0 bg-gradient-to-r from-cadd-red/10 to-cadd-pink/10"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-brand-red/10 to-brand-pink/10"></div>
         <div className="relative px-8 py-12">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-4xl font-bold text-white mb-2">
-                Welcome back, <span className="text-cadd-yellow">{user?.name}</span>
+                Welcome back, <span className="text-brand-yellow">{user?.name}</span>
               </h1>
               <p className="text-xl text-gray-300 mb-4">
-                CDC Administration Dashboard
+                {BRAND.shortName} Administration Dashboard
               </p>
               <div className="flex items-center space-x-4 text-sm text-gray-400">
                 <span className="flex items-center">
@@ -344,7 +345,7 @@ const AdminDashboard = () => {
                   {isRefreshing ? 'Refreshing...' : 'Refresh'}
                 </span>
               </button>
-              <div className="w-32 h-32 bg-gradient-to-br from-cadd-red to-cadd-pink rounded-full flex items-center justify-center shadow-2xl">
+              <div className="w-32 h-32 bg-gradient-to-br from-brand-red to-brand-pink rounded-full flex items-center justify-center shadow-2xl">
                 <span className="text-white font-bold text-4xl">{user?.name?.charAt(0)}</span>
               </div>
             </div>
@@ -356,7 +357,7 @@ const AdminDashboard = () => {
         <div className="flex items-center justify-center min-h-64">
           <div className="relative">
             <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-200"></div>
-            <div className="animate-spin rounded-full h-16 w-16 border-4 border-cadd-red border-t-transparent absolute top-0 left-0"></div>
+            <div className="animate-spin rounded-full h-16 w-16 border-4 border-brand-red border-t-transparent absolute top-0 left-0"></div>
           </div>
         </div>
       ) : (

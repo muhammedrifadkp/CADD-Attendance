@@ -2,19 +2,19 @@ const User = require('../models/userModel');
 const Department = require('../models/departmentModel');
 
 /**
- * Department code mapping for Employee ID generation
+ * Employee IDs use the department's own code as prefix (Department.code, e.g. "CS").
+ * Allowed prefix: 1-10 letters or digits.
  */
-const DEPARTMENT_CODE_MAP = {
-  'CADD': 'CADD',
-  'LIVEWIRE': 'LW',
-  'DREAMZONE': 'DZ',
-  'SYNERGY': 'SY'
-};
+const EMPLOYEE_ID_PATTERN = /^[A-Z0-9]{1,10}-\d{3,}$/;
+
+function departmentPrefix(department) {
+  return String(department.code || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 10);
+}
 
 /**
  * Generate unique Employee ID based on department
  * Format: {DEPT_CODE}-{SEQUENTIAL_NUMBER}
- * Examples: CADD-001, LW-001, LW-002, DZ-001, SY-001
+ * Examples: CS-001, CS-002, MECH-001
  * 
  * @param {string} departmentId - MongoDB ObjectId of the department
  * @returns {Promise<string>} - Generated unique Employee ID
@@ -27,25 +27,23 @@ async function generateEmployeeId(departmentId) {
       throw new Error('Department not found');
     }
 
-    // Get department code from mapping
-    const deptCode = DEPARTMENT_CODE_MAP[department.name];
+    // The department's code is the prefix
+    const deptCode = departmentPrefix(department);
     if (!deptCode) {
-      throw new Error(`Department code mapping not found for: ${department.name}`);
+      throw new Error(`Department "${department.name}" has no code`);
     }
 
     // Find the highest existing employee ID for this department
     const existingEmployees = await User.find({
       employeeId: { $regex: `^${deptCode}-\\d+$` },
       role: 'teacher'
-    }).sort({ employeeId: -1 });
+    });
 
+    // Highest number so far (compared as numbers, so 1000 sorts after 999)
     let nextNumber = 1;
-
-    if (existingEmployees.length > 0) {
-      // Extract the number from the highest employee ID
-      const highestId = existingEmployees[0].employeeId;
-      const numberPart = highestId.split('-')[1];
-      nextNumber = parseInt(numberPart, 10) + 1;
+    for (const emp of existingEmployees) {
+      const num = parseInt(emp.employeeId.split('-')[1], 10);
+      if (num >= nextNumber) nextNumber = num + 1;
     }
 
     // Format the number with leading zeros (3 digits)
@@ -77,9 +75,8 @@ function validateEmployeeIdFormat(employeeId) {
     return false;
   }
 
-  // Check format: DEPT-NNN (e.g., CADD-001, LW-001)
-  const pattern = /^(CADD|LW|DZ|SY)-\d{3}$/;
-  return pattern.test(employeeId);
+  // Check format: CODE-NNN (e.g., CS-001)
+  return EMPLOYEE_ID_PATTERN.test(employeeId);
 }
 
 /**
@@ -99,5 +96,5 @@ module.exports = {
   generateEmployeeId,
   validateEmployeeIdFormat,
   getDepartmentCodeFromEmployeeId,
-  DEPARTMENT_CODE_MAP
+  EMPLOYEE_ID_PATTERN
 };

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { BRAND } from '../config/branding';
 
 const SplashScreen = ({ onComplete }) => {
   const [currentStage, setCurrentStage] = useState(0);
@@ -24,7 +25,7 @@ const SplashScreen = ({ onComplete }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-gray-900 via-purple-900 to-gray-800">
       <div className="relative z-10 text-center">
-        {/* Stage 1: Animated CDC Text with Special C */}
+        {/* Stage 1: animated short name, first letter in a circle */}
         <AnimatePresence>
           {currentStage >= 1 && (
             <motion.div
@@ -65,7 +66,7 @@ const SplashScreen = ({ onComplete }) => {
                     }}
                     transition={{ duration: 2.5, repeat: Infinity }}
                   >
-                    C
+                    {BRAND.shortName.charAt(0)}
                   </motion.span>
 
                   {/* Glowing ring effect */}
@@ -80,7 +81,7 @@ const SplashScreen = ({ onComplete }) => {
                   />
                 </motion.span>
 
-                {/* DC text */}
+                {/* Rest of the short name */}
                 <motion.span
                   className="ml-2"
                   initial={{ opacity: 0, x: -20 }}
@@ -107,7 +108,7 @@ const SplashScreen = ({ onComplete }) => {
                       backgroundClip: 'text'
                     }}
                   >
-                    DC
+                    {BRAND.shortName.slice(1)}
                   </motion.span>
                 </motion.span>
               </motion.h1>

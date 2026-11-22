@@ -1,7 +1,7 @@
 {
-  "name": "cdc-attendance",
+  "name": "lab-attendance",
   "version": "1.0.0",
-  "description": "CDC Attendance Management System - Full Stack Application",
+  "description": "Lab Attendance - open-source attendance and computer lab booking for training institutes",
   "main": "index.js",
   "scripts": {
     "install-all": "npm install && cd backend && npm install && cd ../frontend && npm install",
@@ -16,20 +16,21 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "cd frontend && npm run lint",
     "clean": "rm -rf node_modules backend/node_modules frontend/node_modules",
-    "reset": "npm run clean && npm run install-all"
+    "reset": "npm run clean && npm run install-all",
+    "seed:demo": "cd backend && node scripts/seed-demo.js"
   },
   "keywords": [
     "attendance",
     "management",
-    "cadd",
-    "centre",
+    "lab-booking",
+    "open-source",
     "education",
     "react",
     "nodejs",
     "mongodb",
     "express"
   ],
-  "author": "CADD Centre",
+  "author": "Muhammed Rifad KP",
   "license": "MIT",
   "devDependencies": {
     "concurrently": "^7.6.0"

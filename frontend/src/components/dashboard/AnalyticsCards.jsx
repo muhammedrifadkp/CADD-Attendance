@@ -106,7 +106,7 @@ const AnalyticsCards = ({ analytics, notifications, loading }) => {
         <h2 className="text-xl font-bold text-gray-900">Today's Analytics</h2>
         <Link
           to="/admin/analytics"
-          className="text-sm text-cadd-red hover:text-cadd-pink font-medium transition-colors"
+          className="text-sm text-brand-red hover:text-brand-pink font-medium transition-colors"
         >
           View Detailed Reports →
         </Link>

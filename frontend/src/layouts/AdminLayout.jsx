@@ -14,6 +14,7 @@ import {
   BuildingOfficeIcon,
   AcademicCapIcon,
 } from '@heroicons/react/24/outline'
+import { BRAND } from '../config/branding'
 
 const AdminLayout = () => {
   const { user, logout } = useAuth()
@@ -117,29 +118,29 @@ const AdminLayout = () => {
           </div>
 
           <div className="flex-1 h-0 pt-6 pb-4 overflow-y-auto">
-            {/* Admin Header with CDC Branding */}
+            {/* Admin Header with Branding */}
             <div className="px-4 mb-8">
               <div className="flex items-center justify-center mb-4">
                 <div className="relative">
                   <img
                     className="h-12 w-auto"
-                    src="/logos/cdc_logo.png"
-                    alt="CDC"
+                    src={BRAND.logoUrl}
+                    alt={BRAND.shortName}
                     onError={(e) => {
                       e.target.style.display = 'none'
                       e.target.nextSibling.style.display = 'block'
                     }}
                   />
-                  <div className="hidden w-12 h-12 bg-gradient-to-br from-cadd-red to-cadd-pink rounded-xl flex items-center justify-center shadow-lg">
-                    <span className="text-white font-bold text-lg">CDC</span>
+                  <div className="hidden w-12 h-12 bg-gradient-to-br from-brand-red to-brand-pink rounded-xl flex items-center justify-center shadow-lg">
+                    <span className="text-white font-bold text-lg">{BRAND.shortName}</span>
                   </div>
 
                 </div>
               </div>
               <div className="text-center">
-                <h1 className="text-white text-xl font-bold mb-1">CDC</h1>
+                <h1 className="text-white text-xl font-bold mb-1">{BRAND.shortName}</h1>
                 <p className="text-gray-300 text-sm font-medium mb-1">Administration Panel</p>
-                <div className="w-16 h-0.5 bg-gradient-to-r from-cadd-red to-cadd-yellow mx-auto rounded-full"></div>
+                <div className="w-16 h-0.5 bg-gradient-to-r from-brand-red to-brand-yellow mx-auto rounded-full"></div>
               </div>
             </div>
             <nav className="mt-5 px-2 space-y-1">
@@ -148,7 +149,7 @@ const AdminLayout = () => {
                   key={item.name}
                   to={item.href}
                   className={`group flex items-center px-4 py-3 text-sm font-semibold rounded-xl transition-all duration-300 mb-1 ${item.current
-                    ? 'bg-gradient-to-r from-cadd-red to-cadd-pink text-white shadow-lg transform scale-105'
+                    ? 'bg-gradient-to-r from-brand-red to-brand-pink text-white shadow-lg transform scale-105'
                     : 'text-gray-300 hover:text-white hover:bg-gray-800 hover:bg-opacity-50 hover:transform hover:scale-105'
                     }`}
                   onClick={() => setSidebarOpen(false)}
@@ -164,7 +165,7 @@ const AdminLayout = () => {
                   </div>
                   {item.name}
                   {item.current && (
-                    <div className="ml-auto w-2 h-2 bg-cadd-yellow rounded-full"></div>
+                    <div className="ml-auto w-2 h-2 bg-brand-yellow rounded-full"></div>
                   )}
                 </Link>
               ))}
@@ -175,14 +176,14 @@ const AdminLayout = () => {
             <div className="bg-gray-800 bg-opacity-50 rounded-xl p-4">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  <div className="w-10 h-10 bg-gradient-to-br from-cadd-red to-cadd-pink rounded-full flex items-center justify-center">
+                  <div className="w-10 h-10 bg-gradient-to-br from-brand-red to-brand-pink rounded-full flex items-center justify-center">
                     <span className="text-white font-bold text-sm">{user?.name?.charAt(0)}</span>
                   </div>
                 </div>
                 <div className="ml-3 flex-1">
                   <div className="text-sm font-semibold text-white">{user?.name}</div>
                   <div className="text-xs text-gray-400">{user?.email}</div>
-                  <div className="text-xs text-cadd-yellow font-medium">Administrator</div>
+                  <div className="text-xs text-brand-yellow font-medium">Administrator</div>
                 </div>
                 <button
                   onClick={handleLogout}
@@ -204,29 +205,29 @@ const AdminLayout = () => {
             background: 'linear-gradient(180deg, #1f2937 0%, #111827 50%, #0f172a 100%)'
           }}>
           <div className="flex-1 flex flex-col pt-6 pb-4 overflow-y-auto">
-            {/* Admin Header with CDC Branding */}
+            {/* Admin Header with Branding */}
             <div className="px-4 mb-8">
               <div className="flex items-center justify-center mb-4">
                 <div className="relative">
                   <img
                     className="h-12 w-auto"
-                    src="/logos/cdc_logo.png"
-                    alt="CDC"
+                    src={BRAND.logoUrl}
+                    alt={BRAND.shortName}
                     onError={(e) => {
                       e.target.style.display = 'none'
                       e.target.nextSibling.style.display = 'block'
                     }}
                   />
-                  <div className="hidden w-12 h-12 bg-gradient-to-br from-cadd-red to-cadd-pink rounded-xl flex items-center justify-center shadow-lg">
+                  <div className="hidden w-12 h-12 bg-gradient-to-br from-brand-red to-brand-pink rounded-xl flex items-center justify-center shadow-lg">
                     <span className="text-white font-bold text-lg">CC</span>
                   </div>
 
                 </div>
               </div>
               <div className="text-center">
-                <h1 className="text-white text-xl font-bold mb-1">CDC</h1>
+                <h1 className="text-white text-xl font-bold mb-1">{BRAND.shortName}</h1>
                 <p className="text-gray-300 text-sm font-medium mb-1">Administration Panel</p>
-                <div className="w-16 h-0.5 bg-gradient-to-r from-cadd-red to-cadd-yellow mx-auto rounded-full"></div>
+                <div className="w-16 h-0.5 bg-gradient-to-r from-brand-red to-brand-yellow mx-auto rounded-full"></div>
               </div>
             </div>
             <nav className="mt-5 flex-1 px-2 space-y-1">
@@ -235,7 +236,7 @@ const AdminLayout = () => {
                   key={item.name}
                   to={item.href}
                   className={`group flex items-center px-4 py-3 text-sm font-semibold rounded-xl transition-all duration-300 mb-1 ${item.current
-                    ? 'bg-gradient-to-r from-cadd-red to-cadd-pink text-white shadow-lg transform scale-105'
+                    ? 'bg-gradient-to-r from-brand-red to-brand-pink text-white shadow-lg transform scale-105'
                     : 'text-gray-300 hover:text-white hover:bg-gray-800 hover:bg-opacity-50 hover:transform hover:scale-105'
                     }`}
                 >
@@ -250,7 +251,7 @@ const AdminLayout = () => {
                   </div>
                   {item.name}
                   {item.current && (
-                    <div className="ml-auto w-2 h-2 bg-cadd-yellow rounded-full"></div>
+                    <div className="ml-auto w-2 h-2 bg-brand-yellow rounded-full"></div>
                   )}
                 </Link>
               ))}
@@ -261,14 +262,14 @@ const AdminLayout = () => {
             <div className="bg-gray-800 bg-opacity-50 rounded-xl p-4">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  <div className="w-10 h-10 bg-gradient-to-br from-cadd-red to-cadd-pink rounded-full flex items-center justify-center">
+                  <div className="w-10 h-10 bg-gradient-to-br from-brand-red to-brand-pink rounded-full flex items-center justify-center">
                     <span className="text-white font-bold text-sm">{user?.name?.charAt(0)}</span>
                   </div>
                 </div>
                 <div className="ml-3 flex-1">
                   <div className="text-sm font-semibold text-white">{user?.name}</div>
                   <div className="text-xs text-gray-400">{user?.email}</div>
-                  <div className="text-xs text-cadd-yellow font-medium">Administrator</div>
+                  <div className="text-xs text-brand-yellow font-medium">Administrator</div>
                 </div>
                 <button
                   onClick={handleLogout}
@@ -290,7 +291,7 @@ const AdminLayout = () => {
           <div className="flex items-center justify-between px-4 py-3">
             <button
               type="button"
-              className="btn-icon-mobile h-10 w-10 inline-flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:text-gray-900 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-cadd-red transition-all duration-300 touch-target"
+              className="btn-icon-mobile h-10 w-10 inline-flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:text-gray-900 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-red transition-all duration-300 touch-target"
               onClick={() => setSidebarOpen(true)}
             >
               <span className="sr-only">Open sidebar</span>
@@ -299,18 +300,18 @@ const AdminLayout = () => {
             <div className="flex items-center">
               <img
                 className="h-8 w-auto mr-2"
-                src="/logos/cdc_logo.png"
-                alt="CDC"
+                src={BRAND.logoUrl}
+                alt={BRAND.shortName}
                 onError={(e) => {
                   e.target.style.display = 'none'
                   e.target.nextSibling.style.display = 'block'
                 }}
               />
-              <div className="hidden w-8 h-8 bg-gradient-to-br from-cadd-red to-cadd-pink rounded-lg flex items-center justify-center mr-2">
-                <span className="text-white font-bold text-sm">CDC</span>
+              <div className="hidden w-8 h-8 bg-gradient-to-br from-brand-red to-brand-pink rounded-lg flex items-center justify-center mr-2">
+                <span className="text-white font-bold text-sm">{BRAND.shortName}</span>
               </div>
               <div className="text-center">
-                <h1 className="text-lg font-bold bg-gradient-to-r from-cadd-red to-cadd-pink bg-clip-text text-transparent">CDC</h1>
+                <h1 className="text-lg font-bold bg-gradient-to-r from-brand-red to-brand-pink bg-clip-text text-transparent">{BRAND.shortName}</h1>
                 <p className="text-xs text-gray-500 font-medium">Admin Panel</p>
               </div>
             </div>
@@ -323,19 +324,19 @@ const AdminLayout = () => {
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
                 <div className="flex items-center">
-                  <div className="w-2 h-8 bg-gradient-to-b from-cadd-red to-cadd-pink rounded-full mr-4"></div>
+                  <div className="w-2 h-8 bg-gradient-to-b from-brand-red to-brand-pink rounded-full mr-4"></div>
                   <div>
                     <h1 className="text-xl font-bold text-gray-900">Administration Dashboard</h1>
-                    <p className="text-sm text-gray-500">CDC Management System</p>
+                    <p className="text-sm text-gray-500">{BRAND.appName}</p>
                   </div>
                 </div>
               </div>
               <div className="flex items-center space-x-4">
                 <div className="text-right">
                   <p className="text-sm font-semibold text-gray-900">{user?.name}</p>
-                  <p className="text-xs text-cadd-red font-medium">Administrator</p>
+                  <p className="text-xs text-brand-red font-medium">Administrator</p>
                 </div>
-                <div className="w-8 h-8 bg-gradient-to-br from-cadd-red to-cadd-pink rounded-full flex items-center justify-center">
+                <div className="w-8 h-8 bg-gradient-to-br from-brand-red to-brand-pink rounded-full flex items-center justify-center">
                   <span className="text-white font-bold text-sm">{user?.name?.charAt(0)}</span>
                 </div>
               </div>

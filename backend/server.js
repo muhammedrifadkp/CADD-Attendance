@@ -37,10 +37,9 @@ const app = express();
 const corsOrigins = process.env.CORS_ORIGINS
   ? process.env.CORS_ORIGINS.split(',')
   : [
-      'http://localhost:5173',
+      'http://localhost:5173', // Vite dev server
       'http://127.0.0.1:5173',
       'http://localhost:3000',
-      'http://localhost:5173', // Vite default port
       process.env.FRONTEND_URL,
       process.env.PROD_FRONTEND_URL
     ].filter(Boolean);
@@ -128,7 +127,7 @@ app.use('/api/analytics', analyticsRoutes);
 // Health check endpoint
 app.get('/api/test', (req, res) => {
   res.json({
-    message: 'CDC Attendance Management System API is running!',
+    message: 'Lab Attendance API is running!',
     timestamp: new Date().toISOString(),
     port: process.env.PORT || 5000,
     environment: process.env.NODE_ENV || 'development',

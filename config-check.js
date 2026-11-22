@@ -3,7 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 
-console.log('🔧 CDC Attendance Configuration Validation\n');
+console.log('🔧 Lab Attendance Configuration Validation\n');
 
 // Load environment files
 function loadEnvFile(filePath) {
@@ -122,7 +122,7 @@ if (backendEnv && frontendEnv) {
   
   // Check CORS consistency
   const frontendUrl = backendEnv.FRONTEND_URL;
-  if (frontendUrl && frontendUrl.includes('5170')) {
+  if (frontendUrl && frontendUrl.includes('5173')) {
     console.log('✅ CORS configuration appears consistent');
   } else {
     console.log('⚠️  CORS configuration may need review');
@@ -131,7 +131,7 @@ if (backendEnv && frontendEnv) {
 
 console.log('\n📖 Configuration Summary:');
 console.log('   Backend: http://localhost:5000');
-console.log('   Frontend: http://localhost:5170');
+console.log('   Frontend: http://localhost:5173');
 console.log('   API Endpoint: http://localhost:5000/api');
 console.log('\n💡 To start the application:');
 console.log('   npm run dev');

@@ -7,7 +7,6 @@ const departmentSchema = mongoose.Schema(
       required: [true, 'Please add a department name'],
       trim: true,
       unique: true,
-      enum: ['CADD', 'LIVEWIRE', 'DREAMZONE', 'SYNERGY'],
       maxlength: [100, 'Department name cannot exceed 100 characters'],
     },
     code: {

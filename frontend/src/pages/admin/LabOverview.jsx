@@ -1025,7 +1025,7 @@ const LabOverview = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-cadd-red"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand-red"></div>
       </div>
     )
   }
@@ -1653,7 +1653,7 @@ const LabOverview = () => {
                         value={studentSearch}
                         onChange={(e) => setStudentSearch(e.target.value)}
                         placeholder="Type student name or roll number..."
-                        className="w-full px-4 py-2 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cadd-red focus:border-transparent"
+                        className="w-full px-4 py-2 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent"
                       />
                       <MagnifyingGlassIcon className="h-5 w-5 text-gray-400 absolute left-3 top-2.5" />
                     </div>
@@ -1695,7 +1695,7 @@ const LabOverview = () => {
                             key={student._id}
                             onClick={() => setSelectedStudent(student._id)}
                             className={`p-3 cursor-pointer hover:bg-gray-50 border-b border-gray-100 last:border-b-0 ${
-                              selectedStudent === student._id ? 'bg-cadd-red/10 border-cadd-red' : ''
+                              selectedStudent === student._id ? 'bg-brand-red/10 border-brand-red' : ''
                             }`}
                           >
                             <div className="flex items-center justify-between">
@@ -1707,7 +1707,7 @@ const LabOverview = () => {
                                 )}
                               </div>
                               {selectedStudent === student._id && (
-                                <CheckCircleIcon className="h-5 w-5 text-cadd-red" />
+                                <CheckCircleIcon className="h-5 w-5 text-brand-red" />
                               )}
                             </div>
                           </div>
@@ -1721,7 +1721,7 @@ const LabOverview = () => {
                     <button
                       onClick={handleBookingSubmit}
                       disabled={!selectedStudent || bookingLoading}
-                      className="flex-1 px-4 py-2 bg-cadd-red text-white rounded-lg hover:bg-cadd-red/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
+                      className="flex-1 px-4 py-2 bg-brand-red text-white rounded-lg hover:bg-brand-red/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
                     >
                       {bookingLoading ? 'Booking...' : 'Book PC'}
                     </button>
