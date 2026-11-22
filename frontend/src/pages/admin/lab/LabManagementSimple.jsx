@@ -114,7 +114,7 @@ const LabManagementSimple = () => {
       <div className="flex items-center justify-center min-h-64">
         <div className="relative">
           <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-200"></div>
-          <div className="animate-spin rounded-full h-16 w-16 border-4 border-cadd-red border-t-transparent absolute top-0 left-0"></div>
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-brand-red border-t-transparent absolute top-0 left-0"></div>
         </div>
       </div>
     )
@@ -147,7 +147,7 @@ const LabManagementSimple = () => {
                   type="date"
                   value={selectedDate}
                   onChange={(e) => setSelectedDate(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cadd-red"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-red"
                 />
               </div>
               <div>
@@ -155,7 +155,7 @@ const LabManagementSimple = () => {
                 <select
                   value={selectedTimeSlot}
                   onChange={(e) => setSelectedTimeSlot(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cadd-red"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-red"
                 >
                   <option value="">Select time slot</option>
                   {timeSlots.map(slot => (

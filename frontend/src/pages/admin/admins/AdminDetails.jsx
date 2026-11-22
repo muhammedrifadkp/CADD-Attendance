@@ -92,7 +92,7 @@ const AdminDetails = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cadd-red"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-red"></div>
       </div>
     )
   }
@@ -102,7 +102,7 @@ const AdminDetails = () => {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Admin Not Found</h2>
-          <Link to="/admin/admins" className="text-cadd-red hover:text-cadd-pink">
+          <Link to="/admin/admins" className="text-brand-red hover:text-brand-pink">
             Back to Admins
           </Link>
         </div>
@@ -124,14 +124,14 @@ const AdminDetails = () => {
             <div className="flex space-x-3">
               <Link
                 to={`/admin/admins/${id}/edit`}
-                className="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-cadd-red hover:bg-cadd-pink focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cadd-red transition-colors"
+                className="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-brand-red hover:bg-brand-pink focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-red transition-colors"
               >
                 <PencilIcon className="h-4 w-4 mr-2" />
                 Edit Admin
               </Link>
               <button
                 onClick={() => setShowPasswordModal(true)}
-                className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cadd-red transition-colors"
+                className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-red transition-colors"
               >
                 <KeyIcon className="h-4 w-4 mr-2" />
                 Reset Password
@@ -149,7 +149,7 @@ const AdminDetails = () => {
 
         {/* Admin Information Card */}
         <div className="bg-white shadow-lg rounded-2xl overflow-hidden">
-          <div className="bg-gradient-to-r from-cadd-red to-cadd-pink px-6 py-8">
+          <div className="bg-gradient-to-r from-brand-red to-brand-pink px-6 py-8">
             <div className="flex items-center">
               <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center">
                 <UserIcon className="h-10 w-10 text-white" />
@@ -270,7 +270,7 @@ const AdminDetails = () => {
                     type="password"
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cadd-red focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-red focus:border-transparent"
                     placeholder="Enter new password (min 8 characters)"
                     minLength={8}
                   />
@@ -279,7 +279,7 @@ const AdminDetails = () => {
                   <button
                     onClick={handlePasswordReset}
                     disabled={actionLoading || !newPassword}
-                    className="px-4 py-2 bg-cadd-red text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-cadd-pink focus:outline-none focus:ring-2 focus:ring-cadd-red disabled:opacity-50"
+                    className="px-4 py-2 bg-brand-red text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-brand-pink focus:outline-none focus:ring-2 focus:ring-brand-red disabled:opacity-50"
                   >
                     {actionLoading ? 'Resetting...' : 'Reset Password'}
                   </button>

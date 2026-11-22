@@ -85,10 +85,10 @@ const AttendanceCalendar = () => {
 
       setBatches(batchesRes.data)
 
-      // Filter departments to only include the 4 required ones
+      // Show the institute's active departments
       const allDepartments = departmentsRes.data || []
       const requiredDepartments = allDepartments.filter(dept =>
-        ['CADD', 'LIVEWIRE', 'DREAMZONE', 'SYNERGY'].includes(dept.name)
+        dept.isActive !== false
       )
       setDepartments(requiredDepartments)
 
@@ -211,7 +211,7 @@ const AttendanceCalendar = () => {
             </Link>
             <div className="hidden sm:block w-px h-6 bg-gray-300"></div>
             <div className="flex items-center">
-              <CalendarDaysIcon className="h-6 w-6 text-cadd-red mr-2" />
+              <CalendarDaysIcon className="h-6 w-6 text-brand-red mr-2" />
               <h1 className="text-2xl font-bold text-gray-900">Attendance Calendar</h1>
             </div>
           </div>
@@ -219,7 +219,7 @@ const AttendanceCalendar = () => {
             <select
               value={selectedDepartment}
               onChange={(e) => setSelectedDepartment(e.target.value)}
-              className="form-input min-w-[200px] bg-gradient-to-r from-gray-50 to-white border-2 border-gray-200 focus:border-cadd-red focus:ring-cadd-red"
+              className="form-input min-w-[200px] bg-gradient-to-r from-gray-50 to-white border-2 border-gray-200 focus:border-brand-red focus:ring-brand-red"
             >
               <option value="all">All Departments</option>
               {departments.map((dept) => (
@@ -232,7 +232,7 @@ const AttendanceCalendar = () => {
             <select
               value={selectedBatch}
               onChange={(e) => setSelectedBatch(e.target.value)}
-              className="form-input min-w-[250px] bg-gradient-to-r from-gray-50 to-white border-2 border-gray-200 focus:border-cadd-red focus:ring-cadd-red"
+              className="form-input min-w-[250px] bg-gradient-to-r from-gray-50 to-white border-2 border-gray-200 focus:border-brand-red focus:ring-brand-red"
             >
               <option value="">
                 {filteredBatches.length === 0 ? 'No batches available' : 'Select a batch to view calendar'}
@@ -251,7 +251,7 @@ const AttendanceCalendar = () => {
       {selectedBatch && (
         <div className="bg-white shadow-2xl rounded-2xl overflow-hidden">
           {/* Enhanced Calendar Header */}
-          <div className="bg-gradient-to-r from-cadd-purple to-cadd-pink px-6 py-6 text-white">
+          <div className="bg-gradient-to-r from-brand-purple to-brand-pink px-6 py-6 text-white">
             <div className="flex items-center justify-between">
               <div>
                 <h2 className="text-2xl font-bold mb-2">
@@ -259,7 +259,7 @@ const AttendanceCalendar = () => {
                 </h2>
                 {selectedBatchData && (
                   <div className="flex items-center space-x-2 text-white/90">
-                    <div className="w-2 h-2 bg-cadd-yellow rounded-full"></div>
+                    <div className="w-2 h-2 bg-brand-yellow rounded-full"></div>
                     <p className="text-sm font-medium">
                       {selectedBatchData.name} • {selectedBatchData.academicYear} • {selectedBatchData.section}
                     </p>
@@ -315,7 +315,7 @@ const AttendanceCalendar = () => {
                 if (!isCurrentMonth) {
                   dayClasses += " border-gray-100 bg-gray-50 text-gray-300"
                 } else if (isCurrentDay) {
-                  dayClasses += " border-cadd-red bg-gradient-to-br from-cadd-red to-cadd-pink text-white shadow-lg"
+                  dayClasses += " border-brand-red bg-gradient-to-br from-brand-red to-brand-pink text-white shadow-lg"
                 } else if (hasData) {
                   if (percentage >= 90) {
                     dayClasses += " border-green-200 bg-gradient-to-br from-green-50 to-green-100 text-green-800"
@@ -391,7 +391,7 @@ const AttendanceCalendar = () => {
                     <span className="text-sm font-medium text-gray-700">Needs Attention (&lt;75%)</span>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <div className="w-4 h-4 bg-gradient-to-br from-cadd-red to-cadd-pink rounded-lg"></div>
+                    <div className="w-4 h-4 bg-gradient-to-br from-brand-red to-brand-pink rounded-lg"></div>
                     <span className="text-sm font-medium text-gray-700">Today</span>
                   </div>
                 </div>
@@ -399,14 +399,14 @@ const AttendanceCalendar = () => {
               <div className="flex flex-col sm:flex-row gap-3">
                 <Link
                   to={`/batches/${selectedBatch}/attendance/report`}
-                  className="inline-flex items-center justify-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-xl text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cadd-red transition-all duration-300"
+                  className="inline-flex items-center justify-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-xl text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-red transition-all duration-300"
                 >
                   <ChartBarIcon className="h-4 w-4 mr-2" />
                   View Report
                 </Link>
                 <Link
                   to={`/batches/${selectedBatch}/attendance`}
-                  className="inline-flex items-center justify-center px-6 py-2 border border-transparent text-sm font-medium rounded-xl text-white bg-gradient-to-r from-cadd-red to-cadd-pink hover:from-cadd-pink hover:to-cadd-red focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cadd-red shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                  className="inline-flex items-center justify-center px-6 py-2 border border-transparent text-sm font-medium rounded-xl text-white bg-gradient-to-r from-brand-red to-brand-pink hover:from-brand-pink hover:to-brand-red focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-red shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                 >
                   <CalendarDaysIcon className="h-4 w-4 mr-2" />
                   Mark Today's Attendance
@@ -419,8 +419,8 @@ const AttendanceCalendar = () => {
 
       {!selectedBatch && (
         <div className="bg-white rounded-2xl shadow-lg p-12 text-center">
-          <div className="w-24 h-24 bg-gradient-to-br from-cadd-red/10 to-cadd-pink/10 rounded-full flex items-center justify-center mx-auto mb-6">
-            <CalendarDaysIcon className="h-12 w-12 text-cadd-red" />
+          <div className="w-24 h-24 bg-gradient-to-br from-brand-red/10 to-brand-pink/10 rounded-full flex items-center justify-center mx-auto mb-6">
+            <CalendarDaysIcon className="h-12 w-12 text-brand-red" />
           </div>
           <h3 className="text-xl font-bold text-gray-900 mb-2">Select a Batch</h3>
           <p className="text-gray-600 mb-6 max-w-md mx-auto">

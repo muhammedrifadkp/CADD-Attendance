@@ -97,7 +97,7 @@ const CreateAdmin = () => {
 
       {/* Header */}
       <div className="text-center">
-        <div className="mx-auto w-16 h-16 bg-gradient-to-br from-cadd-red to-cadd-pink rounded-full flex items-center justify-center mb-4">
+        <div className="mx-auto w-16 h-16 bg-gradient-to-br from-brand-red to-brand-pink rounded-full flex items-center justify-center mb-4">
           <ShieldCheckIcon className="h-8 w-8 text-white" />
         </div>
         <h1 className="text-3xl font-bold text-gray-900">Create New Admin</h1>
@@ -126,7 +126,7 @@ const CreateAdmin = () => {
                     type="text"
                     value={formData.name}
                     onChange={handleChange}
-                    className={`block w-full pl-10 pr-3 py-3 border rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cadd-red focus:border-cadd-red transition-all duration-300 ${
+                    className={`block w-full pl-10 pr-3 py-3 border rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-red focus:border-brand-red transition-all duration-300 ${
                       errors.name ? 'border-red-300' : 'border-gray-300'
                     }`}
                     placeholder="Enter admin's full name"
@@ -152,10 +152,10 @@ const CreateAdmin = () => {
                     type="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className={`block w-full pl-10 pr-3 py-3 border rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cadd-red focus:border-cadd-red transition-all duration-300 ${
+                    className={`block w-full pl-10 pr-3 py-3 border rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-red focus:border-brand-red transition-all duration-300 ${
                       errors.email ? 'border-red-300' : 'border-gray-300'
                     }`}
-                    placeholder="admin@caddcentre.com"
+                    placeholder="admin@example.com"
                   />
                 </div>
                 {errors.email && (
@@ -178,7 +178,7 @@ const CreateAdmin = () => {
                     type={showPassword ? 'text' : 'password'}
                     value={formData.password}
                     onChange={handleChange}
-                    className={`block w-full pl-10 pr-10 py-3 border rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cadd-red focus:border-cadd-red transition-all duration-300 ${
+                    className={`block w-full pl-10 pr-10 py-3 border rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-red focus:border-brand-red transition-all duration-300 ${
                       errors.password ? 'border-red-300' : 'border-gray-300'
                     }`}
                     placeholder="Enter secure password"
@@ -217,7 +217,7 @@ const CreateAdmin = () => {
                     type={showPassword ? 'text' : 'password'}
                     value={formData.confirmPassword}
                     onChange={handleChange}
-                    className={`block w-full pl-10 pr-3 py-3 border rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cadd-red focus:border-cadd-red transition-all duration-300 ${
+                    className={`block w-full pl-10 pr-3 py-3 border rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-red focus:border-brand-red transition-all duration-300 ${
                       errors.confirmPassword ? 'border-red-300' : 'border-gray-300'
                     }`}
                     placeholder="Confirm your password"
@@ -233,7 +233,7 @@ const CreateAdmin = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-gradient-to-r from-cadd-red to-cadd-pink hover:from-cadd-red/90 hover:to-cadd-pink/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cadd-red disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-105"
+                  className="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-gradient-to-r from-brand-red to-brand-pink hover:from-brand-red/90 hover:to-brand-pink/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-red disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-105"
                 >
                   {loading ? (
                     <div className="flex items-center">

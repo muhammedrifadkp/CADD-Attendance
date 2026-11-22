@@ -7,8 +7,8 @@ export default {
   theme: {
     extend: {
       colors: {
-        // CDC Brand Colors
-        cadd: {
+        // Brand colours (used as brand-red, brand-pink, ...)
+        brand: {
           red: '#ff0000',
           purple: '#490b3d',
           pink: '#bd1e51',

@@ -23,6 +23,7 @@ import { formatDateSimple, formatDateLong } from '../../../utils/dateUtils'
 import BackButton from '../../../components/BackButton'
 import { format, subDays } from 'date-fns'
 import ExcelJS from 'exceljs'
+import { BRAND } from '../../../config/branding'
 
 // Register Chart.js components
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, ArcElement, BarElement)
@@ -290,7 +291,7 @@ const AdminAttendanceReport = () => {
       // Sheet 1: Overall Statistics
       const overallStatsSheet = workbook.addWorksheet('Overall Statistics');
       overallStatsSheet.addRows([
-        ['CADD Centre - Attendance Report'],
+        [`${BRAND.instituteName} - Attendance Report`],
         ['Generated on:', formatDateLong(new Date())],
         ['Period:', `${formatDateSimple(dateRange.startDate)} to ${formatDateSimple(dateRange.endDate)}`],
         [''],
@@ -383,7 +384,7 @@ const AdminAttendanceReport = () => {
       });
 
       // Generate filename with current date
-      const fileName = `CADD_Attendance_Report_${format(new Date(), 'yyyy-MM-dd_HH-mm')}.xlsx`;
+      const fileName = `Attendance_Report_${format(new Date(), 'yyyy-MM-dd_HH-mm')}.xlsx`;
 
       // Save the file
       await workbook.xlsx.writeBuffer().then(buffer => {
@@ -406,7 +407,7 @@ const AdminAttendanceReport = () => {
   // CSV Export Function
   const exportToCSV = () => {
     try {
-      let csvContent = "CADD Centre - Attendance Report\n"
+      let csvContent = `${BRAND.instituteName} - Attendance Report\n`
       csvContent += `Generated on: ${formatDateLong(new Date())}\n`
       csvContent += `Period: ${formatDateSimple(dateRange.startDate)} to ${formatDateSimple(dateRange.endDate)}\n\n`
 
@@ -440,7 +441,7 @@ const AdminAttendanceReport = () => {
       const link = document.createElement('a')
       const url = URL.createObjectURL(blob)
       link.setAttribute('href', url)
-      link.setAttribute('download', `CADD_Attendance_Report_${format(new Date(), 'yyyy-MM-dd_HH-mm')}.csv`)
+      link.setAttribute('download', `Attendance_Report_${format(new Date(), 'yyyy-MM-dd_HH-mm')}.csv`)
       link.style.visibility = 'hidden'
       document.body.appendChild(link)
       link.click()
@@ -464,7 +465,7 @@ const AdminAttendanceReport = () => {
       <div className="flex items-center justify-center min-h-screen">
         <div className="relative">
           <div className="animate-spin rounded-full h-20 w-20 border-4 border-gray-200"></div>
-          <div className="animate-spin rounded-full h-20 w-20 border-4 border-cadd-red border-t-transparent absolute top-0 left-0"></div>
+          <div className="animate-spin rounded-full h-20 w-20 border-4 border-brand-red border-t-transparent absolute top-0 left-0"></div>
         </div>
       </div>
     )
@@ -591,7 +592,7 @@ const AdminAttendanceReport = () => {
 
       {/* Advanced Header with Gradient and Analytics */}
       <div className="relative overflow-hidden bg-gradient-to-r from-gray-900 via-purple-900 to-gray-900 rounded-3xl shadow-2xl">
-        <div className="absolute inset-0 bg-gradient-to-r from-cadd-red/20 to-purple-500/20"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-brand-red/20 to-purple-500/20"></div>
         <div className="absolute inset-0 opacity-30" style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
         }}></div>
@@ -599,7 +600,7 @@ const AdminAttendanceReport = () => {
           <div className="flex items-center justify-between">
             <div>
               <div className="flex items-center mb-4">
-                <div className="p-3 bg-gradient-to-br from-cadd-red to-purple-600 rounded-2xl shadow-lg mr-4">
+                <div className="p-3 bg-gradient-to-br from-brand-red to-purple-600 rounded-2xl shadow-lg mr-4">
                   <ChartBarIcon className="h-8 w-8 text-white" />
                 </div>
                 <div>
@@ -629,7 +630,7 @@ const AdminAttendanceReport = () => {
             <div className="flex items-center space-x-4">
               <Link
                 to="/admin/attendance"
-                className="inline-flex items-center px-6 py-3 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-gradient-to-r from-cadd-red to-cadd-pink hover:from-cadd-red/90 hover:to-cadd-pink/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cadd-red transition-all duration-300 transform hover:scale-105"
+                className="inline-flex items-center px-6 py-3 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-gradient-to-r from-brand-red to-brand-pink hover:from-brand-red/90 hover:to-brand-pink/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-red transition-all duration-300 transform hover:scale-105"
               >
                 <ArrowLeftIcon className="h-5 w-5 mr-2" />
                 Back to Dashboard
@@ -637,8 +638,8 @@ const AdminAttendanceReport = () => {
               <div className="hidden lg:block">
                 <img
                   className="h-24 w-auto opacity-80"
-                  src="/logos/cadd_logo.png"
-                  alt="CADD Centre"
+                  src={BRAND.logoUrl}
+                  alt={BRAND.instituteName}
                   onError={(e) => {
                     e.target.style.display = 'none'
                   }}
@@ -710,7 +711,7 @@ const AdminAttendanceReport = () => {
                   key={mode}
                   onClick={() => setViewMode(mode)}
                   className={`view-tab px-3 py-2 text-xs sm:text-sm font-medium rounded-md transition-all duration-200 whitespace-nowrap ${viewMode === mode
-                    ? 'bg-white text-cadd-red shadow-sm'
+                    ? 'bg-white text-brand-red shadow-sm'
                     : 'text-gray-600 hover:text-gray-900'
                     }`}
                 >
@@ -852,7 +853,7 @@ const AdminAttendanceReport = () => {
         </div>
 
         {/* Total Batches Card */}
-        <div className="relative bg-gradient-to-br from-cadd-red to-cadd-pink rounded-2xl shadow-lg overflow-hidden group hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+        <div className="relative bg-gradient-to-br from-brand-red to-brand-pink rounded-2xl shadow-lg overflow-hidden group hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
           <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
           <div className="relative mobile-spacing p-4 sm:p-6 text-white">
             <div className="flex items-center justify-between mb-4">
@@ -974,7 +975,7 @@ const AdminAttendanceReport = () => {
                   <p className="text-sm text-gray-500">14-day attendance pattern analysis</p>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <div className="w-3 h-3 bg-cadd-red rounded-full"></div>
+                  <div className="w-3 h-3 bg-brand-red rounded-full"></div>
                   <span className="text-sm text-gray-600">Attendance %</span>
                 </div>
               </div>

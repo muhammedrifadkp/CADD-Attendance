@@ -16,6 +16,7 @@ import { useAuth } from '../../context/AuthContext'
 import { formatDateSimple } from '../../utils/dateUtils'
 import BackButton from '../../components/BackButton'
 import NotificationCenter from '../../components/dashboard/NotificationCenter'
+import { BRAND } from '../../config/branding'
 
 const TeacherDashboard = () => {
   const { user } = useAuth()
@@ -126,7 +127,7 @@ const TeacherDashboard = () => {
       name: 'Today\'s Attendance',
       count: stats.todayAttendance,
       icon: ClipboardDocumentCheckIcon,
-      gradient: 'from-cadd-red to-cadd-pink',
+      gradient: 'from-brand-red to-brand-pink',
       link: '/attendance',
       description: 'Students present today'
     },
@@ -149,15 +150,15 @@ const TeacherDashboard = () => {
 
       {/* Welcome Header */}
       <div className="relative overflow-hidden bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 rounded-2xl shadow-2xl">
-        <div className="absolute inset-0 bg-gradient-to-r from-cadd-red/10 to-cadd-pink/10"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-brand-red/10 to-brand-pink/10"></div>
         <div className="relative px-8 py-12">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-4xl font-bold text-white mb-2">
-                Welcome back, <span className="text-cadd-yellow">{user?.name}</span>
+                Welcome back, <span className="text-brand-yellow">{user?.name}</span>
               </h1>
               <p className="text-xl text-gray-300 mb-4">
-                CADD Centre Teacher Dashboard
+                {BRAND.shortName} Teacher Dashboard
               </p>
               <div className="flex items-center space-x-4 text-sm text-gray-400">
                 <span className="flex items-center">
@@ -173,8 +174,8 @@ const TeacherDashboard = () => {
             <div className="hidden lg:block">
               <img
                 className="h-20 w-auto opacity-80"
-                src="/logos/cdc_logo.png"
-                alt="CDC"
+                src={BRAND.logoUrl}
+                alt={BRAND.shortName}
                 onError={(e) => {
                   e.target.style.display = 'none'
                 }}
@@ -189,7 +190,7 @@ const TeacherDashboard = () => {
         <div className="flex items-center justify-center min-h-64">
           <div className="relative">
             <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-200"></div>
-            <div className="animate-spin rounded-full h-16 w-16 border-4 border-cadd-red border-t-transparent absolute top-0 left-0"></div>
+            <div className="animate-spin rounded-full h-16 w-16 border-4 border-brand-red border-t-transparent absolute top-0 left-0"></div>
           </div>
         </div>
       ) : (
@@ -236,7 +237,7 @@ const TeacherDashboard = () => {
             </div>
             <Link
               to="/batches/new"
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-xl shadow-sm text-white bg-gradient-to-r from-cadd-red to-cadd-pink hover:from-cadd-pink hover:to-cadd-red transition-all duration-300 transform hover:scale-105"
+              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-xl shadow-sm text-white bg-gradient-to-r from-brand-red to-brand-pink hover:from-brand-pink hover:to-brand-red transition-all duration-300 transform hover:scale-105"
             >
               <PlusIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
               New Batch
@@ -256,7 +257,7 @@ const TeacherDashboard = () => {
               </p>
               <Link
                 to="/batches/new"
-                className="inline-flex items-center px-6 py-3 border border-transparent text-sm font-semibold rounded-xl text-white bg-gradient-to-r from-cadd-red to-cadd-pink hover:from-cadd-pink hover:to-cadd-red transition-all duration-300"
+                className="inline-flex items-center px-6 py-3 border border-transparent text-sm font-semibold rounded-xl text-white bg-gradient-to-r from-brand-red to-brand-pink hover:from-brand-pink hover:to-brand-red transition-all duration-300"
               >
                 <PlusIcon className="-ml-1 mr-2 h-5 w-5" />
                 Create Your First Batch
@@ -270,14 +271,14 @@ const TeacherDashboard = () => {
                   className="group relative bg-gradient-to-br from-white to-gray-50 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-105 overflow-hidden animate-slide-up"
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
-                  <div className="absolute inset-0 bg-gradient-to-br from-cadd-red/5 to-cadd-pink/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="absolute inset-0 bg-gradient-to-br from-brand-red/5 to-brand-pink/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   <div className="relative p-6">
                     <div className="flex items-center mb-4">
                       <div className="p-3 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg">
                         <AcademicCapIcon className="h-6 w-6 text-white" />
                       </div>
                       <div className="ml-4 flex-1">
-                        <h3 className="text-lg font-bold text-gray-900 group-hover:text-cadd-red transition-colors duration-300">
+                        <h3 className="text-lg font-bold text-gray-900 group-hover:text-brand-red transition-colors duration-300">
                           {batch.name}
                         </h3>
                         <p className="text-sm text-gray-500">

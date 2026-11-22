@@ -143,7 +143,7 @@ const NotificationCenter = ({ unreadCount, onUnreadCountChange }) => {
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center space-x-3">
           <div className="relative">
-            <div className="p-2 bg-gradient-to-br from-cadd-red to-cadd-pink rounded-lg">
+            <div className="p-2 bg-gradient-to-br from-brand-red to-brand-pink rounded-lg">
               <BellIcon className="h-5 w-5 text-white" />
             </div>
             {unreadCount > 0 && (
@@ -164,7 +164,7 @@ const NotificationCenter = ({ unreadCount, onUnreadCountChange }) => {
           {unreadCount > 0 && (
             <button
               onClick={markAllAsRead}
-              className="text-xs text-cadd-red hover:text-cadd-pink font-medium transition-colors"
+              className="text-xs text-brand-red hover:text-brand-pink font-medium transition-colors"
             >
               Mark all read
             </button>
@@ -238,7 +238,7 @@ const NotificationCenter = ({ unreadCount, onUnreadCountChange }) => {
               </div>
               
               {isUnread(notification) && (
-                <div className="absolute top-4 right-4 w-2 h-2 bg-cadd-red rounded-full"></div>
+                <div className="absolute top-4 right-4 w-2 h-2 bg-brand-red rounded-full"></div>
               )}
             </div>
           ))
@@ -250,7 +250,7 @@ const NotificationCenter = ({ unreadCount, onUnreadCountChange }) => {
         <div className="mt-4 text-center">
           <button
             onClick={() => setShowAll(!showAll)}
-            className="text-sm text-cadd-red hover:text-cadd-pink font-medium transition-colors"
+            className="text-sm text-brand-red hover:text-brand-pink font-medium transition-colors"
           >
             {showAll ? 'Show less' : `Show ${notifications.length - 5} more`}
           </button>

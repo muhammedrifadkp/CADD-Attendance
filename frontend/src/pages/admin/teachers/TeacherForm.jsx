@@ -89,21 +89,14 @@ const TeacherForm = () => {
     }
   }
 
-  // Department code mapping for Employee ID preview
-  const DEPARTMENT_CODE_MAP = {
-    'CADD': 'CADD',
-    'LIVEWIRE': 'LW',
-    'DREAMZONE': 'DZ',
-    'SYNERGY': 'SY'
-  }
-
   const generateEmployeeIdPreview = (departmentId) => {
     if (!departmentId || isEditMode) return ''
 
     const selectedDept = departments.find(dept => dept._id === departmentId)
     if (!selectedDept) return ''
 
-    const deptCode = DEPARTMENT_CODE_MAP[selectedDept.name]
+    // Employee IDs use the department's code as prefix, e.g. CS-001
+    const deptCode = (selectedDept.code || '').toUpperCase()
     if (!deptCode) return ''
 
     return `${deptCode}-XXX (Auto-generated)`
@@ -211,7 +204,7 @@ const TeacherForm = () => {
   if (fetchLoading) {
     return (
       <div className="flex items-center justify-center min-h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cadd-red"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-red"></div>
       </div>
     )
   }
@@ -233,7 +226,7 @@ const TeacherForm = () => {
 
       {/* Form */}
       <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-        <div className="px-6 py-4 bg-gradient-to-r from-cadd-red to-cadd-pink">
+        <div className="px-6 py-4 bg-gradient-to-r from-brand-red to-brand-pink">
           <div className="flex items-center space-x-3">
             <UserIcon className="h-6 w-6 text-white" />
             <h2 className="text-lg font-semibold text-white">Teacher Information</h2>
@@ -256,7 +249,7 @@ const TeacherForm = () => {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-cadd-red focus:border-transparent ${
+                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent ${
                     errors.name ? 'border-red-500' : 'border-gray-300'
                   }`}
                   placeholder="Enter full name"
@@ -296,10 +289,10 @@ const TeacherForm = () => {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-cadd-red focus:border-transparent ${
+                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent ${
                     errors.email ? 'border-red-500' : 'border-gray-300'
                   }`}
-                  placeholder="teacher@caddcentre.com"
+                  placeholder="teacher@example.com"
                 />
                 {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
                 {!isEditMode && (
@@ -319,7 +312,7 @@ const TeacherForm = () => {
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
-                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-cadd-red focus:border-transparent ${
+                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent ${
                     errors.phone ? 'border-red-500' : 'border-gray-300'
                   }`}
                   placeholder="+91 98765 43210"
@@ -338,7 +331,7 @@ const TeacherForm = () => {
                 value={formData.address}
                 onChange={handleChange}
                 rows="2"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cadd-red focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent"
                 placeholder="Enter complete address"
               />
             </div>
@@ -358,7 +351,7 @@ const TeacherForm = () => {
                   name="department"
                   value={formData.department}
                   onChange={handleChange}
-                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-cadd-red focus:border-transparent ${
+                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent ${
                     errors.department ? 'border-red-500' : 'border-gray-300'
                   }`}
                 >
@@ -382,7 +375,7 @@ const TeacherForm = () => {
                   name="dateOfJoining"
                   value={formData.dateOfJoining}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cadd-red focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent"
                 />
               </div>
             </div>
@@ -403,7 +396,7 @@ const TeacherForm = () => {
                   name="qualification"
                   value={formData.qualification}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cadd-red focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent"
                   placeholder="e.g., B.Tech, M.Tech, Diploma"
                 />
               </div>
@@ -418,7 +411,7 @@ const TeacherForm = () => {
                   value={formData.experience}
                   onChange={handleChange}
                   min="0"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cadd-red focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent"
                   placeholder="0"
                 />
               </div>
@@ -434,7 +427,7 @@ const TeacherForm = () => {
                 value={formData.specialization}
                 onChange={handleChange}
                 rows="2"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cadd-red focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent"
                 placeholder="Areas of expertise, software skills, etc."
               />
             </div>
@@ -455,7 +448,7 @@ const TeacherForm = () => {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-cadd-red focus:border-transparent ${
+                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent ${
                     errors.password ? 'border-red-500' : 'border-gray-300'
                   }`}
                   placeholder="Minimum 8 characters"
@@ -474,7 +467,7 @@ const TeacherForm = () => {
                     id="active"
                     checked={formData.active}
                     onChange={handleChange}
-                    className="h-4 w-4 text-cadd-red focus:ring-cadd-red border-gray-300 rounded"
+                    className="h-4 w-4 text-brand-red focus:ring-brand-red border-gray-300 rounded"
                   />
                   <label htmlFor="active" className="text-sm text-gray-700">
                     <CheckCircleIcon className="h-4 w-4 inline mr-1" />
@@ -497,7 +490,7 @@ const TeacherForm = () => {
             <button
               type="submit"
               disabled={loading}
-              className="px-6 py-2 bg-gradient-to-r from-cadd-red to-cadd-pink text-white rounded-lg hover:from-cadd-pink hover:to-cadd-red transition-all duration-300 flex items-center space-x-2 disabled:opacity-50"
+              className="px-6 py-2 bg-gradient-to-r from-brand-red to-brand-pink text-white rounded-lg hover:from-brand-pink hover:to-brand-red transition-all duration-300 flex items-center space-x-2 disabled:opacity-50"
             >
               {loading ? (
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>

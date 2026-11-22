@@ -95,7 +95,7 @@ const BookingSuccessModal = ({ isOpen, onClose, bookingDetails }) => {
                     </button>
                     <button
                       type="button"
-                      className="flex-1 inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-xl text-white bg-gradient-to-r from-cadd-red to-cadd-pink hover:from-cadd-pink hover:to-cadd-red transition-all duration-300"
+                      className="flex-1 inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-xl text-white bg-gradient-to-r from-brand-red to-brand-pink hover:from-brand-pink hover:to-brand-red transition-all duration-300"
                       onClick={onClose}
                     >
                       Continue

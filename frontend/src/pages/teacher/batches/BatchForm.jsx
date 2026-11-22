@@ -36,7 +36,6 @@ const BatchForm = () => {
   const [courses, setCourses] = useState([])
   const [departments, setDepartments] = useState([])
 
-  // Fixed departments as per requirements (CADD, LIVEWIRE, DREAMZONE, SYNERGY)
   // These will be fetched from backend but should only include these 4 departments
 
   useEffect(() => {
@@ -50,10 +49,10 @@ const BatchForm = () => {
 
         setCourses(coursesRes.data.courses || coursesRes.data || []);
 
-        // Filter departments to only include the 4 required ones
+        // Show the institute's active departments
         const allDepartments = departmentsRes.data || [];
         const requiredDepartments = allDepartments.filter(dept =>
-          ['CADD', 'LIVEWIRE', 'DREAMZONE', 'SYNERGY'].includes(dept.name)
+          dept.isActive !== false
         );
         setDepartments(requiredDepartments);
 
@@ -286,7 +285,7 @@ const BatchForm = () => {
                   <label
                     key={slot.id}
                     className={`relative flex cursor-pointer rounded-lg border p-4 focus:outline-none transition-all duration-200 ${formData.timing === slot.id
-                      ? 'border-cadd-red bg-red-50 ring-2 ring-cadd-red'
+                      ? 'border-brand-red bg-red-50 ring-2 ring-brand-red'
                       : 'border-gray-300 bg-white hover:border-gray-400 hover:bg-gray-50'
                       }`}
                   >
@@ -302,7 +301,7 @@ const BatchForm = () => {
                     <div className="flex items-center">
                       <span className="text-2xl mr-3">{slot.icon}</span>
                       <div>
-                        <div className={`text-sm font-medium ${formData.timing === slot.id ? 'text-cadd-red' : 'text-gray-900'
+                        <div className={`text-sm font-medium ${formData.timing === slot.id ? 'text-brand-red' : 'text-gray-900'
                           }`}>
                           {slot.label}
                         </div>
@@ -312,7 +311,7 @@ const BatchForm = () => {
                       </div>
                     </div>
                     {formData.timing === slot.id && (
-                      <div className="absolute -inset-px rounded-lg border-2 border-cadd-red pointer-events-none" />
+                      <div className="absolute -inset-px rounded-lg border-2 border-brand-red pointer-events-none" />
                     )}
                   </label>
                 ))}

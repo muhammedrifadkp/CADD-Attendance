@@ -89,7 +89,7 @@ const ApplyPreviousBookingsModal = ({
                   </div>
                   <button
                     type="button"
-                    className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-cadd-red focus:ring-offset-2"
+                    className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-red focus:ring-offset-2"
                     onClick={onClose}
                     disabled={loading}
                   >
@@ -143,7 +143,7 @@ const ApplyPreviousBookingsModal = ({
                       {/* Toggle Details */}
                       <button
                         onClick={() => setShowDetails(!showDetails)}
-                        className="flex items-center text-sm text-cadd-red hover:text-cadd-pink font-medium mb-4"
+                        className="flex items-center text-sm text-brand-red hover:text-brand-pink font-medium mb-4"
                       >
                         <ClockIcon className="h-4 w-4 mr-1" />
                         {showDetails ? 'Hide' : 'Show'} Booking Details
@@ -195,7 +195,7 @@ const ApplyPreviousBookingsModal = ({
                   </button>
                   <button
                     type="button"
-                    className="inline-flex justify-center rounded-md border border-transparent bg-cadd-red px-4 py-2 text-sm font-medium text-white hover:bg-cadd-pink focus:outline-none focus-visible:ring-2 focus-visible:ring-cadd-red focus-visible:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="inline-flex justify-center rounded-md border border-transparent bg-brand-red px-4 py-2 text-sm font-medium text-white hover:bg-brand-pink focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-red focus-visible:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     onClick={handleConfirm}
                     disabled={loading || previousBookings.length === 0}
                   >

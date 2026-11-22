@@ -95,12 +95,12 @@ const BatchesList = () => {
       <Link to={`${baseUrl}/${batch._id}`} className="block">
         <div className={`px-6 py-6 bg-gradient-to-br transition-all duration-300 ${isFinished
           ? 'from-gray-100/50 to-gray-200/50 hover:from-gray-200/60 hover:to-gray-300/60'
-          : 'from-cadd-purple/5 to-cadd-pink/5 hover:from-cadd-purple/10 hover:to-cadd-pink/10'
+          : 'from-brand-purple/5 to-brand-pink/5 hover:from-brand-purple/10 hover:to-brand-pink/10'
           }`}>
           <div className="flex items-center">
             <div className={`flex-shrink-0 rounded-xl p-4 shadow-lg group-hover:shadow-xl transition-shadow duration-300 ${isFinished
               ? 'bg-gradient-to-br from-gray-400 to-gray-500'
-              : 'bg-gradient-to-br from-cadd-red to-cadd-pink'
+              : 'bg-gradient-to-br from-brand-red to-brand-pink'
               }`}>
               <span className="text-white font-bold text-lg">
                 {batch.name.substring(0, 2).toUpperCase()}
@@ -108,7 +108,7 @@ const BatchesList = () => {
             </div>
             <div className="ml-5 w-0 flex-1">
               <div className="flex items-center">
-                <h3 className={`text-xl font-bold truncate group-hover:text-cadd-red transition-colors duration-300 ${isFinished ? 'text-gray-600' : 'text-gray-900'
+                <h3 className={`text-xl font-bold truncate group-hover:text-brand-red transition-colors duration-300 ${isFinished ? 'text-gray-600' : 'text-gray-900'
                   }`}>
                   {batch.name}
                 </h3>
@@ -145,7 +145,7 @@ const BatchesList = () => {
               {/* Batch Timing */}
               <div className={`mt-2 flex items-center text-sm ${isFinished ? 'text-gray-500' : 'text-gray-600'}`}>
                 <ClockIcon className="h-4 w-4 mr-1.5 text-gray-400" />
-                <span className={`font-medium ${isFinished ? 'text-gray-500' : 'text-cadd-red'}`}>
+                <span className={`font-medium ${isFinished ? 'text-gray-500' : 'text-brand-red'}`}>
                   {formatTiming(batch.timing)}
                 </span>
               </div>
@@ -153,7 +153,7 @@ const BatchesList = () => {
                 <div className="mt-2 text-xs text-gray-500">
                   Created by: {' '}
                   {user && batch.createdBy._id === user._id ? (
-                    <span className="text-cadd-red font-semibold">You</span>
+                    <span className="text-brand-red font-semibold">You</span>
                   ) : (
                     <span className="text-gray-700 font-medium">
                       {batch.createdBy.name}
@@ -174,7 +174,7 @@ const BatchesList = () => {
             <div className="text-xs text-gray-500 font-medium">
               Click to view details
             </div>
-            <div className="flex items-center text-cadd-red opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <div className="flex items-center text-brand-red opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               <span className="text-xs font-medium mr-1">View Details</span>
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -190,7 +190,7 @@ const BatchesList = () => {
           <Link
             to={`${baseUrl}/${batch._id}/students`}
             onClick={(e) => e.stopPropagation()}
-            className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-xs font-semibold rounded-lg text-gray-700 bg-white hover:bg-gray-100 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cadd-red transition-all duration-300"
+            className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-xs font-semibold rounded-lg text-gray-700 bg-white hover:bg-gray-100 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-red transition-all duration-300"
           >
             <UserGroupIcon className="h-4 w-4 mr-1.5" />
             Students
@@ -198,7 +198,7 @@ const BatchesList = () => {
           <Link
             to={`${baseUrl}/${batch._id}/attendance`}
             onClick={(e) => e.stopPropagation()}
-            className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-xs font-semibold rounded-lg text-gray-700 bg-white hover:bg-gray-100 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cadd-red transition-all duration-300"
+            className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-xs font-semibold rounded-lg text-gray-700 bg-white hover:bg-gray-100 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-red transition-all duration-300"
           >
             <ClipboardDocumentCheckIcon className="h-4 w-4 mr-1.5" />
             Attendance
@@ -228,7 +228,7 @@ const BatchesList = () => {
           <Link
             to={`${baseUrl}/${batch._id}/edit`}
             onClick={(e) => e.stopPropagation()}
-            className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-xs font-semibold rounded-lg text-gray-700 bg-white hover:bg-gray-100 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cadd-red transition-all duration-300"
+            className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-xs font-semibold rounded-lg text-gray-700 bg-white hover:bg-gray-100 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-red transition-all duration-300"
           >
             <PencilIcon className="h-4 w-4 mr-1.5" />
             Edit

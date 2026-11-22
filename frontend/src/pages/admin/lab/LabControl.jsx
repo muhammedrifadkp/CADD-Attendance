@@ -116,7 +116,7 @@ const LabControl = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-cadd-red"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand-red"></div>
       </div>
     )
   }
@@ -220,7 +220,7 @@ const LabControl = () => {
               <div className="mt-6">
                 <Link
                   to="/admin/lab/pcs/new"
-                  className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-cadd-red hover:bg-cadd-red/90"
+                  className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-brand-red hover:bg-brand-red/90"
                 >
                   <ComputerDesktopIcon className="h-4 w-4 mr-2" />
                   Add PC
@@ -255,7 +255,7 @@ const LabControl = () => {
                             <select
                               value={pc.status}
                               onChange={(e) => handlePCStatusChange(pc._id, e.target.value)}
-                              className="block w-full text-xs border-gray-300 rounded-md shadow-sm focus:ring-cadd-red focus:border-cadd-red"
+                              className="block w-full text-xs border-gray-300 rounded-md shadow-sm focus:ring-brand-red focus:border-brand-red"
                             >
                               <option value="active">Active</option>
                               <option value="maintenance">Maintenance</option>

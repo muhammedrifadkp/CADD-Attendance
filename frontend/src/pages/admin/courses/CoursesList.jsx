@@ -143,7 +143,7 @@ const CoursesList = () => {
   if (loading && courses.length === 0) {
     return (
       <div className="flex items-center justify-center min-h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cadd-red"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-red"></div>
       </div>
     );
   }
@@ -157,7 +157,7 @@ const CoursesList = () => {
 
       {/* Header */}
       <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 rounded-2xl shadow-2xl overflow-hidden relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-cadd-red/10 to-cadd-pink/10 pointer-events-none"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-brand-red/10 to-brand-pink/10 pointer-events-none"></div>
         <div className="relative px-8 py-12 z-10">
           <div className="flex items-center justify-between">
             <div>
@@ -188,7 +188,7 @@ const CoursesList = () => {
             <div className="hidden lg:block">
               <Link
                 to="/admin/courses/new"
-                className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-cadd-red to-cadd-pink text-white font-semibold rounded-xl shadow-lg hover:from-cadd-pink hover:to-cadd-red transition-all duration-300 transform hover:scale-105"
+                className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-brand-red to-brand-pink text-white font-semibold rounded-xl shadow-lg hover:from-brand-pink hover:to-brand-red transition-all duration-300 transform hover:scale-105"
               >
                 <PlusIcon className="h-5 w-5 mr-2" />
                 Add Course
@@ -211,7 +211,7 @@ const CoursesList = () => {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                className="pl-10 pr-4 py-3 w-full border border-gray-300 rounded-xl focus:ring-2 focus:ring-cadd-red focus:border-transparent transition-all duration-200"
+                className="pl-10 pr-4 py-3 w-full border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-red focus:border-transparent transition-all duration-200"
               />
             </div>
           </div>
@@ -224,7 +224,7 @@ const CoursesList = () => {
             <select
               value={selectedDepartment}
               onChange={(e) => setSelectedDepartment(e.target.value)}
-              className="w-full border border-gray-300 rounded-xl px-3 py-3 focus:ring-2 focus:ring-cadd-red focus:border-transparent"
+              className="w-full border border-gray-300 rounded-xl px-3 py-3 focus:ring-2 focus:ring-brand-red focus:border-transparent"
             >
               <option value="">All Departments</option>
               {departments.map(dept => (
@@ -241,7 +241,7 @@ const CoursesList = () => {
             <select
               value={selectedLevel}
               onChange={(e) => setSelectedLevel(e.target.value)}
-              className="w-full border border-gray-300 rounded-xl px-3 py-3 focus:ring-2 focus:ring-cadd-red focus:border-transparent"
+              className="w-full border border-gray-300 rounded-xl px-3 py-3 focus:ring-2 focus:ring-brand-red focus:border-transparent"
             >
               <option value="">All Levels</option>
               {levels.map(level => (
@@ -258,7 +258,7 @@ const CoursesList = () => {
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="w-full border border-gray-300 rounded-xl px-3 py-3 focus:ring-2 focus:ring-cadd-red focus:border-transparent"
+              className="w-full border border-gray-300 rounded-xl px-3 py-3 focus:ring-2 focus:ring-brand-red focus:border-transparent"
             >
               <option value="">All Categories</option>
               {categories.map(category => (
@@ -276,7 +276,7 @@ const CoursesList = () => {
                 id="activeOnly"
                 checked={showActiveOnly}
                 onChange={(e) => setShowActiveOnly(e.target.checked)}
-                className="rounded border-gray-300 text-cadd-red focus:ring-cadd-red"
+                className="rounded border-gray-300 text-brand-red focus:ring-brand-red"
               />
               <label htmlFor="activeOnly" className="text-sm text-gray-700 font-medium">
                 Active courses only
@@ -286,7 +286,7 @@ const CoursesList = () => {
             <div className="lg:hidden">
               <Link
                 to="/admin/courses/new"
-                className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-cadd-red to-cadd-pink text-white font-semibold rounded-lg hover:from-cadd-pink hover:to-cadd-red transition-all duration-300"
+                className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-brand-red to-brand-pink text-white font-semibold rounded-lg hover:from-brand-pink hover:to-brand-red transition-all duration-300"
               >
                 <PlusIcon className="h-4 w-4 mr-2" />
                 Add
@@ -303,7 +303,7 @@ const CoursesList = () => {
             </button>
             <button
               onClick={handleSearch}
-              className="bg-gradient-to-r from-cadd-red to-cadd-pink text-white px-6 py-2 rounded-lg hover:from-cadd-pink hover:to-cadd-red transition-all duration-300 flex items-center gap-2"
+              className="bg-gradient-to-r from-brand-red to-brand-pink text-white px-6 py-2 rounded-lg hover:from-brand-pink hover:to-brand-red transition-all duration-300 flex items-center gap-2"
             >
               <FunnelIcon className="h-4 w-4" />
               Apply Filters
@@ -344,7 +344,7 @@ const CoursesList = () => {
           {!searchTerm && !selectedDepartment && !selectedLevel && !selectedCategory && (
             <Link
               to="/admin/courses/new"
-              className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-cadd-red to-cadd-pink text-white font-semibold rounded-xl shadow-lg hover:from-cadd-pink hover:to-cadd-red transition-all duration-300 transform hover:scale-105"
+              className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-brand-red to-brand-pink text-white font-semibold rounded-xl shadow-lg hover:from-brand-pink hover:to-brand-red transition-all duration-300 transform hover:scale-105"
             >
               <PlusIcon className="h-5 w-5 mr-2" />
               Create First Course
@@ -370,11 +370,11 @@ const CoursesList = () => {
                 <div className="p-6 border-b border-gray-100">
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center space-x-3">
-                      <div className="p-3 bg-gradient-to-br from-cadd-red to-cadd-pink rounded-xl shadow-lg">
+                      <div className="p-3 bg-gradient-to-br from-brand-red to-brand-pink rounded-xl shadow-lg">
                         <AcademicCapIcon className="h-6 w-6 text-white" />
                       </div>
                       <div>
-                        <h3 className="text-lg font-bold text-gray-900 group-hover:text-cadd-red transition-colors line-clamp-2">
+                        <h3 className="text-lg font-bold text-gray-900 group-hover:text-brand-red transition-colors line-clamp-2">
                           {course.name}
                         </h3>
                         <p className="text-sm text-gray-500 font-medium">
@@ -463,7 +463,7 @@ const CoursesList = () => {
 
                     <Link
                       to={`/admin/courses/${course._id}/edit`}
-                      className="inline-flex items-center justify-center p-2 text-gray-600 hover:text-cadd-red hover:bg-gray-50 rounded-lg transition-colors"
+                      className="inline-flex items-center justify-center p-2 text-gray-600 hover:text-brand-red hover:bg-gray-50 rounded-lg transition-colors"
                       title="Edit Course"
                     >
                       <PencilIcon className="h-4 w-4" />

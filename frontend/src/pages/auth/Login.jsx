@@ -109,7 +109,7 @@ const Login = () => {
                 required
                 className="form-input pl-10"
                 placeholder={loginType === 'teacher'
-                  ? 'Enter email or Employee ID (e.g., CADD-001)'
+                  ? 'Enter email or Employee ID (e.g., CS-001)'
                   : `Enter your ${loginType} email`}
                 value={formData.email}
                 onChange={handleChange}

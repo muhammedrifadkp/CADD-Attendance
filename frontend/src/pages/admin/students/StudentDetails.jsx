@@ -98,7 +98,7 @@ const StudentDetails = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cadd-red"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-red"></div>
       </div>
     )
   }
@@ -108,7 +108,7 @@ const StudentDetails = () => {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Student Not Found</h2>
-          <Link to="/admin/students" className="text-cadd-red hover:text-cadd-pink">
+          <Link to="/admin/students" className="text-brand-red hover:text-brand-pink">
             Back to Students
           </Link>
         </div>
@@ -130,7 +130,7 @@ const StudentDetails = () => {
             <div className="flex space-x-3">
               <Link
                 to={`/admin/students/${id}/edit`}
-                className="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-cadd-red hover:bg-cadd-pink focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cadd-red transition-colors"
+                className="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-brand-red hover:bg-brand-pink focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-red transition-colors"
               >
                 <PencilIcon className="h-4 w-4 mr-2" />
                 Edit Student
@@ -148,7 +148,7 @@ const StudentDetails = () => {
 
         {/* Student Information Card */}
         <div className="bg-white shadow-lg rounded-2xl overflow-hidden mb-8">
-          <div className="bg-gradient-to-r from-cadd-red to-cadd-pink px-6 py-8">
+          <div className="bg-gradient-to-r from-brand-red to-brand-pink px-6 py-8">
             <div className="flex items-center">
               <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center">
                 <UserIcon className="h-10 w-10 text-white" />

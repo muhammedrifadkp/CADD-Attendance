@@ -1,4 +1,5 @@
 import { Outlet } from 'react-router-dom'
+import { BRAND } from '../config/branding'
 
 const AuthLayout = () => {
   return (
@@ -11,13 +12,13 @@ const AuthLayout = () => {
       </div>
 
       <div className="container max-w-md w-full space-y-6 sm:space-y-8 relative z-10">
-        {/* CDC Header */}
+        {/* Brand header */}
         <div className="text-center animate-fade-in">
           <div className="flex justify-center mb-6">
             <img
-              className="cadd-logo-large"
-              src="/logos/cdc_logo.png"
-              alt="CDC"
+              className="brand-logo-large"
+              src={BRAND.logoUrl}
+              alt={BRAND.shortName}
               onError={(e) => {
                 e.target.style.display = 'none'
                 e.target.nextSibling.style.display = 'block'
@@ -25,18 +26,18 @@ const AuthLayout = () => {
             />
             <div className="hidden">
               <div className="w-16 h-16 gradient-primary rounded-xl flex items-center justify-center shadow-lg">
-                <span className="text-white font-bold text-2xl">CDC</span>
+                <span className="text-white font-bold text-2xl">{BRAND.shortName}</span>
               </div>
             </div>
           </div>
           <h1 className="text-4xl font-bold gradient-primary bg-clip-text text-transparent mb-2">
-            CDC
+            {BRAND.shortName}
           </h1>
           <h2 className="text-2xl font-semibold text-gray-800 mb-2">
             Attendance Management
           </h2>
           <p className="text-gray-600 font-medium">
-            Software Training Institute
+            {BRAND.instituteName}
           </p>
         </div>
 
@@ -48,10 +49,10 @@ const AuthLayout = () => {
         {/* Footer */}
         <div className="text-center animate-fade-in">
           <p className="text-sm text-gray-500">
-            © 2025 CDC. All rights reserved.
+            © {new Date().getFullYear()} {BRAND.instituteName}
           </p>
           <p className="text-xs text-gray-400 mt-1">
-            Empowering careers through quality software training
+            Powered by Lab Attendance, free and open source
           </p>
         </div>
       </div>

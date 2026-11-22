@@ -203,7 +203,7 @@ const AdminBatchForm = () => {
   if (fetchLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cadd-red"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-red"></div>
       </div>
     )
   }
@@ -228,7 +228,7 @@ const AdminBatchForm = () => {
 
         {/* Form */}
         <div className="bg-white shadow-lg rounded-2xl overflow-hidden">
-          <div className="px-8 py-6 bg-gradient-to-r from-cadd-red to-cadd-pink">
+          <div className="px-8 py-6 bg-gradient-to-r from-brand-red to-brand-pink">
             <h2 className="text-xl font-bold text-white">Batch Information</h2>
             <p className="text-white/80">Fill in the details below</p>
           </div>
@@ -248,7 +248,7 @@ const AdminBatchForm = () => {
                   id="name"
                   value={formData.name}
                   onChange={(e) => handleInputChange('name', e.target.value)}
-                  className={`block w-full pl-10 pr-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cadd-red focus:border-transparent transition-colors ${
+                  className={`block w-full pl-10 pr-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-red focus:border-transparent transition-colors ${
                     errors.name ? 'border-red-300' : 'border-gray-300'
                   }`}
                   placeholder="Enter batch name"
@@ -272,7 +272,7 @@ const AdminBatchForm = () => {
                   id="department"
                   value={selectedDepartment}
                   onChange={(e) => setSelectedDepartment(e.target.value)}
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cadd-red focus:border-transparent transition-colors"
+                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-red focus:border-transparent transition-colors"
                 >
                   <option value="">All Departments</option>
                   {departments.map(dept => (
@@ -295,7 +295,7 @@ const AdminBatchForm = () => {
                   id="course"
                   value={formData.course}
                   onChange={(e) => handleInputChange('course', e.target.value)}
-                  className={`block w-full pl-10 pr-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cadd-red focus:border-transparent transition-colors ${
+                  className={`block w-full pl-10 pr-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-red focus:border-transparent transition-colors ${
                     errors.course ? 'border-red-300' : 'border-gray-300'
                   }`}
                 >
@@ -327,7 +327,7 @@ const AdminBatchForm = () => {
                     id="academicYear"
                     value={formData.academicYear}
                     onChange={(e) => handleInputChange('academicYear', e.target.value)}
-                    className={`block w-full pl-10 pr-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cadd-red focus:border-transparent transition-colors ${
+                    className={`block w-full pl-10 pr-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-red focus:border-transparent transition-colors ${
                       errors.academicYear ? 'border-red-300' : 'border-gray-300'
                     }`}
                     placeholder="e.g., 2024"
@@ -351,7 +351,7 @@ const AdminBatchForm = () => {
                     id="section"
                     value={formData.section}
                     onChange={(e) => handleInputChange('section', e.target.value)}
-                    className={`block w-full pl-10 pr-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cadd-red focus:border-transparent transition-colors ${
+                    className={`block w-full pl-10 pr-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-red focus:border-transparent transition-colors ${
                       errors.section ? 'border-red-300' : 'border-gray-300'
                     }`}
                     placeholder="e.g., A, B, Morning"
@@ -377,7 +377,7 @@ const AdminBatchForm = () => {
                     id="timing"
                     value={formData.timing}
                     onChange={(e) => handleInputChange('timing', e.target.value)}
-                    className={`block w-full pl-10 pr-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cadd-red focus:border-transparent transition-colors ${
+                    className={`block w-full pl-10 pr-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-red focus:border-transparent transition-colors ${
                       errors.timing ? 'border-red-300' : 'border-gray-300'
                     }`}
                   >
@@ -405,7 +405,7 @@ const AdminBatchForm = () => {
                     id="startDate"
                     value={formData.startDate}
                     onChange={(e) => handleInputChange('startDate', e.target.value)}
-                    className={`block w-full pl-10 pr-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cadd-red focus:border-transparent transition-colors ${
+                    className={`block w-full pl-10 pr-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-red focus:border-transparent transition-colors ${
                       errors.startDate ? 'border-red-300' : 'border-gray-300'
                     }`}
                   />
@@ -432,7 +432,7 @@ const AdminBatchForm = () => {
                   max="50"
                   value={formData.maxStudents}
                   onChange={(e) => handleInputChange('maxStudents', parseInt(e.target.value) || '')}
-                  className={`block w-full pl-10 pr-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cadd-red focus:border-transparent transition-colors ${
+                  className={`block w-full pl-10 pr-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-red focus:border-transparent transition-colors ${
                     errors.maxStudents ? 'border-red-300' : 'border-gray-300'
                   }`}
                   placeholder="Enter maximum number of students"
@@ -451,14 +451,14 @@ const AdminBatchForm = () => {
               <button
                 type="button"
                 onClick={() => navigate('/admin/batches')}
-                className="px-6 py-3 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cadd-red transition-colors"
+                className="px-6 py-3 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-red transition-colors"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={loading}
-                className="px-6 py-3 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-cadd-red to-cadd-pink hover:from-cadd-red/90 hover:to-cadd-pink/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cadd-red transition-all duration-300 disabled:opacity-50"
+                className="px-6 py-3 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-brand-red to-brand-pink hover:from-brand-red/90 hover:to-brand-pink/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-red transition-all duration-300 disabled:opacity-50"
               >
                 {loading ? (
                   <div className="flex items-center">

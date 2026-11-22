@@ -90,7 +90,7 @@ const AdminsList = () => {
           <BackButton />
         </div>
         <div className="flex items-center justify-center min-h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cadd-red"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-red"></div>
         </div>
       </div>
     )
@@ -114,7 +114,7 @@ const AdminsList = () => {
         <div className="mt-4 sm:mt-0">
           <Link
             to="/admin/admins/new"
-            className="inline-flex items-center px-4 py-2 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-gradient-to-r from-cadd-red to-cadd-pink hover:from-cadd-red/90 hover:to-cadd-pink/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cadd-red transition-all duration-300 transform hover:scale-105"
+            className="inline-flex items-center px-4 py-2 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-gradient-to-r from-brand-red to-brand-pink hover:from-brand-red/90 hover:to-brand-pink/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-red transition-all duration-300 transform hover:scale-105"
           >
             <PlusIcon className="h-4 w-4 mr-2" />
             Create Admin
@@ -139,7 +139,7 @@ const AdminsList = () => {
                 id="search"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cadd-red focus:border-transparent transition-colors"
+                className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-red focus:border-transparent transition-colors"
                 placeholder="Search by name or email..."
               />
             </div>
@@ -158,7 +158,7 @@ const AdminsList = () => {
                 id="status"
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cadd-red focus:border-transparent transition-colors"
+                className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-red focus:border-transparent transition-colors"
               >
                 <option value="all">All Admins</option>
                 <option value="active">Active Only</option>
@@ -179,7 +179,7 @@ const AdminsList = () => {
                 setSearchTerm('')
                 setStatusFilter('all')
               }}
-              className="text-cadd-red hover:text-cadd-pink font-medium"
+              className="text-brand-red hover:text-brand-pink font-medium"
             >
               Clear filters
             </button>
@@ -191,7 +191,7 @@ const AdminsList = () => {
         <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="text-center">
-              <div className="text-2xl font-bold text-cadd-red">{admins.length}</div>
+              <div className="text-2xl font-bold text-brand-red">{admins.length}</div>
               <div className="text-sm text-gray-600">Total Admins</div>
             </div>
             <div className="text-center">
@@ -234,7 +234,7 @@ const AdminsList = () => {
           <div className="mt-6">
             <Link
               to="/admin/admins/new"
-              className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-xl text-white bg-gradient-to-r from-cadd-red to-cadd-pink hover:from-cadd-red/90 hover:to-cadd-pink/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cadd-red transition-all duration-300"
+              className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-xl text-white bg-gradient-to-r from-brand-red to-brand-pink hover:from-brand-red/90 hover:to-brand-pink/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-red transition-all duration-300"
             >
               <PlusIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
               Create Admin
@@ -249,14 +249,14 @@ const AdminsList = () => {
               <div className="px-6 py-6 bg-gradient-to-br from-gray-50 to-white hover:from-gray-100 hover:to-gray-50 transition-all duration-300">
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
-                    <div className="w-12 h-12 bg-gradient-to-br from-cadd-red to-cadd-pink rounded-full flex items-center justify-center shadow-lg">
+                    <div className="w-12 h-12 bg-gradient-to-br from-brand-red to-brand-pink rounded-full flex items-center justify-center shadow-lg">
                       <ShieldCheckIcon className="h-6 w-6 text-white" />
                     </div>
                   </div>
                   <div className="ml-4 flex-1">
                     <div className="flex items-center justify-between">
                       <div>
-                        <h3 className="text-lg font-semibold text-gray-900 group-hover:text-cadd-red transition-colors duration-300">
+                        <h3 className="text-lg font-semibold text-gray-900 group-hover:text-brand-red transition-colors duration-300">
                           {admin.name}
                         </h3>
                         <p className="text-sm text-gray-600">{admin.email}</p>
@@ -301,7 +301,7 @@ const AdminsList = () => {
                   <div className="flex space-x-2">
                     <Link
                       to={`/admin/admins/${admin._id}`}
-                      className="inline-flex items-center p-2 border border-transparent rounded-lg text-sm font-medium text-gray-600 bg-white hover:bg-gray-100 hover:text-cadd-red focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cadd-red transition-colors"
+                      className="inline-flex items-center p-2 border border-transparent rounded-lg text-sm font-medium text-gray-600 bg-white hover:bg-gray-100 hover:text-brand-red focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-red transition-colors"
                       title="View Details"
                     >
                       <EyeIcon className="h-4 w-4" />

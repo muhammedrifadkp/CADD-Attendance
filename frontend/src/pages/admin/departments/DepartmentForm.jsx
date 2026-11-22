@@ -98,8 +98,8 @@ const DepartmentForm = () => {
 
     if (!formData.name.trim()) {
       newErrors.name = 'Department name is required'
-    } else if (!['CADD', 'LIVEWIRE', 'DREAMZONE', 'SYNERGY'].includes(formData.name.toUpperCase())) {
-      newErrors.name = 'Department name must be one of: CADD, LIVEWIRE, DREAMZONE, SYNERGY'
+    } else if (formData.name.trim().length > 100) {
+      newErrors.name = 'Department name cannot exceed 100 characters'
     }
 
     if (!formData.code.trim()) {
@@ -186,7 +186,7 @@ const DepartmentForm = () => {
   if (loading && isEdit) {
     return (
       <div className="flex items-center justify-center min-h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cadd-red"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-red"></div>
       </div>
     )
   }
@@ -201,14 +201,14 @@ const DepartmentForm = () => {
             {isEdit ? 'Edit Department' : 'Add New Department'}
           </h1>
           <p className="text-gray-600">
-            {isEdit ? 'Update department information' : 'Create a new department for CDC'}
+            {isEdit ? 'Update department information' : 'Create a new department'}
           </p>
         </div>
       </div>
 
       {/* Form */}
       <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-        <div className="px-6 py-4 bg-gradient-to-r from-cadd-red to-cadd-pink">
+        <div className="px-6 py-4 bg-gradient-to-r from-brand-red to-brand-pink">
           <div className="flex items-center space-x-3">
             <BuildingOfficeIcon className="h-6 w-6 text-white" />
             <h2 className="text-lg font-semibold text-white">Department Information</h2>
@@ -223,20 +223,18 @@ const DepartmentForm = () => {
                 <BuildingOfficeIcon className="h-4 w-4 inline mr-1" />
                 Department Name *
               </label>
-              <select
+              <input
+                type="text"
                 name="name"
                 value={formData.name}
                 onChange={handleInputChange}
-                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-cadd-red focus:border-transparent ${
+                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent ${
                   errors.name ? 'border-red-500' : 'border-gray-300'
                 }`}
-              >
-                <option value="">Select Department</option>
-                <option value="CADD">CADD - Computer Aided Design & Drafting</option>
-                <option value="LIVEWIRE">LIVEWIRE - Electronics & Electrical</option>
-                <option value="DREAMZONE">DREAMZONE - Creative Design</option>
-                <option value="SYNERGY">SYNERGY - Integrated Technology</option>
-              </select>
+              
+                placeholder="e.g., Computer Science"
+                maxLength="100"
+              />
               {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
             </div>
 
@@ -250,10 +248,10 @@ const DepartmentForm = () => {
                 name="code"
                 value={formData.code}
                 onChange={handleInputChange}
-                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-cadd-red focus:border-transparent ${
+                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent ${
                   errors.code ? 'border-red-500' : 'border-gray-300'
                 }`}
-                placeholder="e.g., CADD"
+                placeholder="e.g., CS"
                 maxLength="10"
               />
               {errors.code && <p className="text-red-500 text-sm mt-1">{errors.code}</p>}
@@ -271,7 +269,7 @@ const DepartmentForm = () => {
               value={formData.description}
               onChange={handleInputChange}
               rows="3"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cadd-red focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent"
               placeholder="Brief description of the department..."
             />
           </div>
@@ -287,7 +285,7 @@ const DepartmentForm = () => {
                 name="headOfDepartment"
                 value={formData.headOfDepartment}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cadd-red focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent"
               >
                 <option value="">Select a teacher</option>
                 {teachers.map(teacher => (
@@ -310,7 +308,7 @@ const DepartmentForm = () => {
                 onChange={handleInputChange}
                 min="1900"
                 max={new Date().getFullYear()}
-                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-cadd-red focus:border-transparent ${
+                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent ${
                   errors.establishedYear ? 'border-red-500' : 'border-gray-300'
                 }`}
               />
@@ -332,10 +330,10 @@ const DepartmentForm = () => {
                   name="contactInfo.email"
                   value={formData.contactInfo.email}
                   onChange={handleInputChange}
-                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-cadd-red focus:border-transparent ${
+                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent ${
                     errors.email ? 'border-red-500' : 'border-gray-300'
                   }`}
-                  placeholder="department@caddcentre.com"
+                  placeholder="department@example.com"
                 />
                 {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
               </div>
@@ -350,7 +348,7 @@ const DepartmentForm = () => {
                   name="contactInfo.phone"
                   value={formData.contactInfo.phone}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cadd-red focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent"
                   placeholder="+91 98765 43210"
                 />
               </div>
@@ -366,7 +364,7 @@ const DepartmentForm = () => {
                 value={formData.contactInfo.address}
                 onChange={handleInputChange}
                 rows="2"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cadd-red focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent"
                 placeholder="Department address..."
               />
             </div>
@@ -386,7 +384,7 @@ const DepartmentForm = () => {
                   name="location.building"
                   value={formData.location.building}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cadd-red focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent"
                   placeholder="e.g., Main Building"
                 />
               </div>
@@ -401,7 +399,7 @@ const DepartmentForm = () => {
                   name="location.floor"
                   value={formData.location.floor}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cadd-red focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent"
                   placeholder="e.g., 2nd Floor"
                 />
               </div>
@@ -426,7 +424,7 @@ const DepartmentForm = () => {
                     }
                   }));
                 }}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cadd-red focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent"
                 placeholder="e.g., 201, 202, 203"
               />
             </div>
@@ -441,7 +439,7 @@ const DepartmentForm = () => {
                 id="isActive"
                 checked={formData.isActive}
                 onChange={handleInputChange}
-                className="h-4 w-4 text-cadd-red focus:ring-cadd-red border-gray-300 rounded"
+                className="h-4 w-4 text-brand-red focus:ring-brand-red border-gray-300 rounded"
               />
               <label htmlFor="isActive" className="ml-2 block text-sm text-gray-700">
                 <CheckCircleIcon className="h-4 w-4 inline mr-1" />
@@ -463,7 +461,7 @@ const DepartmentForm = () => {
             <button
               type="submit"
               disabled={loading}
-              className="px-6 py-2 bg-gradient-to-r from-cadd-red to-cadd-pink text-white rounded-lg hover:from-cadd-pink hover:to-cadd-red transition-all duration-300 flex items-center space-x-2 disabled:opacity-50"
+              className="px-6 py-2 bg-gradient-to-r from-brand-red to-brand-pink text-white rounded-lg hover:from-brand-pink hover:to-brand-red transition-all duration-300 flex items-center space-x-2 disabled:opacity-50"
             >
               {loading ? (
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>

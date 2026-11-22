@@ -22,6 +22,7 @@ import { toast } from 'react-toastify'
 import { useAuth } from '../../../context/AuthContext'
 import { formatDateSimple } from '../../../utils/dateUtils'
 import BackButton from '../../../components/BackButton'
+import { BRAND } from '../../../config/branding'
 
 const TeacherStudentsList = () => {
   const { user } = useAuth()
@@ -70,10 +71,10 @@ const TeacherStudentsList = () => {
         setBatches(batchesRes.data || [])
         setCourses(coursesRes.data?.courses || coursesRes.data || [])
 
-        // Filter departments to only include the 4 required ones
+        // Show the institute's active departments
         const allDepartments = departmentsRes.data || []
         const requiredDepartments = allDepartments.filter(dept =>
-          ['CADD', 'LIVEWIRE', 'DREAMZONE', 'SYNERGY'].includes(dept.name)
+          dept.isActive !== false
         )
         setDepartments(requiredDepartments)
       } catch (error) {
@@ -150,7 +151,7 @@ const TeacherStudentsList = () => {
       <div className="flex items-center justify-center min-h-64">
         <div className="relative">
           <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-200"></div>
-          <div className="animate-spin rounded-full h-16 w-16 border-4 border-cadd-red border-t-transparent absolute top-0 left-0"></div>
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-brand-red border-t-transparent absolute top-0 left-0"></div>
         </div>
       </div>
     )
@@ -190,8 +191,8 @@ const TeacherStudentsList = () => {
             <div className="hidden lg:block">
               <img
                 className="h-20 w-auto opacity-80"
-                src="/logos/cadd_logo.png"
-                alt="CADD Centre"
+                src={BRAND.logoUrl}
+                alt={BRAND.instituteName}
                 onError={(e) => {
                   e.target.style.display = 'none'
                 }}
@@ -264,7 +265,7 @@ const TeacherStudentsList = () => {
                 placeholder="Search students..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cadd-red focus:border-cadd-red transition-all duration-200"
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-red focus:border-brand-red transition-all duration-200"
               />
             </div>
           </div>
@@ -277,7 +278,7 @@ const TeacherStudentsList = () => {
                 setSelectedDepartment(e.target.value)
                 setSelectedCourse('all') // Reset course when department changes
               }}
-              className="px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cadd-red focus:border-cadd-red transition-all duration-200"
+              className="px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-red focus:border-brand-red transition-all duration-200"
             >
               <option value="all">All Departments</option>
               {departments.map(dept => (
@@ -290,7 +291,7 @@ const TeacherStudentsList = () => {
             <select
               value={selectedCourse}
               onChange={(e) => setSelectedCourse(e.target.value)}
-              className="px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cadd-red focus:border-cadd-red transition-all duration-200"
+              className="px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-red focus:border-brand-red transition-all duration-200"
               disabled={selectedDepartment === 'all'}
             >
               <option value="all">
@@ -312,7 +313,7 @@ const TeacherStudentsList = () => {
             <select
               value={selectedBatch}
               onChange={(e) => setSelectedBatch(e.target.value)}
-              className="px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cadd-red focus:border-cadd-red transition-all duration-200"
+              className="px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-red focus:border-brand-red transition-all duration-200"
             >
               <option value="all">All Batches</option>
               {batches.map(batch => (
@@ -325,7 +326,7 @@ const TeacherStudentsList = () => {
             <select
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value)}
-              className="px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cadd-red focus:border-cadd-red transition-all duration-200"
+              className="px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-red focus:border-brand-red transition-all duration-200"
             >
               <option value="all">All Status</option>
               <option value="active">Active</option>
@@ -360,7 +361,7 @@ const TeacherStudentsList = () => {
           {(!searchTerm && selectedDepartment === 'all' && selectedCourse === 'all' && selectedBatch === 'all' && selectedStatus === 'all') && (
             <Link
               to="/batches"
-              className="inline-flex items-center px-6 py-3 border border-transparent text-sm font-semibold rounded-xl text-white bg-gradient-to-r from-cadd-red to-cadd-pink hover:from-cadd-pink hover:to-cadd-red transition-all duration-300"
+              className="inline-flex items-center px-6 py-3 border border-transparent text-sm font-semibold rounded-xl text-white bg-gradient-to-r from-brand-red to-brand-pink hover:from-brand-pink hover:to-brand-red transition-all duration-300"
             >
               <UserGroupIcon className="h-5 w-5 mr-2" />
               Manage Batches
@@ -379,7 +380,7 @@ const TeacherStudentsList = () => {
               <div className="relative p-6 bg-gradient-to-br from-gray-50 to-white">
                 <div className="flex items-center space-x-4">
                   <div className="relative">
-                    <div className="w-16 h-16 bg-gradient-to-br from-cadd-red to-cadd-pink rounded-full flex items-center justify-center shadow-lg">
+                    <div className="w-16 h-16 bg-gradient-to-br from-brand-red to-brand-pink rounded-full flex items-center justify-center shadow-lg">
                       <span className="text-white font-bold text-xl">
                         {student.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
                       </span>
@@ -388,7 +389,7 @@ const TeacherStudentsList = () => {
                       }`}></div>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-lg font-bold text-gray-900 truncate group-hover:text-cadd-red transition-colors duration-300">
+                    <h3 className="text-lg font-bold text-gray-900 truncate group-hover:text-brand-red transition-colors duration-300">
                       {student.name}
                     </h3>
                     <p className="text-sm text-gray-600 font-medium">
@@ -396,7 +397,7 @@ const TeacherStudentsList = () => {
                     </p>
                     {/* Class Time Display */}
                     {student.batch?.timing && (
-                      <div className="flex items-center mt-1 text-xs text-cadd-red font-semibold">
+                      <div className="flex items-center mt-1 text-xs text-brand-red font-semibold">
                         <ClockIcon className="h-3 w-3 mr-1" />
                         {formatTiming(student.batch.timing)}
                       </div>
@@ -416,7 +417,7 @@ const TeacherStudentsList = () => {
                 {/* Department & Course Information */}
                 <div className="bg-gray-50 rounded-xl p-4">
                   <div className="flex items-center space-x-2 mb-2">
-                    <AcademicCapIcon className="h-5 w-5 text-cadd-red" />
+                    <AcademicCapIcon className="h-5 w-5 text-brand-red" />
                     <span className="font-semibold text-gray-900">Academic Details</span>
                   </div>
                   <div className="space-y-2 text-sm">
@@ -453,7 +454,7 @@ const TeacherStudentsList = () => {
                         {student.batch.timing && (
                           <div className="flex items-center justify-between">
                             <span className="text-gray-600">Timing:</span>
-                            <span className="font-medium text-cadd-red">
+                            <span className="font-medium text-brand-red">
                               {formatTiming(student.batch.timing)}
                             </span>
                           </div>
@@ -495,7 +496,7 @@ const TeacherStudentsList = () => {
                     {student.batch && (
                       <Link
                         to={`/batches/${student.batch._id}/students`}
-                        className="text-cadd-red hover:text-cadd-pink font-medium transition-colors duration-200"
+                        className="text-brand-red hover:text-brand-pink font-medium transition-colors duration-200"
                       >
                         View Batch
                       </Link>
@@ -516,7 +517,7 @@ const TeacherStudentsList = () => {
                       Edit
                     </Link>
                   )}
-                  <button className="flex-1 inline-flex items-center justify-center px-3 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-cadd-red to-cadd-pink hover:from-cadd-pink hover:to-cadd-red transition-all duration-200">
+                  <button className="flex-1 inline-flex items-center justify-center px-3 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-brand-red to-brand-pink hover:from-brand-pink hover:to-brand-red transition-all duration-200">
                     <EyeIcon className="h-4 w-4 mr-1" />
                     View
                   </button>
@@ -563,7 +564,7 @@ const TeacherStudentsList = () => {
                   <tr key={student._id} className="hover:bg-gray-50 transition-colors duration-200">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
-                        <div className="w-10 h-10 bg-gradient-to-br from-cadd-red to-cadd-pink rounded-full flex items-center justify-center shadow-lg mr-4">
+                        <div className="w-10 h-10 bg-gradient-to-br from-brand-red to-brand-pink rounded-full flex items-center justify-center shadow-lg mr-4">
                           <span className="text-white font-bold text-sm">
                             {student.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
                           </span>
@@ -603,7 +604,7 @@ const TeacherStudentsList = () => {
                           <div className="text-sm font-medium text-gray-900">{student.batch.name}</div>
                           <div className="text-sm text-gray-500">{student.batch.academicYear} • {student.batch.section}</div>
                           {student.batch.timing && (
-                            <div className="text-xs text-cadd-red font-medium mt-1">
+                            <div className="text-xs text-brand-red font-medium mt-1">
                               {formatTiming(student.batch.timing)}
                             </div>
                           )}
@@ -644,7 +645,7 @@ const TeacherStudentsList = () => {
                         {student.batch && (
                           <Link
                             to={`/batches/${student.batch._id}/students/${student._id}/edit`}
-                            className="text-cadd-red hover:text-cadd-pink transition-colors duration-200"
+                            className="text-brand-red hover:text-brand-pink transition-colors duration-200"
                           >
                             <PencilIcon className="h-4 w-4" />
                           </Link>

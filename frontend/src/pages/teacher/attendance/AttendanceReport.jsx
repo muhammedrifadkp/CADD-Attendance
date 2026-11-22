@@ -83,7 +83,7 @@ const AttendanceReport = () => {
             </Link>
             <div className="hidden sm:block w-px h-6 bg-gray-300"></div>
             <div className="flex items-center space-x-3">
-              <div className="p-3 bg-gradient-to-br from-cadd-red to-cadd-pink rounded-xl shadow-lg">
+              <div className="p-3 bg-gradient-to-br from-brand-red to-brand-pink rounded-xl shadow-lg">
                 <DocumentChartBarIcon className="h-8 w-8 text-white" />
               </div>
               <div>
@@ -102,7 +102,7 @@ const AttendanceReport = () => {
           <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
             <Link
               to={`/batches/${batchId}/attendance`}
-              className="inline-flex items-center justify-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-xl text-white bg-gradient-to-r from-cadd-red to-cadd-pink hover:from-cadd-pink hover:to-cadd-red focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cadd-red transition-all duration-300 transform hover:scale-105"
+              className="inline-flex items-center justify-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-xl text-white bg-gradient-to-r from-brand-red to-brand-pink hover:from-brand-pink hover:to-brand-red focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-red transition-all duration-300 transform hover:scale-105"
             >
               <CalendarDaysIcon className="h-4 w-4 mr-2" />
               Mark Attendance

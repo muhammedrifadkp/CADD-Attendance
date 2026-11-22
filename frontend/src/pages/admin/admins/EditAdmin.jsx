@@ -123,7 +123,7 @@ const EditAdmin = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cadd-red"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-red"></div>
       </div>
     )
   }
@@ -142,7 +142,7 @@ const EditAdmin = () => {
 
         {/* Form */}
         <div className="bg-white shadow-lg rounded-2xl overflow-hidden">
-          <div className="bg-gradient-to-r from-cadd-red to-cadd-pink px-6 py-8">
+          <div className="bg-gradient-to-r from-brand-red to-brand-pink px-6 py-8">
             <div className="flex items-center">
               <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
                 <UserIcon className="h-8 w-8 text-white" />
@@ -170,7 +170,7 @@ const EditAdmin = () => {
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
-                  className={`block w-full pl-10 pr-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cadd-red focus:border-transparent transition-colors ${
+                  className={`block w-full pl-10 pr-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-red focus:border-transparent transition-colors ${
                     errors.name ? 'border-red-300 bg-red-50' : 'border-gray-300'
                   }`}
                   placeholder="Enter admin's full name"
@@ -196,7 +196,7 @@ const EditAdmin = () => {
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className={`block w-full pl-10 pr-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cadd-red focus:border-transparent transition-colors ${
+                  className={`block w-full pl-10 pr-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-red focus:border-transparent transition-colors ${
                     errors.email ? 'border-red-300 bg-red-50' : 'border-gray-300'
                   }`}
                   placeholder="Enter admin's email address"
@@ -219,7 +219,7 @@ const EditAdmin = () => {
                   name="password"
                   value={formData.password}
                   onChange={handleInputChange}
-                  className={`block w-full pr-10 pl-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cadd-red focus:border-transparent transition-colors ${
+                  className={`block w-full pr-10 pl-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-red focus:border-transparent transition-colors ${
                     errors.password ? 'border-red-300 bg-red-50' : 'border-gray-300'
                   }`}
                   placeholder="Leave blank to keep current password"
@@ -257,7 +257,7 @@ const EditAdmin = () => {
                     value="true"
                     checked={formData.active === true}
                     onChange={() => setFormData(prev => ({ ...prev, active: true }))}
-                    className="h-4 w-4 text-cadd-red focus:ring-cadd-red border-gray-300"
+                    className="h-4 w-4 text-brand-red focus:ring-brand-red border-gray-300"
                   />
                   <span className="ml-2 flex items-center text-sm text-gray-700">
                     <CheckCircleIcon className="h-4 w-4 text-green-500 mr-1" />
@@ -271,7 +271,7 @@ const EditAdmin = () => {
                     value="false"
                     checked={formData.active === false}
                     onChange={() => setFormData(prev => ({ ...prev, active: false }))}
-                    className="h-4 w-4 text-cadd-red focus:ring-cadd-red border-gray-300"
+                    className="h-4 w-4 text-brand-red focus:ring-brand-red border-gray-300"
                   />
                   <span className="ml-2 flex items-center text-sm text-gray-700">
                     <XCircleIcon className="h-4 w-4 text-red-500 mr-1" />
@@ -286,14 +286,14 @@ const EditAdmin = () => {
               <button
                 type="button"
                 onClick={() => navigate(`/admin/admins/${id}`)}
-                className="px-6 py-3 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cadd-red transition-colors"
+                className="px-6 py-3 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-red transition-colors"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={submitting}
-                className="px-6 py-3 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-cadd-red hover:bg-cadd-pink focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cadd-red disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="px-6 py-3 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-brand-red hover:bg-brand-pink focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-red disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 {submitting ? (
                   <div className="flex items-center">

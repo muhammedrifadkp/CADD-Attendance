@@ -17,9 +17,9 @@ const ResponsiveButton = ({
   const baseClasses = 'inline-flex items-center justify-center font-medium rounded-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed touch-target'
 
   const variantClasses = {
-    primary: 'text-white bg-gradient-to-r from-cadd-red to-cadd-pink hover:from-cadd-pink hover:to-cadd-red focus:ring-cadd-red shadow-lg hover:shadow-xl',
-    secondary: 'text-white bg-gradient-to-r from-cadd-yellow to-yellow-600 hover:from-yellow-600 hover:to-cadd-yellow focus:ring-cadd-yellow shadow-lg hover:shadow-xl',
-    outline: 'text-cadd-red border-2 border-cadd-red bg-transparent hover:bg-cadd-red hover:text-white focus:ring-cadd-red',
+    primary: 'text-white bg-gradient-to-r from-brand-red to-brand-pink hover:from-brand-pink hover:to-brand-red focus:ring-brand-red shadow-lg hover:shadow-xl',
+    secondary: 'text-white bg-gradient-to-r from-brand-yellow to-yellow-600 hover:from-yellow-600 hover:to-brand-yellow focus:ring-brand-yellow shadow-lg hover:shadow-xl',
+    outline: 'text-brand-red border-2 border-brand-red bg-transparent hover:bg-brand-red hover:text-white focus:ring-brand-red',
     ghost: 'text-gray-700 bg-transparent hover:bg-gray-100 focus:ring-gray-500',
     danger: 'text-white bg-red-600 hover:bg-red-700 focus:ring-red-500 shadow-lg hover:shadow-xl'
   }

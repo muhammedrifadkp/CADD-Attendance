@@ -94,7 +94,7 @@ const PCList = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-cadd-red"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand-red"></div>
       </div>
     )
   }
@@ -141,7 +141,7 @@ const PCList = () => {
         <div className="mt-4 sm:mt-0">
           <Link
             to="/admin/lab/pcs/new"
-            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-cadd-red hover:bg-cadd-red/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cadd-red"
+            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-brand-red hover:bg-brand-red/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-red"
           >
             <PlusIcon className="h-4 w-4 mr-2" />
             Add PC
@@ -163,7 +163,7 @@ const PCList = () => {
                 placeholder="Search by PC number..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 block w-full border-gray-300 rounded-md shadow-sm focus:ring-cadd-red focus:border-cadd-red sm:text-sm"
+                className="pl-10 block w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-red focus:border-brand-red sm:text-sm"
               />
             </div>
           </div>
@@ -174,7 +174,7 @@ const PCList = () => {
             <select
               value={filter.row}
               onChange={(e) => setFilter({ ...filter, row: e.target.value })}
-              className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-cadd-red focus:border-cadd-red sm:text-sm"
+              className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-red focus:border-brand-red sm:text-sm"
             >
               <option value="">All Rows</option>
               <option value="1">Row 1</option>
@@ -190,7 +190,7 @@ const PCList = () => {
             <select
               value={filter.status}
               onChange={(e) => setFilter({ ...filter, status: e.target.value })}
-              className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-cadd-red focus:border-cadd-red sm:text-sm"
+              className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-red focus:border-brand-red sm:text-sm"
             >
               <option value="">All Status</option>
               <option value="active">Active</option>
@@ -221,7 +221,7 @@ const PCList = () => {
               <div key={pc._id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center">
-                    <ComputerDesktopIcon className="h-8 w-8 text-cadd-red mr-3" />
+                    <ComputerDesktopIcon className="h-8 w-8 text-brand-red mr-3" />
                     <div>
                       <h3 className="text-lg font-medium text-gray-900">{pc.pcNumber}</h3>
                       <p className="text-sm text-gray-500">Row {pc.row}, Position {pc.position}</p>
@@ -308,7 +308,7 @@ const PCList = () => {
                 <div className="mt-6">
                   <Link
                     to="/admin/lab/pcs/new"
-                    className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-cadd-red hover:bg-cadd-red/90"
+                    className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-brand-red hover:bg-brand-red/90"
                   >
                     <PlusIcon className="h-4 w-4 mr-2" />
                     Add PC

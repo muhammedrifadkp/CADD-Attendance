@@ -256,7 +256,7 @@ const StudentForm = () => {
   if (fetchLoading) {
     return (
       <div className="flex items-center justify-center min-h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cadd-red"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-red"></div>
       </div>
     )
   }
@@ -278,7 +278,7 @@ const StudentForm = () => {
 
       {/* Form */}
       <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-        <div className="px-6 py-4 bg-gradient-to-r from-cadd-red to-cadd-pink">
+        <div className="px-6 py-4 bg-gradient-to-r from-brand-red to-brand-pink">
           <div className="flex items-center space-x-3">
             <AcademicCapIcon className="h-6 w-6 text-white" />
             <h2 className="text-lg font-semibold text-white">Student Information</h2>
@@ -301,7 +301,7 @@ const StudentForm = () => {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-cadd-red focus:border-transparent ${
+                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent ${
                     errors.name ? 'border-red-500' : 'border-gray-300'
                   }`}
                   placeholder="Enter full name"
@@ -319,7 +319,7 @@ const StudentForm = () => {
                   name="rollNumber"
                   value={formData.rollNumber}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cadd-red focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent"
                   placeholder="e.g., STU001"
                 />
               </div>
@@ -336,7 +336,7 @@ const StudentForm = () => {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-cadd-red focus:border-transparent ${
+                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent ${
                     errors.email ? 'border-red-500' : 'border-gray-300'
                   }`}
                   placeholder="student@example.com"
@@ -354,7 +354,7 @@ const StudentForm = () => {
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
-                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-cadd-red focus:border-transparent ${
+                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent ${
                     errors.phone ? 'border-red-500' : 'border-gray-300'
                   }`}
                   placeholder="+91 98765 43210"
@@ -370,7 +370,7 @@ const StudentForm = () => {
                   name="gender"
                   value={formData.gender}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cadd-red focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent"
                 >
                   <option value="">Select Gender</option>
                   {genderOptions.map(gender => (
@@ -391,7 +391,7 @@ const StudentForm = () => {
                   name="dateOfBirth"
                   value={formData.dateOfBirth}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cadd-red focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent"
                 />
               </div>
 
@@ -405,7 +405,7 @@ const StudentForm = () => {
                   name="qualification"
                   value={formData.qualification}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cadd-red focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent"
                   placeholder="e.g., 12th, Diploma, B.Tech"
                 />
               </div>
@@ -421,7 +421,7 @@ const StudentForm = () => {
                 value={formData.address}
                 onChange={handleChange}
                 rows="2"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cadd-red focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent"
                 placeholder="Enter complete address"
               />
             </div>
@@ -442,7 +442,7 @@ const StudentForm = () => {
                   name="guardianName"
                   value={formData.guardianName}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cadd-red focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent"
                   placeholder="Parent/Guardian name"
                 />
               </div>
@@ -457,7 +457,7 @@ const StudentForm = () => {
                   name="guardianPhone"
                   value={formData.guardianPhone}
                   onChange={handleChange}
-                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-cadd-red focus:border-transparent ${
+                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent ${
                     errors.guardianPhone ? 'border-red-500' : 'border-gray-300'
                   }`}
                   placeholder="+91 98765 43210"
@@ -474,7 +474,7 @@ const StudentForm = () => {
                   name="emergencyContact"
                   value={formData.emergencyContact}
                   onChange={handleChange}
-                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-cadd-red focus:border-transparent ${
+                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent ${
                     errors.emergencyContact ? 'border-red-500' : 'border-gray-300'
                   }`}
                   placeholder="+91 98765 43210"
@@ -498,7 +498,7 @@ const StudentForm = () => {
                   name="department"
                   value={formData.department}
                   onChange={handleChange}
-                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-cadd-red focus:border-transparent ${
+                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent ${
                     errors.department ? 'border-red-500' : 'border-gray-300'
                   }`}
                 >
@@ -522,7 +522,7 @@ const StudentForm = () => {
                   value={formData.course}
                   onChange={handleChange}
                   disabled={!formData.department}
-                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-cadd-red focus:border-transparent ${
+                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent ${
                     errors.course ? 'border-red-500' : 'border-gray-300'
                   } ${!formData.department ? 'bg-gray-100 cursor-not-allowed' : ''}`}
                 >
@@ -547,7 +547,7 @@ const StudentForm = () => {
                   value={formData.batch}
                   onChange={handleChange}
                   disabled={!formData.course}
-                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-cadd-red focus:border-transparent ${
+                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent ${
                     errors.batch ? 'border-red-500' : 'border-gray-300'
                   } ${!formData.course ? 'bg-gray-100 cursor-not-allowed' : ''}`}
                 >
@@ -573,7 +573,7 @@ const StudentForm = () => {
                 name="admissionDate"
                 value={formData.admissionDate}
                 onChange={handleChange}
-                className="w-full md:w-48 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cadd-red focus:border-transparent"
+                className="w-full md:w-48 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent"
               />
             </div>
           </div>
@@ -594,7 +594,7 @@ const StudentForm = () => {
                   value={formData.totalFees}
                   onChange={handleChange}
                   min="0"
-                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-cadd-red focus:border-transparent ${
+                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent ${
                     errors.totalFees ? 'border-red-500' : 'border-gray-300'
                   }`}
                   placeholder="0"
@@ -612,7 +612,7 @@ const StudentForm = () => {
                   value={formData.feesPaid}
                   onChange={handleChange}
                   min="0"
-                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-cadd-red focus:border-transparent ${
+                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent ${
                     errors.feesPaid ? 'border-red-500' : 'border-gray-300'
                   }`}
                   placeholder="0"
@@ -628,7 +628,7 @@ const StudentForm = () => {
                   name="paymentStatus"
                   value={formData.paymentStatus}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cadd-red focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-red focus:border-transparent"
                 >
                   {paymentStatusOptions.map(status => (
                     <option key={status.value} value={status.value}>{status.label}</option>
@@ -647,7 +647,7 @@ const StudentForm = () => {
                 </div>
                 <div className="mt-2 w-full bg-gray-200 rounded-full h-2">
                   <div
-                    className="bg-gradient-to-r from-cadd-red to-cadd-pink h-2 rounded-full transition-all duration-300"
+                    className="bg-gradient-to-r from-brand-red to-brand-pink h-2 rounded-full transition-all duration-300"
                     style={{ width: `${Math.min((formData.feesPaid / formData.totalFees) * 100, 100)}%` }}
                   ></div>
                 </div>
@@ -669,7 +669,7 @@ const StudentForm = () => {
                 id="isActive"
                 checked={formData.isActive}
                 onChange={handleChange}
-                className="h-4 w-4 text-cadd-red focus:ring-cadd-red border-gray-300 rounded"
+                className="h-4 w-4 text-brand-red focus:ring-brand-red border-gray-300 rounded"
               />
               <label htmlFor="isActive" className="text-sm text-gray-700">
                 <CheckCircleIcon className="h-4 w-4 inline mr-1" />
@@ -690,7 +690,7 @@ const StudentForm = () => {
             <button
               type="submit"
               disabled={loading}
-              className="px-6 py-2 bg-gradient-to-r from-cadd-red to-cadd-pink text-white rounded-lg hover:from-cadd-pink hover:to-cadd-red transition-all duration-300 flex items-center space-x-2 disabled:opacity-50"
+              className="px-6 py-2 bg-gradient-to-r from-brand-red to-brand-pink text-white rounded-lg hover:from-brand-pink hover:to-brand-red transition-all duration-300 flex items-center space-x-2 disabled:opacity-50"
             >
               {loading ? (
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>

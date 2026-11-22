@@ -47,10 +47,10 @@ const StudentForm = () => {
           setBatch(batchRes.data)
         }
 
-        // Filter departments to only include the 4 required ones
+        // Show the institute's active departments
         const allDepartments = departmentsRes.data || []
         const requiredDepartments = allDepartments.filter(dept =>
-          ['CADD', 'LIVEWIRE', 'DREAMZONE', 'SYNERGY'].includes(dept.name)
+          dept.isActive !== false
         )
         setDepartments(requiredDepartments)
         setCourses(coursesRes.data.courses || coursesRes.data || [])

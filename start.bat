@@ -1,6 +1,6 @@
 @echo off
 echo ========================================
-echo CADD Attendance Management System
+echo Lab Attendance Management System
 echo ========================================
 echo.
 
@@ -26,10 +26,10 @@ if not exist "frontend\node_modules" (
 
 echo.
 echo ========================================
-echo Starting CADD Attendance System...
+echo Starting Lab Attendance System...
 echo ========================================
 echo.
-echo Frontend will be available at: http://localhost:5170
+echo Frontend will be available at: http://localhost:5173
 echo Backend API will be available at: http://localhost:5000
 echo.
 echo Press Ctrl+C to stop the servers
