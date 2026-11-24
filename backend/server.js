@@ -28,9 +28,6 @@ console.log(`   FRONTEND_URL: ${process.env.FRONTEND_URL || 'Not set'}`);
 console.log(`   MONGO_URI: ${process.env.MONGO_URI ? 'Configured' : 'Not configured'}`);
 console.log(`   JWT_SECRET: ${process.env.JWT_SECRET ? 'Configured' : 'Not configured'}`);
 
-// Connect to database
-connectDB();
-
 const app = express();
 
 // CORS - Must be before other middleware
@@ -138,18 +135,26 @@ app.get('/api/test', (req, res) => {
 // Error handler
 app.use(errorHandler);
 
-// Global error handlers
-process.on('uncaughtException', (err) => {
-  console.error('Uncaught Exception:', err);
-  process.exit(1);
-});
+// Start the server only when run directly (`node server.js`); tests import the app instead
+if (require.main === module) {
+  // Connect to database
+  connectDB();
 
-process.on('unhandledRejection', (err) => {
-  console.error('Unhandled Rejection:', err);
-  process.exit(1);
-});
+  // Global error handlers
+  process.on('uncaughtException', (err) => {
+    console.error('Uncaught Exception:', err);
+    process.exit(1);
+  });
 
-const PORT = process.env.PORT || 5000;
-const server = app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
-});
+  process.on('unhandledRejection', (err) => {
+    console.error('Unhandled Rejection:', err);
+    process.exit(1);
+  });
+
+  const PORT = process.env.PORT || 5000;
+  const server = app.listen(PORT, '0.0.0.0', () => {
+    console.log(`🚀 Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
+  });
+}
+
+module.exports = app;
