@@ -12,6 +12,8 @@ test*.js
 test*.html
 *test*.js
 *test*.html
+# ...but keep the real test suite
+!backend/test/*.test.js
 
 # production
 /build

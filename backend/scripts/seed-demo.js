@@ -138,8 +138,12 @@ async function main() {
   await mongoose.disconnect();
 }
 
-main().catch(async (err) => {
-  console.error(err);
-  await mongoose.disconnect();
-  process.exit(1);
-});
+if (require.main === module) {
+  main().catch(async (err) => {
+    console.error(err);
+    await mongoose.disconnect();
+    process.exit(1);
+  });
+}
+
+module.exports = { isLocal };

@@ -9,6 +9,11 @@
   React + Express + MongoDB · works offline as an installable app · MIT licensed
 </p>
 
+<p align="center">
+  <a href="https://github.com/muhammedrifadkp/CADD-Attendance/actions/workflows/ci.yml"><img src="https://github.com/muhammedrifadkp/CADD-Attendance/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT license" /></a>
+</p>
+
 ---
 
 Many small training institutes still take attendance on paper and juggle lab PCs on a whiteboard.
@@ -105,10 +110,11 @@ docs/       Development notes
 
 ## Contributing
 
-Issues and pull requests are welcome. Good first areas:
+Issues and pull requests are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for setup and checks
+(`cd backend && npm test` runs the API tests without a database). Good first areas:
 
 - Screenshots and a hosted demo for this README
-- Automated tests for the API
+- More API tests, especially ones that use a test database
 - Translations (Malayalam, Hindi, Arabic, ...)
 - Configurable batch timings and lab rows (currently fixed in the models)
 

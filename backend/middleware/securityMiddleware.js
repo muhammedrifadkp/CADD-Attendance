@@ -258,7 +258,8 @@ const securityHeaders = (req, res, next) => {
   next();
 };
 
-// Clean up old suspicious activities periodically
+// Clean up old suspicious activities periodically.
+// unref() lets the process exit when nothing else is running (e.g. after tests).
 setInterval(() => {
   const now = Date.now();
   const cleanupThreshold = 24 * 60 * 60 * 1000; // 24 hours
@@ -268,7 +269,7 @@ setInterval(() => {
       suspiciousActivities.delete(key);
     }
   }
-}, 60 * 60 * 1000); // Run cleanup every hour
+}, 60 * 60 * 1000).unref(); // Run cleanup every hour
 
 module.exports = {
   bruteForceProtection,
